@@ -1,0 +1,51 @@
+Copyright (c) 2003 - 2012 OpenSubsystems. All rights reserved.
+
+OpenSubsystems is using open-source friendly dual licensing model the guiding
+principle of which is one of fair exchange, or Quid pro Quo ("something for 
+something"). The basic idea is that if your organization is deriving commercial
+benefit from solutions built using OpenSubsystems software and does not release
+the complete source code of it's solution, then it is required to obtain 
+commercial license from OpenSubsystems.
+
+OpenSubsystems is available under two licenses: OSI approved GNU Affero General 
+Public License (AGPL) v3 or later and OpenSubsystems commercial license.
+
+   1. All software, documentation, resources and other materials developed as 
+      part of OpenSubsystems project are licensed under AGPL v3 or later. If 
+      your application is licensed under AGPL or it is licensed under compatible 
+      OSI license approved by OpenSubsystems, you are free and more then welcome 
+      to include and distribute OpenSubsystems software with your application. 
+      Please see the agplv3.txt file accompanying this file.
+      
+   2. Commercial license allows you to develop and distribute your own software, 
+      which includes OpenSubsystems software without the restriction presented 
+      by the strict AGPL requirements. If you are distributing your application 
+      in any way and you do not wish to release its source code to recipients of
+      your application upon their request you should obtain from OpenSubsystems 
+      the commercial license. By obtaining the commercial license you are not
+      obligated to release any source code of your application as well as you 
+      are not obligated to release any modifications to OpenSubsystems software 
+      unless you wish to do so. Typical examples of commercial distributions 
+      that require commercial license are:
+          * Selling software to customers, which includes OpenSubsystems 
+            software or requires OpenSubsystems software to be installed by 
+            customer.
+          * Building and selling hardware, which includes OpenSubsystems 
+            software to customers.
+
+Simply rule to follow: if you are developing and/or distributing application to 
+which source code is not available and is not licensed under applicable open 
+source license that is based on or includes OpenSubsystems software, you are 
+required to obtain commercial license. To obtain commercial license contact us 
+please at 
+
+http://www.opensubsystems.org
+
+OpenSubystems includes or integrates external libraries licensed under separate 
+terms. Information and licenses for these libraries and projects can be found in 
+files named license-xxx in the directory containing these libraries (usually 
+called external) or online at 
+
+http://www.opensubsystems.org/externals.html
+
+Your OpenSubsystems team
