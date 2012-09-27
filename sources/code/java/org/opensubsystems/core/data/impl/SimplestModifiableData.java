@@ -105,6 +105,7 @@ public final class SimplestModifiableData extends    ModifiableDataObjectImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    public boolean isSame(
       Object oObject
    )

@@ -20,10 +20,10 @@
 package org.opensubsystems.core.data.impl;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 
 import org.opensubsystems.core.data.BasicDataObject;
 import org.opensubsystems.core.data.DataDescriptor;
+import org.opensubsystems.core.data.DataDescriptorManager;
 import org.opensubsystems.core.data.DataObject;
 import org.opensubsystems.core.error.OSSException;
 import org.opensubsystems.core.util.GlobalConstants;
@@ -36,37 +36,43 @@ import org.opensubsystems.core.util.ObjectUtils;
  * 
  * @author bastafidli
  */
-public abstract class BasicDataObjectImpl extends DataObjectImpl
-                                          implements BasicDataObject,
-                                                     Serializable
+public abstract class DataObjectImpl implements DataObject,
+                                                Serializable
 {
    // Attributes ///////////////////////////////////////////////////////////////
 
    /**
     * Generated serial version id for this class.
     */
-   private static final long serialVersionUID = 6389524056661895594L;
+   private static final long serialVersionUID = 4382098724650433470L;
 
    /**
-    * Id of the domain this data object belongs to. Domain represents default 
-    * partition where the data object belongs to (since it is presumed that
-    * each data object belongs to some partition). 
+    * Id of this instance of data. This is private so that we can maintain the 
+    * cached object value without fear that these two won't be in sync.
     */
-   protected long m_lDomainId; 
-
+   private long m_lId;
+   
    /**
-    * Flag which is set to true if this data was loaded from some persistence 
-    * store, e.g. database and false if it was constructed in memory and it is
-    * not persisted.
+    * Class identifying data descriptor for the object. This is private so that 
+    * we can maintain the cached object value without fear that these two won't 
+    * be in sync.
     */
-   protected boolean m_bFromPersistanceStore = false;
-
-   /**
-    * Creation timestamp when the data object was created.
-    */
-   protected Timestamp m_creationTimestamp;
-
+   private Class<DataDescriptor> m_clsDataDescriptor;
+   
    // Cached values ////////////////////////////////////////////////////////////
+   
+   /**
+    * Id of this instance of data represented as object.
+    * This is constructed only when somebody asks for it. It is private so that
+    * we can keep it in sync with the real id. 
+    */
+   private Long m_lIdObject;
+   
+   /**
+    * Data descriptor describing the current data object. This is a cached copy
+    * and in order to ensure it is in sync with the source, it is private.
+    */
+   private DataDescriptor m_dataDescriptor;
    
    // Constructors /////////////////////////////////////////////////////////////
    
@@ -74,15 +80,13 @@ public abstract class BasicDataObjectImpl extends DataObjectImpl
     * Simple constructor creating new data object in particular domain.
     * 
     * @param clsDataDescriptor - class identifying data descriptor for the object
-    * @param lDomainId - domain this data object belongs to
     * @throws OSSException - an error has occurred
     */
-   public BasicDataObjectImpl(
-      Class<DataDescriptor> clsDataDescriptor,
-      long                  lDomainId
+   public DataObjectImpl(
+      Class<DataDescriptor> clsDataDescriptor
    ) throws OSSException
    {
-      this(DataObject.NEW_ID, clsDataDescriptor, lDomainId, null);
+      this(DataObject.NEW_ID, clsDataDescriptor);
    }
 
    /**
@@ -90,21 +94,14 @@ public abstract class BasicDataObjectImpl extends DataObjectImpl
     * 
     * @param lId - id of this data object
     * @param clsDataDescriptor - class identifying data descriptor for the object
-    * @param lDomainId - domain this data object belongs to
-    * @param creationTimestamp - timestamp when the data object was created.
     * @throws OSSException - an error has occurred
     */
-   public BasicDataObjectImpl(
+   public DataObjectImpl(
       long                  lId,
-      Class<DataDescriptor> clsDataDescriptor,
-      long                  lDomainId,
-      Timestamp             creationTimestamp 
+      Class<DataDescriptor> clsDataDescriptor
    ) throws OSSException
    {
-      super(lId, clsDataDescriptor);
-
-      m_lDomainId = lDomainId;
-      m_creationTimestamp = creationTimestamp;
+      restore(lId, clsDataDescriptor);
    }
    
    // Logic ////////////////////////////////////////////////////////////////////
@@ -112,52 +109,88 @@ public abstract class BasicDataObjectImpl extends DataObjectImpl
    /**
     * {@inheritDoc}
     */
-   public boolean isFromPersistenceStore(
-   )
+   public long getId() 
    {
-      return m_bFromPersistanceStore;
+      return m_lId;
    }
 
    /**
     * {@inheritDoc}
     */
-   public void setFromPersistenceStore(
-   )
+   public Long getIdAsObject() 
    {
-      m_bFromPersistanceStore = true;
+      // This doesn't have to be synchronized since it really doesn't matter
+      // if we create two objects in case of concurrent access
+      if (m_lIdObject == null)
+      {
+         if (m_lId == DataObject.NEW_ID)
+         {
+            m_lIdObject = DataObject.NEW_ID_OBJ;
+         }
+         else
+         {
+            m_lIdObject = new Long(m_lId);            
+         }
+      }
+      
+      return m_lIdObject;
    }
-   
+
    /**
     * {@inheritDoc}
     */
-   public long getDomainId(
+   public void setId(
+      long lNewId
    ) 
-   {
-      return m_lDomainId;
-   }
-   
-   /**
-    * {@inheritDoc}
-    */
-   public Timestamp getCreationTimestamp()
-   {
-      return m_creationTimestamp;
-   }
-   
-   /**
-    * {@inheritDoc}
-    */
-   public void setCreationTimestamp(
-      Timestamp creationTimestamp
-   )
    {
       if (GlobalConstants.ERROR_CHECKING)
       {
-         assert ((m_creationTimestamp == null) || (creationTimestamp == null))
-                 : "Creation timestamp can be set only if it is null.";
+         // Prevent changing id by accident
+         assert ((m_lId == DataObject.NEW_ID) || (lNewId == DataObject.NEW_ID))
+                : "Cannot set id for object which already has id " + m_lId;
       }
 
-      m_creationTimestamp = creationTimestamp;
+      if (m_lId != lNewId)
+      {
+         m_lId = lNewId;
+         m_lIdObject = null;         
+      }
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public Class<DataDescriptor> getDataDescriptorClass(
+   )
+   {
+      return m_clsDataDescriptor;
+   }
+   
+   /**
+    * {@inheritDoc}
+    */
+   public DataDescriptor getDataDescriptor(
+   )
+   {
+      return m_dataDescriptor;
+   }
+   
+   /**
+    * {@inheritDoc}
+    */
+   public int getDataType(
+   )
+   {
+      return m_dataDescriptor.getDataType();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public Integer getDataTypeAsObject(
+   ) 
+   {
+      return m_dataDescriptor.getDataTypeAsObject();
    }
 
    /**
@@ -182,10 +215,11 @@ public abstract class BasicDataObjectImpl extends DataObjectImpl
          // We need to compare the getXyz methods here because if we compare
          // variable with getXyz method the comparison would fail since the 
          // getXyz method may implement special behavior
-         bReturn = (getDomainId() == helper.getDomainId())
-                   && ObjectUtils.equals(getCreationTimestamp(), 
-                                         helper.getCreationTimestamp())
-                   && (super.equals(oObject));
+         bReturn = (getId() == helper.getId())
+                   && ObjectUtils.equals(getDataDescriptorClass(), 
+                                         helper.getDataDescriptorClass())
+                  // And now compare all other "business" related attributes
+                  && (isSame(oObject));
       }
       return bReturn;
    }
@@ -197,16 +231,15 @@ public abstract class BasicDataObjectImpl extends DataObjectImpl
    public int hashCode()
    {
       int iResult = HashCodeUtils.SEED;
-      iResult = HashCodeUtils.hash(iResult, m_lDomainId);
-      if (m_creationTimestamp != null)
+      iResult = HashCodeUtils.hash(iResult, m_lId);
+      if (m_clsDataDescriptor == null)
       {
-         iResult = HashCodeUtils.hash(iResult, m_creationTimestamp.getTime());
+         iResult = HashCodeUtils.hash(iResult, "null");
       }
       else
       {
-         iResult = HashCodeUtils.hash(iResult, "null");         
+         iResult = HashCodeUtils.hash(iResult, m_clsDataDescriptor.getName());
       }
-      iResult = HashCodeUtils.hash(iResult, super.hashCode());
       return iResult;
    }
 
@@ -219,20 +252,19 @@ public abstract class BasicDataObjectImpl extends DataObjectImpl
     * 
     * @param lId - id of this data object
     * @param clsDataDescriptor - class identifying data descriptor for the object
-    * @param lDomainId - domain this data object belongs to
-    * @param creationTimestamp - timestamp when the data object was created.
     * @throws OSSException - an error has occurred
     */
    protected void restore(
       long                  lId,
-      Class<DataDescriptor> clsDataDescriptor,
-      long                  lDomainId,
-      Timestamp             creationTimestamp 
+      Class<DataDescriptor> clsDataDescriptor
    ) throws OSSException
    {
-      super.restore(lId, clsDataDescriptor);
-
-      m_lDomainId = lDomainId;
-      m_creationTimestamp = creationTimestamp;
+      m_lId = lId;
+      // Construct the descriptor immediately so if there is an exception if
+      // happens here so that we can call all the other methods without worrying
+      // about exception handling
+      m_clsDataDescriptor = clsDataDescriptor;
+      m_dataDescriptor = DataDescriptorManager.getInstance(m_clsDataDescriptor);
+      m_lIdObject = null;
    }
 }

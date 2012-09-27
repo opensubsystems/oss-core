@@ -113,6 +113,7 @@ public abstract class ModifiableDataObjectImpl extends    BasicDataObjectImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    public boolean equals(
       Object oObject
    )
@@ -138,6 +139,7 @@ public abstract class ModifiableDataObjectImpl extends    BasicDataObjectImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    public int hashCode()
    {
       int iResult = HashCodeUtils.SEED;

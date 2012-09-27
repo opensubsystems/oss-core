@@ -55,7 +55,7 @@ public class DataDescriptorManager
    /**
     * Class factory used to instantiate data descriptors.
     */
-   protected ClassFactory m_descriptorClassFactory;
+   protected ClassFactory<DataDescriptor> m_descriptorClassFactory;
    
    /**
     * Cache where already instantiated data descriptors will be cached. We can 
@@ -117,7 +117,7 @@ public class DataDescriptorManager
    public DataDescriptorManager(
    )
    {
-      m_descriptorClassFactory = new ClassFactory();
+      m_descriptorClassFactory = new ClassFactory<DataDescriptor>(DataDescriptor.class);
       m_mpDescriptorCache = new HashMap<String, DataDescriptor>();
       m_mpDataTypeToDescriptors = new HashMap<Integer, List<DataDescriptor>>();
       m_mpDataTypeViews = new HashMap<String, Integer>();
@@ -135,7 +135,7 @@ public class DataDescriptorManager
     * @throws OSSException - an error has occurred 
     */
    public static DataDescriptor getInstance(
-      Class<DataDescriptor> clsDescriptor
+      Class<? extends DataDescriptor> clsDescriptor
    ) throws OSSException
    {
       return getManagerInstance().getDataDescriptorInstance(clsDescriptor);
@@ -161,10 +161,12 @@ public class DataDescriptorManager
             if (s_defaultInstance == null)
             {
                Class<DataDescriptorManager> defaultManager = DataDescriptorManager.class;
+               ClassFactory<DataDescriptorManager> cf;
                
-               setManagerInstance((DataDescriptorManager)
-                  ClassFactory.getInstance().createInstance(
-                     defaultManager, defaultManager));
+               cf = new ClassFactory<DataDescriptorManager>(
+                           DataDescriptorManager.class);
+               setManagerInstance(cf.createInstance(defaultManager, 
+                                                    defaultManager));
             }
          }   
       }
@@ -251,7 +253,7 @@ public class DataDescriptorManager
     * @throws OSSException - an error has occurred
     */
    public DataDescriptor getDataDescriptorInstance(
-      Class<DataDescriptor> clsDescriptor
+      Class<? extends DataDescriptor> clsDescriptor
    ) throws OSSException
    {
       DataDescriptor descriptor;

@@ -59,15 +59,6 @@ public interface BasicDataObject extends DataObject,
    ); 
    
    /**
-    * Set the unique id for this instance of the data if it wasn't set yet.
-    * 
-    * @param lNewId - new id of the data object
-    */
-   void setId(
-      long lNewId
-   ); 
-
-   /**
     * Get the creation timestamp, which is timestamp when the data object was 
     * created.
     *

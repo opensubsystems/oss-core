@@ -84,6 +84,15 @@ public interface DataObject
    ); 
    
    /**
+    * Set the unique id for this instance of the data if it wasn't set yet.
+    * 
+    * @param lNewId - new id of the data object
+    */
+   void setId(
+      long lNewId
+   ); 
+
+   /**
     * Get class identifying the data descriptor describing the current instance 
     * of data.
     * 
