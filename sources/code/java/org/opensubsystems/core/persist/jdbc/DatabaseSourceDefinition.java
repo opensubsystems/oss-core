@@ -19,6 +19,8 @@
 
 package org.opensubsystems.core.persist.jdbc;
 
+import org.opensubsystems.core.util.OSSObject;
+import org.opensubsystems.core.util.StringUtils;
 import org.opensubsystems.core.util.jdbc.DatabaseUtils;
 
 /**
@@ -26,7 +28,7 @@ import org.opensubsystems.core.util.jdbc.DatabaseUtils;
  * 
  * @author bastafidli
  */
-public class DatabaseSourceDefinition
+public class DatabaseSourceDefinition extends OSSObject
 {
    // Attributes ///////////////////////////////////////////////////////////////
    
@@ -186,78 +188,24 @@ public class DatabaseSourceDefinition
    /**
     * {@inheritDoc}
     */
-   public String toString()
+   public void toString(
+      StringBuilder sb,
+      int           ind
+   )
    {
-      StringBuffer dump = new StringBuffer();
-      
-      dump.append("DataSourceDefinition[");
-      dump.append("\n   m_strName = ");
-      if (m_strName != null)
-      {
-         dump.append(m_strName);
-      }
-      else
-      {
-         dump.append("null");            
-      }
-      dump.append("\n   m_database = ");
-      if (m_database != null)
-      {
-         dump.append(m_database.getDatabaseTypeIdentifier());
-      }
-      else
-      {
-         dump.append("null");            
-      }
-      dump.append("\n   m_strDriver = ");
-      if (m_strDriver != null)
-      {
-         dump.append(m_strDriver);
-      }
-      else
-      {
-         dump.append("null");            
-      }
-      dump.append("\n   m_strRealDriver = ");
-      if (m_strDriver != null)
-      {
-         dump.append(m_strRealDriver);
-      }
-      else
-      {
-         dump.append("null");            
-      }
-      dump.append("\n   m_strUrl = ");
-      if (m_strUrl != null)
-      {
-         dump.append(m_strUrl);
-      }
-      else
-      {
-         dump.append("null");            
-      }
-      dump.append("\n   m_strUser = ");
-      if (m_strUser != null)
-      {
-         dump.append(m_strUser);
-      }
-      else
-      {
-         dump.append("null");            
-      }
-      dump.append("\n   m_strPassword = ");
-      if (m_strUser != null)
-      {
-         dump.append(m_strUser);
-      }
-      else
-      {
-         dump.append("null");            
-      }
-      dump.append("\n   m_iTransactionIsolation = ");
-      dump.append(DatabaseUtils.convertTransactionIsolationFromConstant(
-                                   m_iTransactionIsolation));      
-      
-      return dump.toString();
+      append(sb, ind + 0, "DataSourceDefinition[");
+      append(sb, ind + 1, "m_strName = ", m_strName);
+      append(sb, ind + 1, "m_database = ", 
+             m_database != null ? m_database.getDatabaseTypeIdentifier()
+                                : StringUtils.NULL_STRING);
+      append(sb, ind + 1, "m_strDriver = ", m_strDriver);
+      append(sb, ind + 1, "m_strRealDriver = ", m_strRealDriver);
+      append(sb, ind + 1, "m_strUrl = ", m_strUrl);
+      append(sb, ind + 1, "m_strUser = ", m_strUser);
+      append(sb, ind + 1, "m_strPassword = ", m_strPassword);
+      append(sb, ind + 1, "m_iTransactionIsolation = ", 
+             DatabaseUtils.convertTransactionIsolationFromConstant(
+                              m_iTransactionIsolation));
+      append(sb, ind + 0, "]");
    }
 }

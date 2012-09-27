@@ -28,6 +28,7 @@ import org.opensubsystems.core.data.DataObject;
 import org.opensubsystems.core.error.OSSException;
 import org.opensubsystems.core.util.GlobalConstants;
 import org.opensubsystems.core.util.HashCodeUtils;
+import org.opensubsystems.core.util.OSSObject;
 import org.opensubsystems.core.util.ObjectUtils;
 
 /**
@@ -36,7 +37,8 @@ import org.opensubsystems.core.util.ObjectUtils;
  * 
  * @author bastafidli
  */
-public abstract class DataObjectImpl implements DataObject,
+public abstract class DataObjectImpl extends OSSObject
+                                     implements DataObject,
                                                 Serializable
 {
    // Attributes ///////////////////////////////////////////////////////////////

@@ -27,6 +27,7 @@ import org.opensubsystems.core.error.OSSException;
 import org.opensubsystems.core.util.ClassFactory;
 import org.opensubsystems.core.util.GlobalConstants;
 import org.opensubsystems.core.util.Log;
+import org.opensubsystems.core.util.OSSObject;
 
 /**
  * Class responsible for instantiation of database schemas. This class determines
@@ -38,7 +39,7 @@ import org.opensubsystems.core.util.Log;
  * @author bastafidli
  */
 //TODO: JDK 1.5: All Manager classes could be refactored using template classes 
-public class DatabaseSchemaManager
+public class DatabaseSchemaManager extends OSSObject
 {
    // Constants ////////////////////////////////////////////////////////////////
    

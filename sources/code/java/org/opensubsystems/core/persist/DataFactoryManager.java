@@ -30,6 +30,7 @@ import org.opensubsystems.core.persist.jdbc.DatabaseFactoryClassFactory;
 import org.opensubsystems.core.util.ClassFactory;
 import org.opensubsystems.core.util.GlobalConstants;
 import org.opensubsystems.core.util.Log;
+import org.opensubsystems.core.util.OSSObject;
 
 /**
  * Class responsible for instantiation of data factories. This class determines
@@ -41,7 +42,7 @@ import org.opensubsystems.core.util.Log;
  * @author bastafidli
  */
 // TODO: JDK 1.5: All Manager classes could be refactored using template classes 
-public class DataFactoryManager
+public class DataFactoryManager extends OSSObject
 {
    // Constants ////////////////////////////////////////////////////////////////
    

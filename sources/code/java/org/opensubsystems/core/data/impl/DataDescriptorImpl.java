@@ -22,6 +22,7 @@ package org.opensubsystems.core.data.impl;
 import org.opensubsystems.core.data.DataDescriptor;
 import org.opensubsystems.core.data.DataObject;
 import org.opensubsystems.core.util.GlobalConstants;
+import org.opensubsystems.core.util.OSSObject;
 
 /**
  * Implementation of interface representing collection of metadata elements that 
@@ -36,7 +37,8 @@ import org.opensubsystems.core.util.GlobalConstants;
  *
  * @author bastafidli
  */
-public class DataDescriptorImpl implements DataDescriptor
+public class DataDescriptorImpl extends OSSObject
+                                implements DataDescriptor
 {
    // Attributes ///////////////////////////////////////////////////////////////
 
