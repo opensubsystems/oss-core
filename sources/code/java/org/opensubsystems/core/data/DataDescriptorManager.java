@@ -259,14 +259,12 @@ public class DataDescriptorManager extends OSSObject
    {
       DataDescriptor descriptor;
       
-      descriptor = (DataDescriptor)m_mpDescriptorCache.get(
-                                        clsDescriptor.getName());
+      descriptor = m_mpDescriptorCache.get(clsDescriptor.getName());
       if (descriptor == null)
       {
          synchronized (m_mpDescriptorCache)
          {
-            descriptor = (DataDescriptor)m_descriptorClassFactory.createInstance(
-                                              clsDescriptor);
+            descriptor = m_descriptorClassFactory.createInstance(clsDescriptor);
             initialize(descriptor);
          }
       }

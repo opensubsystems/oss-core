@@ -188,6 +188,7 @@ public class DatabaseSourceDefinition extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public void toString(
       StringBuilder sb,
       int           ind
@@ -206,6 +207,7 @@ public class DatabaseSourceDefinition extends OSSObject
       append(sb, ind + 1, "m_iTransactionIsolation = ", 
              DatabaseUtils.convertTransactionIsolationFromConstant(
                               m_iTransactionIsolation));
+      super.toString(sb, ind + 1);
       append(sb, ind + 0, "]");
    }
 }

@@ -40,7 +40,7 @@ import org.opensubsystems.core.error.OSSException;
  *
  * @author bastafidli
  */
-public class ClassFactory<T>
+public class ClassFactory<T> extends OSSObject
 {   
    // Constants ////////////////////////////////////////////////////////////////
    
