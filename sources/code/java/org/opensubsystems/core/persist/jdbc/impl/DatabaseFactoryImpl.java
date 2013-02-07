@@ -33,7 +33,7 @@ import org.opensubsystems.core.util.OSSObject;
  * @author bastafidli
  */
 public abstract class DatabaseFactoryImpl extends OSSObject 
-                                          implements DatabaseFactory
+                                             implements DatabaseFactory
 {
    // Attributes ///////////////////////////////////////////////////////////////
 
