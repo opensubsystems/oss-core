@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -60,8 +60,8 @@ public interface BasicDataFactory extends DataFactory
    /**
     * Delete specified data.
     *
-    * @param  iId - id of the data object to be deleted
-    * @param  iDomainId - if the data object exists in a domain then by specifying 
+    * @param  lId - id of the data object to be deleted
+    * @param  lDomainId - if the data object exists in a domain then by specifying 
     *                     the domain id it allows the persistence store to limit 
     *                     the data that will be searched and also possibly 
     *                     enforce in what domain the id can possibly exist. This
@@ -74,7 +74,7 @@ public interface BasicDataFactory extends DataFactory
     * @throws OSSException - an error has occurred deleting data
     */
    void delete(
-      int iId,
-      int iDomainId
+      long lId,
+      long lDomainId
    ) throws OSSException;
 }

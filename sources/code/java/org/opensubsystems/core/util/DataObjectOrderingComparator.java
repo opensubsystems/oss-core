@@ -29,7 +29,8 @@ import org.opensubsystems.core.data.DataObject;
  * 
  * @author OpenSubsystems
  */
-public class DataObjectOrderingComparator implements Comparator<DataObject> 
+public class DataObjectOrderingComparator extends    OSSObject
+                                           implements Comparator<DataObject> 
 {
    // Attributes ///////////////////////////////////////////////////////////////
    

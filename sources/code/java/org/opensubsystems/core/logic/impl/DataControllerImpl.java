@@ -42,15 +42,15 @@ public abstract class DataControllerImpl extends    StatelessControllerImpl
     * This implementation will get only the default data object supported 
     * by this controller in case the controller supports multiple data types.
     * 
-    * @param iId {@inheritDoc}
+    * @param lId {@inheritDoc}
     * @return DataObject {@inheritDoc}
     * @throws OSSException {@inheritDoc}
     */
    public DataObject get(
-      int iId
+      long lId
    ) throws OSSException
    {
-      return getDataFactory().get(iId, 
+      return getDataFactory().get(lId, 
                 CallContext.getInstance().getCurrentDomainId());
    }
    

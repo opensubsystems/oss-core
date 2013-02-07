@@ -30,7 +30,7 @@ import org.opensubsystems.core.data.BasicDataObject;
  * @author bastafidli
  */
 public class CreationTimestampIdComparator extends     OSSObject
-                                             implements Comparator<BasicDataObject>
+                                            implements Comparator<BasicDataObject>
 {
    // Cached values ////////////////////////////////////////////////////////////
    
