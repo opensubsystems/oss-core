@@ -53,14 +53,14 @@ public abstract class BasicDataControllerImpl extends    DataControllerImpl
     * This implementation will delete only the default data object supported 
     * by this controller in case the controller supports multiple data types.
     * 
-    * @param iId {@inheritDoc}
+    * @param lId {@inheritDoc}
     * @throws OSSException {@inheritDoc}
     */
    public void delete(
-      int iId
+      long lId
    ) throws OSSException
    {
-      ((BasicDataFactory)getDataFactory()).delete(iId, 
+      ((BasicDataFactory)getDataFactory()).delete(lId, 
          CallContext.getInstance().getCurrentDomainId());      
    }
 

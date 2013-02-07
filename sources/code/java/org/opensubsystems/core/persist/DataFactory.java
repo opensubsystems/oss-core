@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -64,24 +64,24 @@ public interface DataFactory
     * Every data factory has to support this method otherwise we wouldn't have 
     * any way how to load and test existence of the data.
     *
-    * @param  iId - id of the data object to get, if the id is NEW_ID a new data
-    *               object initialized to default values
-    * @param  iDomainId - if the data object exists in a domain then by specifying 
-    *                     the domain id it allows the persistence store to limit 
-    *                     the data that will be searched and also possibly 
-    *                     enforce in what domain the id can possibly exist. This
-    *                     allows to enforce security on the persistence layer 
-    *                     that by ensuring that if the data object doesn't exist 
-    *                     in the domain where it is expected to exist, it will 
-    *                     not be even retrieved. If the data object doesn't exist
-    *                     in the domain, you can pass DataObject.NEW_ID here
-    *                     since it won't be used.
+    * @param  lId - id of the data object to get, if the id is NEW_ID a new data
+    *                object initialized to default values
+    * @param  lDomainId - if the data object exists in a domain then by specifying 
+    *                      the domain id it allows the persistence store to limit 
+    *                      the data that will be searched and also possibly 
+    *                      enforce in what domain the id can possibly exist. This
+    *                      allows to enforce security on the persistence layer 
+    *                      that by ensuring that if the data object doesn't exist 
+    *                      in the domain where it is expected to exist, it will 
+    *                      not be even retrieved. If the data object doesn't exist
+    *                      in the domain, you can pass DataObject.NEW_ID here
+    *                      since it won't be used.
     * @return DataObject - specified data object or null if it couldn't be 
     *                      retrieved
     * @throws OSSException - an error while getting data
     */
    DataObject get(
-      int iId,
-      int iDomainId
+      long lId,
+      long lDomainId
    ) throws OSSException;
 }
