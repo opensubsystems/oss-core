@@ -34,7 +34,7 @@ import java.util.logging.Logger;
  *
  * @author bastafidli
  */
-public class Log
+public class Log extends OSSObject
 {
    // Constants ////////////////////////////////////////////////////////////////
 
