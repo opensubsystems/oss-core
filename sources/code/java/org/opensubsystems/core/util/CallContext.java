@@ -101,6 +101,7 @@ public class CallContext extends OSSObject
       // of user who is using  
       m_currentUser = new InheritableThreadLocal<Stack<Principal>>()
       {
+         @Override
          protected Stack<Principal> childValue(
                Stack<Principal> parentValue
          )
@@ -110,7 +111,7 @@ public class CallContext extends OSSObject
             if ((parentValue != null) && (!parentValue.isEmpty()))
             {
                // See discussion above why we need to copy this
-               childStack = new Stack<Principal>();
+               childStack = new Stack<>();
                childStack.addAll(parentValue);   
             }
                                 
@@ -119,6 +120,7 @@ public class CallContext extends OSSObject
       };
       m_currentSession = new InheritableThreadLocal<Stack<String>>()
       {
+         @Override
          protected Stack<String> childValue(
                Stack<String> parentValue
          )
@@ -128,7 +130,7 @@ public class CallContext extends OSSObject
             if ((parentValue != null) && (!parentValue.isEmpty()))
             {
                // See discussion above why we need to copy this
-               childStack = new Stack<String>();
+               childStack = new Stack<>();
                childStack.addAll(parentValue);   
             }
                                 
@@ -139,8 +141,8 @@ public class CallContext extends OSSObject
       // is own error message to parent. If it would be inheritable and the
       // child value is not overridden as above, every error messages produced
       // by child thread would be visible by parent
-      m_messages = new ThreadLocal<Messages>();
-      m_cache = new ThreadLocal<Map<String, Map>>();
+      m_messages = new ThreadLocal<>();
+      m_cache = new ThreadLocal<>();
    }
    
    // Logic ////////////////////////////////////////////////////////////////////
@@ -311,7 +313,7 @@ public class CallContext extends OSSObject
    public Messages getMessages(
    )
    {
-      Messages msgs = null;
+      Messages msgs;
       
       msgs = m_messages.get();
       
@@ -365,7 +367,7 @@ public class CallContext extends OSSObject
       
       if (cache == null)
       {   
-         cache = new HashMap<String, Map>();
+         cache = new HashMap<>();
          setCache(cache);
       }
       customcache = cache.get(strCacheKey);
