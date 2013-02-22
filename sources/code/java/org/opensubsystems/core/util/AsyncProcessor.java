@@ -115,6 +115,7 @@ public class AsyncProcessor extends Thread
    /**
     * Method called during thread execution.  
     */
+   @Override
    public void run(
    )
    {
@@ -134,15 +135,13 @@ public class AsyncProcessor extends Thread
             
             if (itemToProcess != null)
             {   
-               s_logger.log(Level.FINEST, 
-                            getName() 
-                            + ": Going to process " + itemToProcess.toString());
+               s_logger.log(Level.FINEST, "{0}: Going to process {1}", 
+                            new Object[]{getName(), itemToProcess.toString()});
             }
             else
             {
-               s_logger.log(Level.FINEST, 
-                            getName() 
-                            + ": Going to process null object.");         
+               s_logger.log(Level.FINEST, "{0}: Going to process null object.", 
+                            getName());         
             }
             processItemNow(itemToProcess);
          }
@@ -194,15 +193,13 @@ public class AsyncProcessor extends Thread
       // This make wake up the thread above
       if (objItem != null)
       {   
-         s_logger.log(Level.FINEST, 
-                      getName() 
-                      + ": Adding object to the queue " + objItem.toString());
+         s_logger.log(Level.FINEST, "{0}: Adding object to the queue {1}", 
+                      new Object[]{getName(), objItem.toString()});
       }
       else
       {
-         s_logger.log(Level.FINEST, 
-                      getName() 
-                      + ": Adding null object to the queue.");         
+         s_logger.log(Level.FINEST, "{0}: Adding null object to the queue.", 
+                      getName());         
       }
       m_syncQueue.put(objItem);
    }
