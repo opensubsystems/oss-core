@@ -51,7 +51,7 @@ public final class ArrayUtils extends OSSObject
       int[] arrExclude
    )
    {
-      int[] arrReturn = null;
+      int[] arrReturn;
 
       if ((arrBase != null) && (arrBase.length > 0) && (arrExclude != null)
          && (arrExclude.length > 0))
@@ -74,12 +74,8 @@ public final class ArrayUtils extends OSSObject
          }
          
          // Shrink the array
-         // TODO: Performance: Replace this with System.arraycopy
          arrReturn = new int[iLength];
-         for (int iCount = 0; iCount < iLength; iCount++)
-         {
-            arrReturn[iCount] = arrHelp[iCount];
-         }
+         System.arraycopy(arrHelp, 0, arrReturn, 0, iLength);
       }
       else
       {
