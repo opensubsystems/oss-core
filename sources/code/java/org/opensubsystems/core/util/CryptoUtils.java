@@ -24,6 +24,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.Security;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -126,7 +127,7 @@ public final class CryptoUtils extends OSSObject
 
       // Get the data hash
       byte[] arrBytes = messageDigest.digest();
-      StringBuffer strFinal = new StringBuffer();
+      StringBuilder strFinal = new StringBuilder();
       for (int iCount = 0; iCount < arrBytes.length; iCount++)
       {
          // By converting it into the hexa-decimal number format  it is 
@@ -157,7 +158,7 @@ public final class CryptoUtils extends OSSObject
       String     strPasswordAlgorithm;
       String     strPasswordAlgorithmProvider;
       
-      MessageDigest messageDigest = null;
+      MessageDigest messageDigest;
       
       prpSettings = Config.getInstance().getProperties();
       strPasswordAlgorithm = PropertyUtils.getStringProperty(
@@ -180,21 +181,23 @@ public final class CryptoUtils extends OSSObject
       }
       catch (OSSException ossExc)
       {
-         s_logger.config("Algorithm " + strPasswordAlgorithm + " set in" 
-                         + " property " + PASSWORD_DIGEST_ALGORITHM
-                         + " provided by provider " 
-                         + strPasswordAlgorithmProvider 
+         s_logger.log(Level.CONFIG,"Algorithm {0}" 
+                         + " set in" + " property "
+                         + PASSWORD_DIGEST_ALGORITHM 
+                         + " provided by provider {1}" 
                          + " set in property " + PASSWORD_ALGORITHM_PROVIDER 
-                         + " doesn't exist, using default values " 
+                         + " doesn''t exist, using default values " 
                          + PASSWORD_DIGEST_ALGORITHM_DEFAULT + " and " 
-                         + PASSWORD_ALGORITHM_PROVIDER_DEFAULT);
+                         + PASSWORD_ALGORITHM_PROVIDER_DEFAULT, 
+                         new Object[]{strPasswordAlgorithm, 
+                                      strPasswordAlgorithmProvider});
          strPasswordAlgorithm = PASSWORD_DIGEST_ALGORITHM_DEFAULT;
          strPasswordAlgorithmProvider = PASSWORD_ALGORITHM_PROVIDER_DEFAULT;
          
-         s_logger.config("Final value of " + PASSWORD_DIGEST_ALGORITHM + " = " 
-                         + strPasswordAlgorithm);
-         s_logger.config("Final value of " + PASSWORD_ALGORITHM_PROVIDER + " = " 
-                         + strPasswordAlgorithmProvider);
+         s_logger.log(Level.CONFIG,"Final value of " + PASSWORD_DIGEST_ALGORITHM 
+                         + " = {0}", strPasswordAlgorithm);
+         s_logger.log(Level.CONFIG,"Final value of " + PASSWORD_ALGORITHM_PROVIDER 
+                         + " = {0}", strPasswordAlgorithmProvider);
       
          messageDigest = getMessageDigestAlgorithmInstance(
                             strPasswordAlgorithm, 
@@ -232,7 +235,7 @@ public final class CryptoUtils extends OSSObject
             messageDigest = MessageDigest.getInstance(strPasswordAlgorithm); 
          }
       }
-      catch (NoSuchAlgorithmException algExc)
+      catch (NoSuchAlgorithmException | NoSuchProviderException exc)
       {
          assert (!PASSWORD_DIGEST_ALGORITHM_DEFAULT.equals(
                      strPasswordAlgorithm))
@@ -241,18 +244,7 @@ public final class CryptoUtils extends OSSObject
                 : "Default algorithm provided by default provider has to be"
                   + " always found.";
          throw new OSSConfigException("Cannot find message digest algorithm", 
-                                      algExc);
-      }
-      catch (NoSuchProviderException provExc)
-      {
-         assert (!PASSWORD_DIGEST_ALGORITHM_DEFAULT.equals(
-                     strPasswordAlgorithm))
-                || (!PASSWORD_ALGORITHM_PROVIDER_DEFAULT.equals(
-                        strPasswordAlgorithmProvider))
-                : "Default algorithm provided by default provider has to be"
-                  + " always found.";
-         throw new OSSConfigException("Cannot find message digest algorithm", 
-                                      provExc);
+                                      exc);
       }
       
       return messageDigest;
