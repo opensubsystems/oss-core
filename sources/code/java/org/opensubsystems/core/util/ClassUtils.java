@@ -22,6 +22,7 @@ package org.opensubsystems.core.util;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.opensubsystems.core.error.OSSDynamicClassException;
@@ -97,15 +98,11 @@ public final class ClassUtils extends OSSObject
       try
       {
          objInstance = templateClass.newInstance();
-         s_logger.finest("Instantiated class " + templateClass.getName());        
+         s_logger.log(Level.FINEST, "Instantiated class {0}", templateClass.getName());        
       }
-      catch (IllegalAccessException eIllAcc)
+      catch (IllegalAccessException | InstantiationException exc)
       {
-         throw new OSSDynamicClassException("Unexpected exception.", eIllAcc);         
-      }
-      catch (InstantiationException ineExc)
-      {
-         throw new OSSDynamicClassException("Unexpected exception.", ineExc);
+         throw new OSSDynamicClassException("Unexpected exception.", exc);         
       }
       
       return objInstance;      
