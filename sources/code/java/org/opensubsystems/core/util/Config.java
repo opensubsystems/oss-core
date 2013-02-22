@@ -551,8 +551,8 @@ public class Config extends OSSObject
             }
             else
             {
-               s_logger.config(CONFIG_FILE_NAME + " = " 
-                               + m_strRequestedConfigFile);
+               s_logger.log(Level.CONFIG,CONFIG_FILE_NAME 
+                               + " = {0}", m_strRequestedConfigFile);
                
                try
                {
@@ -569,9 +569,8 @@ public class Config extends OSSObject
          }
          else
          {
-            s_logger.config("Name of configuration file is specified"
-                            + " programatically = " 
-                            + m_strRequestedConfigFile);
+            s_logger.log(Level.CONFIG,"Name of configuration file is specified" 
+                            + " programatically = {0}", m_strRequestedConfigFile);
                
             try
             {
@@ -589,7 +588,7 @@ public class Config extends OSSObject
          BufferedInputStream bisConfigFile = null;
          
          // Load the properties
-         s_logger.config("Using configuration file " + m_strActualConfigFile);
+         s_logger.log(Level.CONFIG, "Using configuration file {0}", m_strActualConfigFile);
          m_prpProperties = new Properties();
          try
          {
@@ -656,9 +655,9 @@ public class Config extends OSSObject
             
             dependentFile = new Config(strDependentPropertyFile);
             prpSettings = dependentFile.getProperties();
-            s_logger.config("Replacing properties specified in dependent file " 
-                            + strDependentPropertyFile + " with properties from " 
-                            + m_strActualConfigFile);
+            s_logger.log(Level.CONFIG, "Replacing properties specified in"
+                         + " dependent file {0} with properties from {1}", 
+                         new Object[]{strDependentPropertyFile, m_strActualConfigFile});
             // Now replace the settings which were redefined in this file
             prpSettings.putAll(m_prpProperties);
             // And the end result will be the current properties
