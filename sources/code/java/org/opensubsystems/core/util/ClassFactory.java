@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -192,7 +192,7 @@ public class ClassFactory<T> extends OSSObject
    {
       String       strModifier;
       T            objInstance = null;
-      List<String> lstClassNames = new ArrayList<String>();
+      List<String> lstClassNames = new ArrayList<>();
       
       strModifier = getModifier();
       createConfiguredClassNames(strClassIdentifier, strModifier, lstClassNames);
@@ -204,9 +204,10 @@ public class ClassFactory<T> extends OSSObject
          objInstance = instantiateClass(lstClassNames, strClassIdentifier);
          if (objInstance != null)
          {
-            s_logger.finest("Class instantiation for " + strClassIdentifier + 
-                            " based on configured setting instantiated " +
-                            objInstance.getClass().getName());
+            s_logger.log(Level.FINEST, "Class instantiation for {0} based on "
+                         + "configured setting instantiated {1}", 
+                         new Object[]{strClassIdentifier, 
+                                      objInstance.getClass().getName()});
          }
       }
       else
@@ -220,9 +221,10 @@ public class ClassFactory<T> extends OSSObject
             objInstance = instantiateClass(lstClassNames, strClassIdentifier);
             if (objInstance != null)
             {
-               s_logger.finest("Class instantiation for " + strClassIdentifier + 
-                               " based on default setting instantiated " +
-                               objInstance.getClass().getName());
+               s_logger.log(Level.FINEST, "Class instantiation for {0} based on "
+                            + "default setting instantiated {1}", 
+                            new Object[]{strClassIdentifier, 
+                                         objInstance.getClass().getName()});
             }
          }
          else
@@ -272,9 +274,9 @@ public class ClassFactory<T> extends OSSObject
             objInstance = ClassUtils.createNewInstance(strClassName);
             instance = verifyInstance(objInstance); 
             // Print success message so that we can see what class are we using
-            Log.s_logger.finer("Speculative class instantiation for "
-                               + strClassIdentifier + " succeeded for class " 
-                               + strClassName);
+            Log.s_logger.log(Level.FINER, "Speculative class instantiation for"
+                             + " {0} succeeded for class {1}", 
+                             new Object[]{strClassIdentifier, strClassName});
          }
          catch (OSSDynamicClassException dceExc)
          {
@@ -285,10 +287,9 @@ public class ClassFactory<T> extends OSSObject
             
             // Instead of stack trace print just the original message of the 
             // cause since the class is just not present
-            s_logger.log(Level.FINEST, 
-                         "Speculative class instantiation for "
-                         + strClassIdentifier + " failed for class " 
-                         + strClassName + " with error " + cause);
+            s_logger.log(Level.FINEST, "Speculative class instantiation for {0}"
+                         + " failed for class {1} with error {2}", 
+                         new Object[]{strClassIdentifier, strClassName, cause});
          }
       }
       
@@ -363,8 +364,8 @@ public class ClassFactory<T> extends OSSObject
    ) throws OSSException
    {
       Properties   prpSettings;
-      String       strClassName = null;
-      StringBuffer sbProperty = new StringBuffer(strClassIdentifier);
+      String       strClassName;
+      StringBuilder sbProperty = new StringBuilder(strClassIdentifier);
       
       prpSettings = Config.getInstance().getProperties();
       
