@@ -55,7 +55,7 @@ public interface BasicDataController extends DataController
     * If the object doesn't exist in the current domain, this method should 
     * throw an exception and shouldn't delete anything. If the client needs to 
     * delete data object in a different domain than the current one, it needs to 
-    * provide for it its' own specific interface. 
+    * provide its own specific interface. 
     *
     * @param lId - id of the data object to delete
     * @throws OSSException - an error has occurred 
