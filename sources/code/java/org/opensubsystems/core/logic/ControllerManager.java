@@ -22,6 +22,7 @@ package org.opensubsystems.core.logic;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.opensubsystems.core.error.OSSException;
@@ -61,7 +62,7 @@ public class ControllerManager extends OSSObject
     * Cache where already instantiated controllers will be cached. We can 
     * cache them since the controllers should be reentrant.
     */
-   private Map<String, StatelessController> m_mpControllerCache; 
+   private final Map<String, StatelessController> m_mpControllerCache; 
    
    // Cached values ////////////////////////////////////////////////////////////
 
@@ -84,7 +85,7 @@ public class ControllerManager extends OSSObject
    )
    {
       m_controllerClassFactory = new ControllerClassFactory();
-      m_mpControllerCache = new HashMap<String, StatelessController>();
+      m_mpControllerCache = new HashMap<>();
    }
    
    // Logic ////////////////////////////////////////////////////////////////////
@@ -131,7 +132,7 @@ public class ControllerManager extends OSSObject
    
                ClassFactory<ControllerManager> cf;
                
-               cf = new ClassFactory<ControllerManager>(ControllerManager.class);
+               cf = new ClassFactory<>(ControllerManager.class);
 
                setManagerInstance(cf.createInstance(defaultManager, 
                                                     defaultManager));
@@ -161,8 +162,8 @@ public class ControllerManager extends OSSObject
       synchronized (IMPL_LOCK)
       {
          s_defaultInstance = defaultInstance;
-         s_logger.fine("Default controller manager is " 
-                       + s_defaultInstance.getClass().getName());
+         s_logger.log(Level.FINE, "Default controller manager is {0}", 
+                      s_defaultInstance.getClass().getName());
       }   
    }
 
