@@ -22,7 +22,6 @@ package org.opensubsystems.core.error;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -104,7 +103,7 @@ public class OSSMultiException extends OSSException
    {
       super("Multiple exceptions");
       
-      m_lstExceptions = new ArrayList<Throwable>(2);
+      m_lstExceptions = new ArrayList<>(2);
       add(first);
       add(second);
    }
@@ -116,13 +115,13 @@ public class OSSMultiException extends OSSException
     * 
     * @param thr - new exception
     */
-   public void add(
+   public final void add(
      Throwable thr
    )
    {
       if (m_lstExceptions == null)
       {
-         m_lstExceptions = new ArrayList<Throwable>();
+         m_lstExceptions = new ArrayList<>();
       }
 
       if (thr instanceof OSSMultiException)
@@ -140,6 +139,7 @@ public class OSSMultiException extends OSSException
    /**
     * {@inheritDoc}
     */
+   @Override
    public String toString(
    )
    {
@@ -150,35 +150,45 @@ public class OSSMultiException extends OSSException
    /**
     * {@inheritDoc}
     */
+   @Override
+   @SuppressWarnings("CallToThreadDumpStack")
    public void printStackTrace(
    )
    {
       super.printStackTrace();
       
-      for (Iterator<Throwable> exc = m_lstExceptions.iterator(); exc.hasNext();)
-      {   
-         exc.next().printStackTrace();
+      if (m_lstExceptions != null)
+      {
+         for (Throwable exc : m_lstExceptions)
+         {   
+            exc.printStackTrace();
+         }
       }
    }
    
    /**
     * {@inheritDoc}
     */
+   @Override
    public void printStackTrace(
       PrintStream stream
    )
    {
       super.printStackTrace(stream);
       
-      for (Iterator<Throwable> exc = m_lstExceptions.iterator(); exc.hasNext();)
-      {   
-         exc.next().printStackTrace(stream);
+      if (m_lstExceptions != null)
+      {
+         for (Throwable exc : m_lstExceptions)
+         {   
+            exc.printStackTrace(stream);
+         }
       }
    }
    
    /**
     * {@inheritDoc}
     */
+   @Override
    public void printStackTrace(
       PrintWriter writer
    )
@@ -187,9 +197,9 @@ public class OSSMultiException extends OSSException
       
       if (m_lstExceptions != null)
       {
-         for (Iterator<Throwable> exc = m_lstExceptions.iterator(); exc.hasNext();)
+         for (Throwable exc : m_lstExceptions)
          {   
-            exc.next().printStackTrace(writer);
+            exc.printStackTrace(writer);
          }
       }
    }
@@ -197,6 +207,7 @@ public class OSSMultiException extends OSSException
    /**
     * {@inheritDoc}
     */
+   @Override
    public synchronized Throwable initCause(
       Throwable thr
    )
@@ -205,6 +216,7 @@ public class OSSMultiException extends OSSException
       {
          add(thr);
       }
+      
       return this;
    }
 }
