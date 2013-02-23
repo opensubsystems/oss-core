@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -112,6 +112,7 @@ public abstract class BasicDataObjectImpl extends DataObjectImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    public boolean isFromPersistenceStore(
    )
    {
@@ -121,6 +122,7 @@ public abstract class BasicDataObjectImpl extends DataObjectImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    public void setFromPersistenceStore(
    )
    {
@@ -130,6 +132,7 @@ public abstract class BasicDataObjectImpl extends DataObjectImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    public long getDomainId(
    ) 
    {
@@ -139,6 +142,7 @@ public abstract class BasicDataObjectImpl extends DataObjectImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    public Timestamp getCreationTimestamp()
    {
       return m_creationTimestamp;
@@ -147,6 +151,7 @@ public abstract class BasicDataObjectImpl extends DataObjectImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    public void setCreationTimestamp(
       Timestamp creationTimestamp
    )
