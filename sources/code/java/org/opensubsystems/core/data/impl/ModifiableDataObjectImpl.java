@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -95,6 +95,7 @@ public abstract class ModifiableDataObjectImpl extends    BasicDataObjectImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    public Timestamp getModificationTimestamp()
    {
       return m_modificationTimestamp;
@@ -103,6 +104,7 @@ public abstract class ModifiableDataObjectImpl extends    BasicDataObjectImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    public void setModificationTimestamp(
       Timestamp modificationTimestamp
    )
