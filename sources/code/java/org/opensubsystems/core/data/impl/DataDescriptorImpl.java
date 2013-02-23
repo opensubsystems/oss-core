@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2008 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -190,6 +190,7 @@ public class DataDescriptorImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public Class<DataDescriptor> getParentDescriptorClass()
    {
       return m_clsParentDescriptor;   
@@ -198,6 +199,7 @@ public class DataDescriptorImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public int getDesiredDataType(
    )
    {
@@ -207,6 +209,7 @@ public class DataDescriptorImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public int getDataType(
    )
    {
@@ -221,6 +224,7 @@ public class DataDescriptorImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public void setDataType(
       int iDataType
    )
@@ -232,6 +236,7 @@ public class DataDescriptorImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public Integer getDataTypeAsObject(
    )
    {
@@ -248,6 +253,7 @@ public class DataDescriptorImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public String getDisplayableViewName()
    {
       return m_strDisplayableViewName;
@@ -256,6 +262,7 @@ public class DataDescriptorImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public String getViewName()
    {
       return m_strViewName;
