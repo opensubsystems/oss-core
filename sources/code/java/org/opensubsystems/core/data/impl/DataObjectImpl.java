@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -98,6 +98,7 @@ public abstract class DataObjectImpl extends OSSObject
     * @param clsDataDescriptor - class identifying data descriptor for the object
     * @throws OSSException - an error has occurred
     */
+   @SuppressWarnings("LeakingThisInConstructor")
    public DataObjectImpl(
       long                  lId,
       Class<DataDescriptor> clsDataDescriptor
@@ -111,6 +112,7 @@ public abstract class DataObjectImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public long getId() 
    {
       return m_lId;
@@ -119,6 +121,7 @@ public abstract class DataObjectImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public Long getIdAsObject() 
    {
       // This doesn't have to be synchronized since it really doesn't matter
@@ -141,6 +144,7 @@ public abstract class DataObjectImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public void setId(
       long lNewId
    ) 
@@ -162,6 +166,7 @@ public abstract class DataObjectImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public Class<DataDescriptor> getDataDescriptorClass(
    )
    {
@@ -171,6 +176,7 @@ public abstract class DataObjectImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public DataDescriptor getDataDescriptor(
    )
    {
@@ -180,6 +186,7 @@ public abstract class DataObjectImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public int getDataType(
    )
    {
@@ -189,6 +196,7 @@ public abstract class DataObjectImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public Integer getDataTypeAsObject(
    ) 
    {
@@ -252,11 +260,12 @@ public abstract class DataObjectImpl extends OSSObject
     * object in case it needs to be reused or reconstructed (e.g. when rollback
     * is issued).
     * 
+    * @param target - target object to restore
     * @param lId - id of this data object
     * @param clsDataDescriptor - class identifying data descriptor for the object
     * @throws OSSException - an error has occurred
     */
-   protected void restore(
+   protected final void restore(
       long                  lId,
       Class<DataDescriptor> clsDataDescriptor
    ) throws OSSException
