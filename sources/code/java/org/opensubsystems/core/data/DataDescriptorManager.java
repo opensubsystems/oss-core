@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.opensubsystems.core.error.OSSException;
@@ -63,7 +64,7 @@ public class DataDescriptorManager extends OSSObject
     * cache them since data descriptors should be reentrant. Key is the class 
     * name of the descriptor and value is the descriptor itself.
     */
-   private Map<String, DataDescriptor> m_mpDescriptorCache; 
+   private final Map<String, DataDescriptor> m_mpDescriptorCache; 
    
    /**
     * Map that is used to transform the desired data types to real data types.
@@ -118,10 +119,10 @@ public class DataDescriptorManager extends OSSObject
    public DataDescriptorManager(
    )
    {
-      m_descriptorClassFactory = new ClassFactory<DataDescriptor>(DataDescriptor.class);
-      m_mpDescriptorCache = new HashMap<String, DataDescriptor>();
-      m_mpDataTypeToDescriptors = new HashMap<Integer, List<DataDescriptor>>();
-      m_mpDataTypeViews = new HashMap<String, Integer>();
+      m_descriptorClassFactory = new ClassFactory<>(DataDescriptor.class);
+      m_mpDescriptorCache = new HashMap<>();
+      m_mpDataTypeToDescriptors = new HashMap<>();
+      m_mpDataTypeViews = new HashMap<>();
       m_mpDesiredDataTypeMap = null;
    }
    
@@ -164,7 +165,7 @@ public class DataDescriptorManager extends OSSObject
                Class<DataDescriptorManager> defaultManager = DataDescriptorManager.class;
                ClassFactory<DataDescriptorManager> cf;
                
-               cf = new ClassFactory<DataDescriptorManager>(
+               cf = new ClassFactory<>(
                            DataDescriptorManager.class);
                setManagerInstance(cf.createInstance(defaultManager, 
                                                     defaultManager));
@@ -194,8 +195,8 @@ public class DataDescriptorManager extends OSSObject
       synchronized (IMPL_LOCK)
       {
          s_defaultInstance = defaultInstance;
-         s_logger.fine("Default data descriptor manager is " 
-                       + s_defaultInstance.getClass().getName());
+         s_logger.log(Level.FINE, "Default data descriptor manager is {0}", 
+                      s_defaultInstance.getClass().getName());
       }   
    }
 
@@ -344,7 +345,7 @@ public class DataDescriptorManager extends OSSObject
       Integer intDataType
    )
    {
-      List<DataDescriptor> lstDataDescriptors = null;
+      List<DataDescriptor> lstDataDescriptors;
       
       lstDataDescriptors = m_mpDataTypeToDescriptors.get(intDataType);      
       
@@ -413,11 +414,13 @@ public class DataDescriptorManager extends OSSObject
          }
          lstDescriptors.add(descriptor);
          
-         s_logger.fine("Registered data descriptor " + descriptor.getDataType()
-                       + " - " + descriptor.getViewName() 
-                       + " - " + descriptor.getDisplayableViewName() 
-                       + " - " + descriptor.getClass().getName()
-                       + " as child of " + parentDescriptor.getClass().getName());
+         s_logger.log(Level.FINE, "Registered data descriptor {0} - {1} - {2}"
+                      + " - {3} as child of {4}", 
+                      new Object[]{descriptor.getDataType(), 
+                                   descriptor.getViewName(), 
+                                   descriptor.getDisplayableViewName(), 
+                                   descriptor.getClass().getName(), 
+                                   parentDescriptor.getClass().getName()});
       }
       else
       {
@@ -458,16 +461,18 @@ public class DataDescriptorManager extends OSSObject
          else
          {
             // Most of these will have only 1 descriptor per data type
-            lstDescriptors = new ArrayList<DataDescriptor>(1);
+            lstDescriptors = new ArrayList<>(1);
             lstDescriptors.add(descriptor);
             m_mpDataTypeToDescriptors.put(descriptor.getDataTypeAsObject(), 
                                           lstDescriptors);
          }
          
-         s_logger.fine("Registered data descriptor " + descriptor.getDataType()
-                       + " - " + descriptor.getViewName() 
-                       + " - " + descriptor.getDisplayableViewName() 
-                       + " - " + descriptor.getClass().getName());
+         s_logger.log(Level.FINE, "Registered data descriptor {0} - {1} - {2}"
+                      + " - {3}", 
+                      new Object[]{descriptor.getDataType(), 
+                                   descriptor.getViewName(), 
+                                   descriptor.getDisplayableViewName(), 
+                                   descriptor.getClass().getName()});
       }
       m_mpDataTypeViews.put(descriptor.getViewName(), 
                             descriptor.getDataTypeAsObject());
