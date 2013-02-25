@@ -37,6 +37,7 @@ import org.opensubsystems.core.error.OSSDatabaseAccessException;
 import org.opensubsystems.core.error.OSSException;
 import org.opensubsystems.core.util.GlobalConstants;
 import org.opensubsystems.core.util.Log;
+import org.opensubsystems.core.util.OSSObject;
 import org.opensubsystems.core.util.TwoIntStruct;
 
 /**
@@ -44,7 +45,7 @@ import org.opensubsystems.core.util.TwoIntStruct;
  * 
  * @author bastafidli
  */
-public final class DatabaseUtils
+public final class DatabaseUtils extends OSSObject
 {
    // Cached values ////////////////////////////////////////////////////////////
 

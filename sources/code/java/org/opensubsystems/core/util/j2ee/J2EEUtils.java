@@ -23,13 +23,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.opensubsystems.core.util.Log;
+import org.opensubsystems.core.util.OSSObject;
 
 /**
  * Collection of useful utilities to work with j2ee environment.
  *
  * @author OpenSubsystems
  */
-public final class J2EEUtils
+public final class J2EEUtils extends OSSObject
 {
    // Constants ////////////////////////////////////////////////////////////////
 
