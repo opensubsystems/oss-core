@@ -43,7 +43,7 @@ public interface DataController extends StatelessController
     * If the object doesn't exist in the current domain, this method should 
     * throw an exception and shouldn't retrieve anything. If the client needs 
     * to retrieve data object in a different domain than the current one, it 
-    * needs to provide for it its' own specific interface. 
+    * needs to provide its own specific interface. 
     *
     * @param lId - ID of the data object to retrieve
     * @return DataObject - retrieved data object, null if the data object 
