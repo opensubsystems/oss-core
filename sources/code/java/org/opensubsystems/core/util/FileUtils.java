@@ -42,7 +42,7 @@ import org.opensubsystems.core.error.OSSMultiException;
  * 
  * @author bastafidli
  */
-public final class FileUtils
+public final class FileUtils extends OSSObject
 {
    // Configuration settings ///////////////////////////////////////////////////
    
@@ -505,13 +505,13 @@ public final class FileUtils
     * @param olderThan  - file last modification time have to be before this date
     * @return List - list of File objects
     */
-   public static List listFiles(
+   public static List<File> listFiles(
       File directory, 
       int  maximum,
       Date olderThan
    )
    {
-      List lRetval = null;
+      List<File> lRetval = null;
       if (directory != null && directory.isDirectory())
       {
          File[] files;
