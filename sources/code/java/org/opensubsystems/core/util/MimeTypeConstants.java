@@ -36,12 +36,12 @@ public final class MimeTypeConstants extends OSSObject
    /**
     * Default Mime type
     */
-   protected static String s_strDefaultMimeType = "text/html";
+   private static String s_strDefaultMimeType = "text/html";
 
    /**
     * Hash map that will be stored types in
     */
-   protected static final Map<String, String> s_mapMimeTypes;
+   private static final Map<String, String> s_mapMimeTypes;
    
    // Constructors /////////////////////////////////////////////////////////////
    
