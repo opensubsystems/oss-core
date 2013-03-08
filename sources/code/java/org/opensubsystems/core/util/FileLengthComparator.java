@@ -28,7 +28,8 @@ import java.util.Comparator;
  * 
  * @author bastafidli
  */
-public class FileLengthComparator implements Comparator<File>
+public class FileLengthComparator extends OSSObject
+                                  implements Comparator<File>
 {
    // Cached values ////////////////////////////////////////////////////////////
    
