@@ -29,7 +29,7 @@ import org.opensubsystems.core.error.OSSException;
  * 
  * @author OpenSubsystems
  */
-public final class NetUtils 
+public final class NetUtils extends OSSObject
 {
    // Constructors /////////////////////////////////////////////////////////////
    
