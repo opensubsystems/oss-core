@@ -105,7 +105,7 @@ public final class J2EEUtils extends OSSObject
     * Since J2EE server doesn't changes during execution we can cache the
     * value for detected server.
     */
-   protected static int s_iDetectedServer = J2EE_SERVER_UNINITIALIZED;
+   private static int s_iDetectedServer = J2EE_SERVER_UNINITIALIZED;
   
    // Constructors /////////////////////////////////////////////////////////////
    
@@ -162,7 +162,7 @@ public final class J2EEUtils extends OSSObject
     * @param strIdentifier - string which should uniquely identify the AS
     * @return int - representation of the current running j2ee server
     */
-   protected static int detectJ2EEServerType(
+   private static int detectJ2EEServerType(
       String strIdentifier
    )
    {
