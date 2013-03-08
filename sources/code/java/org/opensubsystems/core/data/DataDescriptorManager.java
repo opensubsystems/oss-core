@@ -165,8 +165,7 @@ public class DataDescriptorManager extends OSSObject
                Class<DataDescriptorManager> defaultManager = DataDescriptorManager.class;
                ClassFactory<DataDescriptorManager> cf;
                
-               cf = new ClassFactory<>(
-                           DataDescriptorManager.class);
+               cf = new ClassFactory<>(DataDescriptorManager.class);
                setManagerInstance(cf.createInstance(defaultManager, 
                                                     defaultManager));
             }
