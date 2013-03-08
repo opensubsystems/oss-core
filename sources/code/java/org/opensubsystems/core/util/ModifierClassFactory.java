@@ -81,8 +81,8 @@ public class ModifierClassFactory<T> extends ImplementationClassFactory<T>
       List<String> lstClassNames
    ) throws OSSException
    {
-      int          iIndex;
-      StringBuffer sbClassName = new StringBuffer();
+      int           iIndex;
+      StringBuilder sbClassName = new StringBuilder();
       
       // Assuming name of the interface aaa.AAA
       
