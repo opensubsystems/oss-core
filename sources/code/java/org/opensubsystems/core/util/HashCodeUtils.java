@@ -203,7 +203,7 @@ public final class HashCodeUtils extends OSSObject
     * @param iSeed - value to use to compute first term
     * @return int - hashcode contributor
     */
-   protected static int firstTerm(
+   private static int firstTerm(
       int iSeed
    )
    {
@@ -216,7 +216,7 @@ public final class HashCodeUtils extends OSSObject
     * @param oObject - object to test
     * @return boolean
     */
-   protected static boolean isArray(
+   private static boolean isArray(
       Object oObject
    )
    {
