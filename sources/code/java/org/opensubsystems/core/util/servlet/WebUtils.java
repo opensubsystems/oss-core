@@ -91,13 +91,13 @@ public final class WebUtils extends OSSObject
    /**
     * HTTP server port the last request to the web application came on.
     */
-   protected static int s_iWebPort;
+   private static int s_iWebPort;
 
    /**
     * HTTPS server port the last request to the web application came on (SSL 
     * port).
     */
-   protected static int s_iWebPortSecure;
+   private static int s_iWebPortSecure;
 
    // Constructors /////////////////////////////////////////////////////////////
    
