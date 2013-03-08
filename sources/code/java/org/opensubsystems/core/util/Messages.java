@@ -175,14 +175,14 @@ public class Messages extends OSSObject
    {
       if (erMessages.m_mpMessages != null)
       {
-         List                            lstMessages;
+         List<String> lstMessages;
          
          for (Map.Entry<Object, List<String>> item : erMessages.m_mpMessages.entrySet())
          {
-            lstMessages = (List)m_mpMessages.get(item.getKey());
+            lstMessages = m_mpMessages.get(item.getKey());
             if (lstMessages != null)
             {
-               lstMessages.addAll((List)item.getValue());
+               lstMessages.addAll(item.getValue());
             }
             else
             {
@@ -331,8 +331,8 @@ public class Messages extends OSSObject
       String strMessage
    )
    {
-      boolean bReturn = false;
-      List    lstMessages;
+      boolean      bReturn = false;
+      List<String> lstMessages;
       
       lstMessages = m_mpMessages.get(messageCategory);
       if (lstMessages != null)
