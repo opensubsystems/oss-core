@@ -25,9 +25,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Hashtable;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -46,7 +46,7 @@ public final class PropertyUtils extends OSSObject
     * Map storing previous values of the configuration settings to eliminate
     * excessive log output. Use Hashtable because it is synchronized. 
     */
-   protected static Map<String, String> s_previousValues = new Hashtable<>();
+   private static Map<String, String> s_previousValues = new ConcurrentHashMap<>();
    
    // Cached values ////////////////////////////////////////////////////////////
    
