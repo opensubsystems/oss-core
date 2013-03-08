@@ -27,7 +27,8 @@ import java.io.FileFilter;
  * 
  * @author bastafidli
  */
-public class FileExtensionFilter implements FileFilter
+public class FileExtensionFilter extends OSSObject
+                                 implements FileFilter
 {
    // Cached values ////////////////////////////////////////////////////////////
    
