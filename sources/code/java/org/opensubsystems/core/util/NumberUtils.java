@@ -34,7 +34,7 @@ public final class NumberUtils extends OSSObject
     * Static array used to append leading 0 chars to file name constructed from
     * number.
     */
-   private static final char[] ZEROCHARS 
+   public static final char[] ZEROCHARS 
       = {'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
          '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
          '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
