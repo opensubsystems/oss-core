@@ -24,7 +24,7 @@ package org.opensubsystems.core.util;
  * 
  * @author bastafidli
  */
-public class StopWatch
+public class StopWatch 
 {
    // Attributes ///////////////////////////////////////////////////////////////
    
