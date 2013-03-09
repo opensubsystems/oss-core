@@ -87,6 +87,7 @@ public class TwoIntStruct extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public boolean equals(
       Object oObject
    )
@@ -111,6 +112,7 @@ public class TwoIntStruct extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public int hashCode()
    {
       int iResult = HashCodeUtils.SEED;

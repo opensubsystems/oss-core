@@ -70,7 +70,7 @@ import org.opensubsystems.core.error.OSSException;
  *        
  * @author bastafidli
  */
-public class AsyncProcessor extends Thread
+public class AsyncProcessor<T> extends Thread
 {
    // Attributes ///////////////////////////////////////////////////////////////
    
@@ -79,7 +79,7 @@ public class AsyncProcessor extends Thread
     * asynchronously. It is also used to block the thread if there is nothing 
     * to process.
     */
-   protected SynchronizedQueue m_syncQueue;
+   protected SynchronizedQueue<T> m_syncQueue;
 
    /**
     * By setting this flag to false we can stop the thread.
@@ -106,7 +106,7 @@ public class AsyncProcessor extends Thread
    {
       super(strName);
       
-      m_syncQueue = new SynchronizedQueue();
+      m_syncQueue = new SynchronizedQueue<>();
       m_bKeepRunning = true;
    }
    
@@ -119,7 +119,7 @@ public class AsyncProcessor extends Thread
    public void run(
    )
    {
-      Object itemToProcess;
+      T itemToProcess;
       
       while (m_bKeepRunning)
       {
@@ -187,7 +187,7 @@ public class AsyncProcessor extends Thread
     *                  the queue
     */
    public void processItemLater(
-      Object objItem
+      T objItem
    )
    {
       // This make wake up the thread above
@@ -220,7 +220,7 @@ public class AsyncProcessor extends Thread
     * @throws OSSException - an error has occurred
     */
    protected void processItemNow(
-      Object objItem
+      T objItem
    ) throws OSSException
    {
       throw new UnsupportedOperationException("This method must be overridden.");

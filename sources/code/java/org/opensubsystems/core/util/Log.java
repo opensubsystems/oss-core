@@ -24,6 +24,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
@@ -78,7 +79,7 @@ public class Log extends OSSObject
       try
       {
          // At first, try to use config file from command line definition
-         String strLogfilename = "";
+         String strLogfilename;
          
          strLogfilename = System.getProperty("java.util.logging.config.file");
          try
@@ -156,7 +157,8 @@ public class Log extends OSSObject
             s_logger = Log.getInstance(Log.class);
             // Print this as info because otherwise we wouldn't know where to 
             // change it
-            s_logger.info("Using log configuration file " + s_strConfigFile);
+            s_logger.log(Level.INFO, "Using log configuration file {0}", 
+                        s_strConfigFile);
          }
       }
    }

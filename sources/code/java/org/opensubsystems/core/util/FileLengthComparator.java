@@ -28,7 +28,8 @@ import java.util.Comparator;
  * 
  * @author bastafidli
  */
-public class FileLengthComparator implements Comparator<File>
+public class FileLengthComparator extends OSSObject
+                                  implements Comparator<File>
 {
    // Cached values ////////////////////////////////////////////////////////////
    
@@ -36,7 +37,7 @@ public class FileLengthComparator implements Comparator<File>
     * Shared comparator instance. Must be named this way to avoid Checkstyle 
     * warning.
     */
-   private static Comparator s_instance = new FileLengthComparator();
+   private static Comparator<File> s_instance = new FileLengthComparator();
 
    // Logic ////////////////////////////////////////////////////////////////////
    
@@ -45,7 +46,7 @@ public class FileLengthComparator implements Comparator<File>
     *
     * @return FileLengthComparator  - shared comparator instance
     */
-   public static Comparator getInstance(
+   public static Comparator<File> getInstance(
    )
    {
       return s_instance;

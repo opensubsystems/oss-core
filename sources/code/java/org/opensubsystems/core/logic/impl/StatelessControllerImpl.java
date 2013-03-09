@@ -39,6 +39,7 @@ public abstract class StatelessControllerImpl extends     OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public void constructor() throws OSSException
    {
    }

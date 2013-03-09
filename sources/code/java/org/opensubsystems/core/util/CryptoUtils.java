@@ -136,7 +136,7 @@ public final class CryptoUtils extends OSSObject
          // sign from the SHA1 string can be converted at most to the 
          // 2 chars - hexa-decimal number (from 0 to 255))) 
          strFinal.append(Integer.toHexString(
-            (int) arrBytes[iCount] + (int) (-1 * Byte.MIN_VALUE)));
+            (int) arrBytes[iCount] + (-1 * Byte.MIN_VALUE)));
       }
       return strFinal.toString();
    }
@@ -150,7 +150,7 @@ public final class CryptoUtils extends OSSObject
     * @return MessageDigest - instance of message digest algorithm
     * @throws OSSException - an error has occurred
     */
-   protected static MessageDigest getMessageDigestAlgorithmInstance(
+   private static MessageDigest getMessageDigestAlgorithmInstance(
    ) throws OSSException
    {
       // Read configuration parameters
@@ -214,7 +214,7 @@ public final class CryptoUtils extends OSSObject
     * @return MessageDigest - instance of message digest algorithm
     * @throws OSSException - an error has occurred
     */
-   protected static MessageDigest getMessageDigestAlgorithmInstance(
+   private static MessageDigest getMessageDigestAlgorithmInstance(
       String strPasswordAlgorithm,
       String strPasswordAlgorithmProvider
    ) throws OSSException

@@ -46,6 +46,7 @@ public abstract class DataControllerImpl extends    StatelessControllerImpl
     * @return DataObject {@inheritDoc}
     * @throws OSSException {@inheritDoc}
     */
+   @Override
    public DataObject get(
       long lId
    ) throws OSSException

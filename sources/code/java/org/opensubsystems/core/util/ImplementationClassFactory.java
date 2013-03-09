@@ -59,7 +59,7 @@ public class ImplementationClassFactory<T> extends ClassFactory<T>
    ) throws OSSException
    {
       int          iIndex;
-      StringBuffer sbClassName = new StringBuffer();
+      StringBuilder sbClassName = new StringBuilder();
       
       // Assuming name of the class aaa.AAA
       

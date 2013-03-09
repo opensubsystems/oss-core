@@ -116,27 +116,27 @@ public final class GlobalConstants extends OSSObject
    /**
     * Current operating system.
     */
-   protected static final String s_currentOS;
+   private static final String s_currentOS;
    
    /**
     * Current operating system.
     */
-   protected static final String s_currentOSUpper;
+   private static final String s_currentOSUpper;
    
    /**
     * End of lines characters used on given platform.
     */
-   protected static final String s_lineSeparator;
+   private static final String s_lineSeparator;
 
    /**
     * Separator used to separate various elements of a file path.
     */
-   protected static final String s_fileSeparator;
+   private static final String s_fileSeparator;
 
    /**
     * System specified temporary directory.
     */
-   protected static final String s_strTempDirectory;
+   private static final String s_strTempDirectory;
    
    // Constructors /////////////////////////////////////////////////////////////
    

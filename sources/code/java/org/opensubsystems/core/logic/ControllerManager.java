@@ -186,8 +186,7 @@ public class ControllerManager extends OSSObject
    {
       StatelessController control;
       
-      control = (StatelessController)m_mpControllerCache.get(
-                                        clsController.getName());
+      control = m_mpControllerCache.get(clsController.getName());
       if (control == null)
       {
          synchronized (m_mpControllerCache)

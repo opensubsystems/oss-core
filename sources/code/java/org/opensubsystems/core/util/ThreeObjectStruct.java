@@ -83,6 +83,7 @@ public class ThreeObjectStruct extends TwoObjectStruct
    /**
     * {@inheritDoc}
     */
+   @Override
    public boolean equals(
       Object oObject
    )
@@ -110,6 +111,7 @@ public class ThreeObjectStruct extends TwoObjectStruct
    /**
     * {@inheritDoc}
     */
+   @Override
    public int hashCode()
    {
       int iResult = HashCodeUtils.SEED;

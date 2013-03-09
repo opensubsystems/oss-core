@@ -95,7 +95,7 @@ public abstract class MultiSetupReader extends SetupReader
    {
       // Pass the first reader name to the base class since that will simulate 
       // the default functionality (most important name or default value)
-      super(strBasePath, (String)lstReaderNames.get(0), mpRegisteredParameters);
+      super(strBasePath, lstReaderNames.get(0), mpRegisteredParameters);
       
       m_lstReaderNames = lstReaderNames;
    }
@@ -103,6 +103,7 @@ public abstract class MultiSetupReader extends SetupReader
    /**
     * {@inheritDoc}
     */ 
+   @Override
    public Object getParameterValue(
       String strParameterName
    )
@@ -110,19 +111,19 @@ public abstract class MultiSetupReader extends SetupReader
       Object            objRetval = null;
       ThreeObjectStruct parameter;
       
-      parameter = (ThreeObjectStruct)m_mpRegisteredParameters.get(strParameterName);
+      parameter = m_mpRegisteredParameters.get(strParameterName);
       if (parameter != null)
       {
          // Try to get parameter value from cached values
          objRetval = m_mpRegisteredParametersValues.get(strParameterName);
          if (objRetval == null)
          {
-            StringBuffer sbFullPropertyName = new StringBuffer();
-            Integer      iParameterType = null;
-            Object       objDefaultValue = null;
-            String       strDisplayName;
-            String       strPropertyValue;
-            String       strReaderName;
+            StringBuilder sbFullPropertyName = new StringBuilder();
+            Integer       iParameterType;
+            Object        objDefaultValue;
+            String        strDisplayName;
+            String        strPropertyValue;
+            String        strReaderName;
             
             iParameterType = (Integer)parameter.getFirst();
             objDefaultValue = parameter.getSecond();

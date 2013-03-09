@@ -215,7 +215,7 @@ public abstract class SetupReader extends OSSObject
       m_strReaderName = strReaderName;
       m_mpRegisteredParameters = mpRegisteredParameters;
       // Here will be cached configuration values for current reader
-      m_mpRegisteredParametersValues = new HashMap<String, Object>();
+      m_mpRegisteredParametersValues = new HashMap<>();
 
       if (mpRegisteredParameters.isEmpty())
       {
@@ -252,11 +252,11 @@ public abstract class SetupReader extends OSSObject
          objRetval = m_mpRegisteredParametersValues.get(strParameterName);
          if (objRetval == null)
          {
-            StringBuffer sbFullPropertyName = new StringBuffer(m_strBasePath);
-            Integer      iParameterType = null;
-            Object       objDefaultValue = null;
-            String       strDisplayName;
-            String       strPropertyValue;
+            StringBuilder sbFullPropertyName = new StringBuilder(m_strBasePath);
+            Integer       iParameterType;
+            Object        objDefaultValue;
+            String        strDisplayName;
+            String        strPropertyValue;
             
             iParameterType = (Integer)parameter.getFirst();
             objDefaultValue = parameter.getSecond();
@@ -427,7 +427,7 @@ public abstract class SetupReader extends OSSObject
       Map<String, ThreeObjectStruct> mpRegisteredParameters
    )
    {
-      StringBuffer      sbFullPropertyName = new StringBuffer(strBasePath);
+      StringBuilder     sbFullPropertyName = new StringBuilder(strBasePath);
       String            strNewDefaultValue;
       Object            objDefault;
       Object            objHardcodedDefault;
