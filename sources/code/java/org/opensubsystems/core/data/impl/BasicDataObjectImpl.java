@@ -169,6 +169,23 @@ public abstract class BasicDataObjectImpl extends DataObjectImpl
     * {@inheritDoc}
     */
    @Override
+   public void toString(
+      StringBuilder sb,
+      int           ind
+   )
+   {
+      append(sb, ind + 0, "BasicDataObjectImpl[");
+      append(sb, ind + 1, "m_lDomainId = ", m_lDomainId);
+      append(sb, ind + 1, "m_bFromPersistanceStore = ", m_bFromPersistanceStore);
+      append(sb, ind + 1, "m_creationTimestamp = ", m_creationTimestamp);
+      super.toString(sb, ind + 1);
+      append(sb, ind + 0, "]");
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
    public boolean equals(
       Object oObject
    )
