@@ -21,7 +21,6 @@ package org.opensubsystems.core.data.impl;
 
 import java.io.Serializable;
 
-import org.opensubsystems.core.data.BasicDataObject;
 import org.opensubsystems.core.data.DataDescriptor;
 import org.opensubsystems.core.data.DataDescriptorManager;
 import org.opensubsystems.core.data.DataObject;
@@ -207,20 +206,38 @@ public abstract class DataObjectImpl extends OSSObject
     * {@inheritDoc}
     */
    @Override
+   public void toString(
+      StringBuilder sb,
+      int           ind
+   )
+   {
+      append(sb, ind + 0, "DataObjectImpl[");
+      append(sb, ind + 1, "m_lId = ", m_lId);
+      append(sb, ind + 1, "m_clsDataDescriptor = ", m_clsDataDescriptor);
+      append(sb, ind + 1, "m_lIdObject = ", m_lIdObject);
+      append(sb, ind + 1, "m_dataDescriptor = ", m_dataDescriptor);
+      super.toString(sb, ind + 1);
+      append(sb, ind + 0, "]");
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
    public boolean equals(
       Object oObject
    )
    {
-      boolean bReturn = false;
-      BasicDataObject helper;
+      boolean    bReturn = false;
+      DataObject helper;
 
       if (oObject == this)
       {
          bReturn = true;
       }
-      else if ((oObject != null) && (oObject instanceof BasicDataObject))
+      else if ((oObject != null) && (oObject instanceof DataObject))
       {
-         helper = (BasicDataObject) oObject;
+         helper = (DataObject) oObject;
          // No need to compare the cached values since they are derived from these
          // We need to compare the getXyz methods here because if we compare
          // variable with getXyz method the comparison would fail since the 
