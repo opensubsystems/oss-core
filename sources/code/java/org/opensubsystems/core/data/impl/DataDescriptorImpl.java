@@ -267,4 +267,24 @@ public class DataDescriptorImpl extends OSSObject
    {
       return m_strViewName;
    }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void toString(
+      StringBuilder sb,
+      int           ind
+   )
+   {
+      append(sb, ind + 0, "DataDescriptorImpl[");
+      append(sb, ind + 1, "m_clsParentDescriptor = ", m_clsParentDescriptor);
+      append(sb, ind + 1, "m_iDesiredDataType = ", m_iDesiredDataType);
+      append(sb, ind + 1, "m_iDataType = ", m_iDataType);
+      append(sb, ind + 1, "m_strViewName = ", m_strViewName);
+      append(sb, ind + 1, "m_strDisplayableViewName = ", m_strDisplayableViewName);
+      append(sb, ind + 1, "m_iDataTypeObject = ", m_iDataTypeObject);
+      super.toString(sb, ind + 1);
+      append(sb, ind + 0, "]");
+   }
 }
