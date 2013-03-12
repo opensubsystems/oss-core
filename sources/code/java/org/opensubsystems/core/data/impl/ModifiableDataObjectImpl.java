@@ -116,6 +116,21 @@ public abstract class ModifiableDataObjectImpl extends    BasicDataObjectImpl
     * {@inheritDoc}
     */
    @Override
+   public void toString(
+      StringBuilder sb,
+      int           ind
+   )
+   {
+      append(sb, ind + 0, "ModifiableDataObjectImpl[");
+      append(sb, ind + 1, "m_modificationTimestamp = ", m_modificationTimestamp);
+      super.toString(sb, ind + 1);
+      append(sb, ind + 0, "]");
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
    public boolean equals(
       Object oObject
    )
