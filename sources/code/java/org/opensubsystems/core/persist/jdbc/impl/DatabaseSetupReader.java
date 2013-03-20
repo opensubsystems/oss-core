@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2008 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.opensubsystems.core.util.SetupReader;
-import org.opensubsystems.core.util.ThreeObjectStruct;
+import org.opensubsystems.core.util.ThreeElementStruct;
 
 /**
  * Class that reads setup for database from properties. Each database has unique 
@@ -170,8 +170,8 @@ public class DatabaseSetupReader extends SetupReader
     *    that can be shared between all instances.
     * 3. is String representing user friendly name of the property
     */
-   protected  static Map<String, ThreeObjectStruct> s_registeredParameters 
-                        = new HashMap<String, ThreeObjectStruct>();
+   protected  static Map<String, ThreeElementStruct<Integer, Object, String>> s_registeredParameters 
+      = new HashMap<>();
 
    // Constructor //////////////////////////////////////////////////////////////
    
@@ -232,6 +232,7 @@ public class DatabaseSetupReader extends SetupReader
    /**
     * {@inheritDoc}
     */
+   @Override
    protected void registerParameters(
    )
    {
