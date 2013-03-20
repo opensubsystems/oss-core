@@ -626,14 +626,14 @@ public final class FileUtils extends OSSObject
     * Function will create TwoObjectStruct from full file path and name string
     * 
     * @param filePath - file path and name
-    * @return TwoObjectStruct - file directory as first member and file name as 
+    * @return TwoElementStruct - file directory as first member and file name as 
     *                           second member
     */
-   public static TwoObjectStruct getFilenameSplit(
+   public static TwoElementStruct<String, String> getFilenameSplit(
       String filePath
    )
    {
-      return new TwoObjectStruct(
+      return new TwoElementStruct<>(
             filePath.substring(0, filePath.lastIndexOf(File.separator) + 1),
             filePath.substring(filePath.lastIndexOf(File.separator) + 1));
    }
