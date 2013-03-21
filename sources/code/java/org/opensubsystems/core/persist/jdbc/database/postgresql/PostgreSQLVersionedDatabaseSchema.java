@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -81,7 +81,8 @@ public class PostgreSQLVersionedDatabaseSchema extends VersionedDatabaseSchemaIm
     * {@inheritDoc}
     */
    @Override
-   public void loadExistingSchemas(
+   @SuppressWarnings("UseSpecificCatch")
+   protected void loadExistingSchemas(
       Connection                  cntDBConnection,
       Map<String, DatabaseSchema> mpSchemasToAdd,
       Map<String, Integer>        mpSchemasToUpgrade
@@ -126,6 +127,7 @@ public class PostgreSQLVersionedDatabaseSchema extends VersionedDatabaseSchemaIm
    /**
     * {@inheritDoc}
     */
+   @Override
    public void create(
       Connection cntDBConnection, 
       String strUserName
@@ -183,7 +185,7 @@ public class PostgreSQLVersionedDatabaseSchema extends VersionedDatabaseSchemaIm
                // Close any results
                stmQuery.getMoreResults(Statement.CLOSE_ALL_RESULTS);
             }
-            s_logger.log(Level.FINEST, "Table " + SCHEMA_TABLE_NAME + " created.");
+            s_logger.log(Level.FINEST, "Table {0} created.", SCHEMA_TABLE_NAME);
          }
          catch (SQLException sqleExc)
          {
