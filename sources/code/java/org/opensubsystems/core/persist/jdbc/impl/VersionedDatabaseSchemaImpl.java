@@ -256,6 +256,7 @@ public abstract class VersionedDatabaseSchemaImpl extends    ModifiableDatabaseS
    /**
     * {@inheritDoc}
     */
+   @Override
    public void add(
       DatabaseSchema dsSchema
    ) throws OSSException
@@ -273,9 +274,9 @@ public abstract class VersionedDatabaseSchemaImpl extends    ModifiableDatabaseS
 
       if (m_mpSchemas.get(dsSchema.getName()) != null)
       {
-         s_logger.log(Level.FINEST, "Database schema " + dsSchema.getName()
-                             + " is already managed by versioned schema."
-                             + " It is not added second time.");
+         s_logger.log(Level.FINEST, "Database schema {0}"
+                      + " is already managed by versioned schema."
+                      + " It is not added second time.", dsSchema.getName());
       }
       else
       {
@@ -292,15 +293,16 @@ public abstract class VersionedDatabaseSchemaImpl extends    ModifiableDatabaseS
             }
          }
          m_mpSchemas.put(dsSchema.getName(), dsSchema);
-         s_logger.log(Level.FINEST, "Database schema " + dsSchema.getName()
-                             + " version " + dsSchema.getVersion()
-                             + " is now managed by versioned schema.");
+         s_logger.log(Level.FINEST, "Database schema {0} version {1} is now"
+                      + " managed by versioned schema.", 
+                      new Object[]{dsSchema.getName(), dsSchema.getVersion()});
       }
    }
 
    /**
     * {@inheritDoc}
     */
+   @Override
    public void init(
       Connection cntDBConnection, 
       String     strUserName
@@ -335,7 +337,7 @@ public abstract class VersionedDatabaseSchemaImpl extends    ModifiableDatabaseS
    public String getInsertSchema(
    ) throws OSSException
    {
-      StringBuffer buffer = new StringBuffer();
+      StringBuilder buffer = new StringBuilder();
       
       buffer.append("insert into " + SCHEMA_TABLE_NAME 
                     + " (SCHEMA_NAME, SCHEMA_VERSION,"
@@ -377,9 +379,8 @@ public abstract class VersionedDatabaseSchemaImpl extends    ModifiableDatabaseS
       try
       {
 
-         s_logger.log(Level.FINEST, "Creating new database schema "
-                             + dsSchema.getName() + " version " 
-                             + dsSchema.getVersion() + ".");
+         s_logger.log(Level.FINEST, "Creating new database schema {0} version {1}.", 
+                      new Object[]{dsSchema.getName(), dsSchema.getVersion()});
          dsSchema.create(cntDBConnection, strUserName);
    
          // Update the version schema tables with the latest version 
@@ -403,8 +404,8 @@ public abstract class VersionedDatabaseSchemaImpl extends    ModifiableDatabaseS
             throw new OSSDatabaseAccessException(strMessage);
             
          }
-         s_logger.log(Level.FINER, "Database schema " + dsSchema.getName() 
-                             + " created.");
+         s_logger.log(Level.FINER, "Database schema {0} created.", 
+                      dsSchema.getName());
 
          // Try to commit on the connection if the schema was created successfully
          // see Bug #1110485 for explanation what we are doing. We cannot user
@@ -419,7 +420,8 @@ public abstract class VersionedDatabaseSchemaImpl extends    ModifiableDatabaseS
          DatabaseTransactionFactoryImpl.getInstance().commitTransaction(
                                                          cntDBConnection);
       }
-      catch (OSSException ossExc)
+      catch (OSSException 
+             | SQLException ossExc)
       {
          // At this point we don't know if this is just a single operation
          // and we need to commit or if it is a part of bigger transaction
@@ -429,17 +431,6 @@ public abstract class VersionedDatabaseSchemaImpl extends    ModifiableDatabaseS
                                                          cntDBConnection);
          // Just rethrow the original exception
          throw ossExc;
-      }
-      catch (SQLException sqlExc)
-      {
-         // At this point we don't know if this is just a single operation
-         // and we need to commit or if it is a part of bigger transaction
-         // and the commit is not desired until all operations proceed.
-         // Therefore let the DatabaseTransactionFactory resolve it
-         DatabaseTransactionFactoryImpl.getInstance().rollbackTransaction(
-                                                         cntDBConnection);
-         // Just rethrow the original exception
-         throw sqlExc;
       }
       catch (Throwable thr)
       {
@@ -481,9 +472,8 @@ public abstract class VersionedDatabaseSchemaImpl extends    ModifiableDatabaseS
    {
       int iUpdateCount;
       
-      s_logger.log(Level.FINEST, "Upgrading new database schema "
-                   + dsSchema.getName() + " version " + dsSchema.getVersion()
-                   + ".");
+      s_logger.log(Level.FINEST, "Upgrading new database schema {0} version {1}.", 
+                   new Object[]{dsSchema.getName(), dsSchema.getVersion()});
       dsSchema.upgrade(cntDBConnection, strUserName, iOriginalVersion);
 
       // Update the version schema tables with the latest version 
@@ -523,8 +513,8 @@ public abstract class VersionedDatabaseSchemaImpl extends    ModifiableDatabaseS
          throw new OSSDatabaseAccessException(strMessage);
          
       }
-      s_logger.log(Level.FINER, "Database schema " + dsSchema.getName() 
-                          + " upgraded.");
+      s_logger.log(Level.FINER, "Database schema {0} upgraded.", 
+                   dsSchema.getName());
 
       return pstmUpdate;
    }
@@ -573,11 +563,11 @@ public abstract class VersionedDatabaseSchemaImpl extends    ModifiableDatabaseS
                iLastVersion = rsQueryResults.getInt(2);
                if (iLastVersion < dsSchema.getVersion())
                {
-                  s_logger.finer("Database contains schema " + strSchemaName
-                                 + " version " + iLastVersion
-                                 + ", but the current schema has version "
-                                 + dsSchema.getVersion()
-                                 + ". It needs to be upgraded.");
+                  s_logger.log(Level.FINER, "Database contains schema {0} version"
+                               + " {1}, but the current schema has version {2}."
+                               + " It needs to be upgraded.", 
+                               new Object[]{strSchemaName, iLastVersion, 
+                                            dsSchema.getVersion()});
                   // Remember the last version
                   mpSchemasToUpgrade.put(dsSchema.getName(),
                                          new Integer(iLastVersion));
@@ -597,8 +587,9 @@ public abstract class VersionedDatabaseSchemaImpl extends    ModifiableDatabaseS
                }
                else
                {
-                  s_logger.finer("Database schema " + strSchemaName
-                                 + " version " + iLastVersion + " is up to date.");
+                  s_logger.log(Level.FINER, "Database schema {0} version {1} is"
+                               + " up to date.", 
+                               new Object[]{strSchemaName, iLastVersion});
                }
             }
             else
@@ -606,14 +597,15 @@ public abstract class VersionedDatabaseSchemaImpl extends    ModifiableDatabaseS
                // There is schema in the database which doesn't exists anymore
                // This is not an assert since the same database can be used 
                // by multiple products
-               s_logger.finer("Database contains schema " + strSchemaName
-                              + ", which doesn't exist anymore in current schema.");
+               s_logger.log(Level.FINER, "Database contains schema {0}, which"
+                            + " doesn't exist anymore in current schema.", 
+                            strSchemaName);
             }
          }
          
-         s_logger.fine("Existing database schemas verified: " 
-                       + mpSchemasToAdd.size() + " schemas to add and "
-                       + mpSchemasToUpgrade.size() + " schemas to upgrade.");
+         s_logger.log(Level.FINE, "Existing database schemas verified: {0} schemas"
+                      + " to add and {1} schemas to upgrade.", 
+                      new Object[]{mpSchemasToAdd.size(), mpSchemasToUpgrade.size()});
       }
       catch (SQLException sqleExc)
       {
