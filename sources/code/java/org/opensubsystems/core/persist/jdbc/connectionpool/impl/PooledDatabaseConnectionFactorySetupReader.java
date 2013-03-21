@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -25,7 +25,7 @@ import java.util.Map;
 import org.opensubsystems.core.persist.jdbc.impl.DatabaseConnectionFactorySetupReader;
 import org.opensubsystems.core.util.MultiSetupReader;
 import org.opensubsystems.core.util.SetupReader;
-import org.opensubsystems.core.util.ThreeObjectStruct;
+import org.opensubsystems.core.util.ThreeElementStruct;
 
 /**
  * Class that reads setup for database connection pools from properties. Each 
@@ -330,8 +330,8 @@ public class PooledDatabaseConnectionFactorySetupReader extends MultiSetupReader
     *    that can be shared between all instances.
     * 3. is String representing user friendly name of the property
     */
-   protected  static Map<String, ThreeObjectStruct> s_mpRegisteredParameters 
-                        = new HashMap<String, ThreeObjectStruct>();
+   protected  static Map<String, ThreeElementStruct<Integer, Object, String>> s_mpRegisteredParameters 
+      = new HashMap<>();
 
    // Constructor //////////////////////////////////////////////////////////////
    
@@ -368,6 +368,7 @@ public class PooledDatabaseConnectionFactorySetupReader extends MultiSetupReader
    /**
     * {@inheritDoc}
     */
+   @Override
    protected void registerParameters(
    )
    {

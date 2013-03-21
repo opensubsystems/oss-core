@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -20,66 +20,75 @@
 package org.opensubsystems.core.util;
 
 /**
- * Class which can hold three objects. This is useful if one wants to create  
- * array of three objects to pass as argument to some function.
+ * Class which can hold two objects. This is useful if one wants to create array 
+ * of two objects to pass as argument to some function.
  *  
- * @author bastafidli
+ * @author OpenSubsystems
  */
-public class ThreeObjectStruct extends TwoObjectStruct 
+public class TwoElementStruct<X, Y> extends OSSObject
 {
    // Attributes ///////////////////////////////////////////////////////////////
    
    /**
-    * Third object
+    * First element
     */
-   protected Object m_objThird;
+   protected X m_first;
+
+   /**
+    * Second element
+    */
+   protected Y m_second;
 
    // Constructors /////////////////////////////////////////////////////////////
    
    /**
     * Public constructor.
     * 
-    * @param objFirst - first object
-    * @param objSecond - second object
+    * @param first - first element
+    * @param second - second element
     */
-   public ThreeObjectStruct(
-      Object objFirst, 
-      Object objSecond,
-      Object objThird
+   public TwoElementStruct(
+      X first, 
+      Y second
    )
    {
-      super(objFirst, objSecond);
-      
-      m_objThird = objThird;
+      m_first = first;
+      m_second = second;
    }
 
    /**
     * Public constructor.
     * 
-    * @param input - ThreeObjectStruct to copy into
+    * @param input - TwoObjectStruct to copy into
     */
-   public ThreeObjectStruct(
-      ThreeObjectStruct input
+   public TwoElementStruct(
+      TwoElementStruct<X, Y> input
    )
    {
-      super(input);
-      
-      assert input != null : "Can't create empty ThreeObjectStruct";
-      
+      assert input != null : "Can't create empty TwoObjectStruct";
 
-      m_objThird = input.getThird();
+      m_first = input.getFirst();
+      m_second = input.getSecond();
    }
 
    // Logic ////////////////////////////////////////////////////////////////////
    
    /**
-    * @return object
+    * @return X
     */
-   public Object getThird()
+   public X getFirst()
    {
-      return m_objThird;
+      return m_first;
    }
 
+   /**
+    * @return Y
+    */
+   public Y getSecond()
+   {
+      return m_second;
+   }
+   
    /**
     * {@inheritDoc}
     */
@@ -96,12 +105,12 @@ public class ThreeObjectStruct extends TwoObjectStruct
       }
       else if (oObject != null)
       {
-         if (oObject instanceof ThreeObjectStruct)
+         if (oObject instanceof TwoElementStruct)
          {
-            ThreeObjectStruct input = (ThreeObjectStruct) oObject;
+            TwoElementStruct input = (TwoElementStruct) oObject;
             
-            return (super.equals(oObject)) 
-                   && ObjectUtils.equals(m_objThird, input.m_objThird);
+            return ObjectUtils.equals(m_first, input.m_first)
+                   && ObjectUtils.equals(m_second, input.m_second);
          }
       }
 
@@ -115,8 +124,8 @@ public class ThreeObjectStruct extends TwoObjectStruct
    public int hashCode()
    {
       int iResult = HashCodeUtils.SEED;
-      iResult = HashCodeUtils.hash(iResult, m_objThird);
-      iResult = HashCodeUtils.hash(iResult, super.hashCode());
+      iResult = HashCodeUtils.hash(iResult, m_first);
+      iResult = HashCodeUtils.hash(iResult, m_second);
       return iResult;
    }
 }

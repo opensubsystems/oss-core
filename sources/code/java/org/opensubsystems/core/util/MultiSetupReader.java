@@ -88,9 +88,9 @@ public abstract class MultiSetupReader extends SetupReader
     *                                 parameters.
     */
    public MultiSetupReader(
-      String                         strBasePath,
-      List<String>                   lstReaderNames,
-      Map<String, ThreeObjectStruct> mpRegisteredParameters
+      String       strBasePath,
+      List<String> lstReaderNames,
+      Map<String, ThreeElementStruct<Integer, Object, String>> mpRegisteredParameters
    )
    {
       // Pass the first reader name to the base class since that will simulate 
@@ -108,8 +108,8 @@ public abstract class MultiSetupReader extends SetupReader
       String strParameterName
    )
    {
-      Object            objRetval = null;
-      ThreeObjectStruct parameter;
+      Object objRetval = null;
+      ThreeElementStruct<Integer, Object, String> parameter;
       
       parameter = m_mpRegisteredParameters.get(strParameterName);
       if (parameter != null)
@@ -125,9 +125,9 @@ public abstract class MultiSetupReader extends SetupReader
             String        strPropertyValue;
             String        strReaderName;
             
-            iParameterType = (Integer)parameter.getFirst();
+            iParameterType = parameter.getFirst();
             objDefaultValue = parameter.getSecond();
-            strDisplayName = (String)parameter.getThird();
+            strDisplayName = parameter.getThird();
 
             for (Iterator<String> names = m_lstReaderNames.iterator(); 
                  (names.hasNext()) && (objRetval == null);)

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2008 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -30,7 +30,7 @@ import org.opensubsystems.core.util.Config;
 import org.opensubsystems.core.util.MultiSetupReader;
 import org.opensubsystems.core.util.PropertyUtils;
 import org.opensubsystems.core.util.SetupReader;
-import org.opensubsystems.core.util.ThreeObjectStruct;
+import org.opensubsystems.core.util.ThreeElementStruct;
 
 /**
  * Class that reads setup for database connections from properties. Each 
@@ -195,8 +195,8 @@ public class DatabaseConnectionFactorySetupReader extends MultiSetupReader
     *    that can be shared between all instances.
     * 3. is String representing user friendly name of the property
     */
-   protected  static Map<String, ThreeObjectStruct> s_mpRegisteredParameters 
-                        = new HashMap<String, ThreeObjectStruct>();
+   protected  static Map<String, ThreeElementStruct<Integer, Object, String>> s_mpRegisteredParameters 
+      = new HashMap<>();
 
    // Constructor //////////////////////////////////////////////////////////////
    
@@ -299,7 +299,7 @@ public class DatabaseConnectionFactorySetupReader extends MultiSetupReader
       String strDatabaseIdentification
    )
    {
-      List<String> lstReaderNames = new ArrayList<String>(3);
+      List<String> lstReaderNames = new ArrayList<>(3);
       
       // Do not change the case of the reader name since developers control this
       // and may prefer certain case. Do change the database identifier since
@@ -319,6 +319,7 @@ public class DatabaseConnectionFactorySetupReader extends MultiSetupReader
    /**
     * {@inheritDoc}
     */
+   @Override
    protected void registerParameters(
    )
    {

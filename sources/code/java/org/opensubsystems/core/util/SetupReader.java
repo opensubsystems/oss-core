@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -161,7 +161,7 @@ public abstract class SetupReader extends OSSObject
     *    that can be shared between all instances.
     * 3. is String representing user friendly name of the property
     */
-   protected  Map<String, ThreeObjectStruct> m_mpRegisteredParameters;
+   protected  Map<String, ThreeElementStruct<Integer, Object, String>> m_mpRegisteredParameters;
 
    /**
     * Map with parameters values. Parameters values are read only once and  
@@ -196,9 +196,9 @@ public abstract class SetupReader extends OSSObject
     *                                 parameters.
     */
    public SetupReader(
-      String                         strBasePath,
-      String                         strReaderName,
-      Map<String, ThreeObjectStruct> mpRegisteredParameters
+      String  strBasePath,
+      String strReaderName,
+      Map<String, ThreeElementStruct<Integer, Object, String>> mpRegisteredParameters
    )
    {
       super();
@@ -242,8 +242,8 @@ public abstract class SetupReader extends OSSObject
       String strParameterName
    )
    {
-      Object            objRetval = null;
-      ThreeObjectStruct parameter;
+      Object                                      objRetval = null;
+      ThreeElementStruct<Integer, Object, String> parameter;
       
       parameter = m_mpRegisteredParameters.get(strParameterName);
       if (parameter != null)
@@ -258,9 +258,9 @@ public abstract class SetupReader extends OSSObject
             String        strDisplayName;
             String        strPropertyValue;
             
-            iParameterType = (Integer)parameter.getFirst();
+            iParameterType = parameter.getFirst();
             objDefaultValue = parameter.getSecond();
-            strDisplayName = (String)parameter.getThird();
+            strDisplayName = parameter.getThird();
             
             sbFullPropertyName.append(".");
             sbFullPropertyName.append(m_strReaderName);
@@ -418,20 +418,20 @@ public abstract class SetupReader extends OSSObject
     *                                 name of the property
     */
    protected static void registerParameter(
-      String                         strParameterName,
-      Integer                        iParameterType,
-      String                         strDefaultValue,
-      String                         strDisplayName,
-      String                         strBasePath,
-      Properties                     prpSettings,
-      Map<String, ThreeObjectStruct> mpRegisteredParameters
+      String     strParameterName,
+      Integer    iParameterType,
+      String     strDefaultValue,
+      String     strDisplayName,
+      String     strBasePath,
+      Properties prpSettings,
+      Map<String, ThreeElementStruct<Integer, Object, String>> mpRegisteredParameters
    )
    {
-      StringBuilder     sbFullPropertyName = new StringBuilder(strBasePath);
-      String            strNewDefaultValue;
-      Object            objDefault;
-      Object            objHardcodedDefault;
-      ThreeObjectStruct parameter;
+      StringBuilder sbFullPropertyName = new StringBuilder(strBasePath);
+      String        strNewDefaultValue;
+      Object        objDefault;
+      Object        objHardcodedDefault;
+      ThreeElementStruct<Integer, Object, String> parameter;
       
       objHardcodedDefault = parseValue(iParameterType.intValue(), 
                                        strDefaultValue, null, strParameterName,
@@ -457,8 +457,8 @@ public abstract class SetupReader extends OSSObject
                               sbFullPropertyName.toString(),
                               strDisplayName);
 
-      parameter = new ThreeObjectStruct(iParameterType, objDefault, 
-                                        strDisplayName);
+      parameter = new ThreeElementStruct<>(iParameterType, objDefault, 
+                                           strDisplayName);
       mpRegisteredParameters.put(strParameterName, parameter);
    }
    
