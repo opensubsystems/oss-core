@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -21,6 +21,7 @@ package org.opensubsystems.core.persist;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.opensubsystems.core.error.OSSDynamicClassException;
@@ -63,7 +64,7 @@ public class DataFactoryManager extends OSSObject
     * cache them since data factories should be reentrant. Key is the data 
     * factory interface class, value is the data factory instance.
     */
-   private Map<String, DataFactory> m_mpClassFactoryCache; 
+   private final Map<String, DataFactory> m_mpClassFactoryCache; 
    
    /**
     * Cache where already instantiated data factories will be cached. We can 
@@ -76,7 +77,7 @@ public class DataFactoryManager extends OSSObject
     * are constructed ahead of the time, we can create mapping between the data
     * type view and the factory instances.
     */
-   private Map<String, DataFactory> m_mpViewFactoryCache; 
+   private final Map<String, DataFactory> m_mpViewFactoryCache; 
    
    // Cached values ////////////////////////////////////////////////////////////
 
@@ -99,8 +100,8 @@ public class DataFactoryManager extends OSSObject
    )
    {
       m_factoryClassFactory = new DatabaseFactoryClassFactory();
-      m_mpClassFactoryCache = new HashMap<String, DataFactory>();
-      m_mpViewFactoryCache  = new HashMap<String, DataFactory>();
+      m_mpClassFactoryCache = new HashMap<>();
+      m_mpViewFactoryCache  = new HashMap<>();
    }
    
    /**
@@ -115,7 +116,7 @@ public class DataFactoryManager extends OSSObject
     * @throws OSSException - an error has occurred 
     */
    public static DataFactory getInstance(
-      Class<DataFactory> clsDataFactory
+      Class<? extends DataFactory> clsDataFactory
    ) throws OSSException
    {
       return getManagerInstance().getFactoryInstance(clsDataFactory);
@@ -158,7 +159,7 @@ public class DataFactoryManager extends OSSObject
          {
             ClassFactory<DataFactoryManager> cf;
             
-            cf = new ClassFactory<DataFactoryManager>(DataFactoryManager.class);
+            cf = new ClassFactory<>(DataFactoryManager.class);
             setManagerInstance(cf.createInstance(DataFactoryManager.class, 
                                                  DataFactoryManager.class));
          }   
@@ -186,8 +187,8 @@ public class DataFactoryManager extends OSSObject
       synchronized (IMPL_LOCK)
       {
          s_defaultInstance = defaultInstance;
-         s_logger.fine("Default data factory manager is " 
-                       + s_defaultInstance.getClass().getName());
+         s_logger.log(Level.FINE, "Default data factory manager is {0}", 
+                      s_defaultInstance.getClass().getName());
       }   
    }
 
