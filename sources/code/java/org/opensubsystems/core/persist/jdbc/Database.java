@@ -83,7 +83,7 @@ public interface Database
     * @throws OSSException - an error has occurred
     */
    void add(
-      Class<DatabaseSchema> clsSchema
+      Class<? extends DatabaseSchema> clsSchema
    ) throws OSSException;
    
    /**
