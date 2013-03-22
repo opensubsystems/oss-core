@@ -287,7 +287,7 @@ public abstract class DatabaseImpl extends OSSObject
             {
                ClassFactory<Database> cf;
                
-               cf = new ClassFactory<Database>(Database.class);
+               cf = new ClassFactory<>(Database.class);
 
                // Use HSQLDB as a default database since it can be easily
                // bundled with the application
@@ -336,8 +336,8 @@ public abstract class DatabaseImpl extends OSSObject
       synchronized (IMPL_LOCK)
       {
          s_defaultInstance = dbDatabase;
-         s_logger.fine("Default database is " 
-                       + s_defaultInstance.getClass().getName());
+         s_logger.log(Level.FINE, "Default database is {0}", 
+                      s_defaultInstance.getClass().getName());
       }   
    }
 
@@ -346,6 +346,8 @@ public abstract class DatabaseImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
+   @SuppressWarnings("UseSpecificCatch")
    public void start(
    ) throws OSSException
    {
@@ -511,6 +513,7 @@ public abstract class DatabaseImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public void stop(
    ) throws OSSException
    {
@@ -526,6 +529,7 @@ public abstract class DatabaseImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public boolean isStarted(
    )
    {
@@ -537,6 +541,7 @@ public abstract class DatabaseImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public void add(
       DatabaseSchema dsSchema
    ) throws OSSException 
@@ -555,15 +560,16 @@ public abstract class DatabaseImpl extends OSSObject
       m_bDatabaseSchemaInitialized = false;
 
       // We have new schema, it needs to be reinitialized
-      s_logger.log(Level.FINEST, "Database schema " + dsSchema.getName() 
-                   + " added to the database versioned schema.");
+      s_logger.log(Level.FINEST, "Database schema {0} added to the database"
+                   + " versioned schema.", dsSchema.getName());
    }  
 
    /**
     * {@inheritDoc}
     */
+   @Override
    public void add(
-      Class<DatabaseSchema> clsSchema
+      Class<? extends DatabaseSchema> clsSchema
    ) throws OSSException 
    {
       add(DatabaseSchemaManager.getInstance(clsSchema));
@@ -572,6 +578,7 @@ public abstract class DatabaseImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public String getDatabaseTypeIdentifier(
    )
    {
@@ -581,6 +588,7 @@ public abstract class DatabaseImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public int getTransactionIsolation(
       int iTransactionIsolation
    )
@@ -593,6 +601,7 @@ public abstract class DatabaseImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public String getSQLCountFunctionCall()
    {
       return m_strSQLCountFunctionCall;
@@ -601,6 +610,7 @@ public abstract class DatabaseImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public String getSQLCurrentTimestampFunctionCall()
    {
       return m_strSQLCurrentTimestampFunctionCall;
@@ -609,6 +619,7 @@ public abstract class DatabaseImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public String getConnectionTestStatement()
    {
       return m_strConnectionTestStatement;
@@ -617,6 +628,7 @@ public abstract class DatabaseImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public int getSelectListResultSetType(
    )
    {
@@ -626,6 +638,7 @@ public abstract class DatabaseImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public int getSelectListResultSetConcurrency(
    )   
    {
@@ -635,6 +648,7 @@ public abstract class DatabaseImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public int getBatchSize()
    {
       return m_iBatchSize.intValue();
@@ -643,6 +657,7 @@ public abstract class DatabaseImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public boolean hasAbsolutePositioningSupport(
    )
    {
@@ -652,6 +667,7 @@ public abstract class DatabaseImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public boolean preferCountToLast(
    )
    {
@@ -661,6 +677,7 @@ public abstract class DatabaseImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public boolean hasRangeSupport(
    )
    {
@@ -670,19 +687,20 @@ public abstract class DatabaseImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public List<String> getInListWithSafeLength(
       Collection<?> idList,
       boolean    bQuote
    )
    {
-      List<String> lstRetList = new ArrayList<String>(
-                                       idList.size() 
-                                       / IN_CLAUSE_MAX_SAFE_LENGTH 
-                                       + 1);
-      int          count = 0;
-      Iterator<?>  inputIterator = idList.iterator();
-      String       currData = null;
-      StringBuffer dataString = new StringBuffer();
+      List<String>  lstRetList = new ArrayList<>(
+                                        idList.size() 
+                                        / IN_CLAUSE_MAX_SAFE_LENGTH 
+                                        + 1);
+      int           count = 0;
+      Iterator<?>   inputIterator = idList.iterator();
+      String        currData;
+      StringBuilder dataString = new StringBuilder();
       
       while (inputIterator.hasNext())
       {
