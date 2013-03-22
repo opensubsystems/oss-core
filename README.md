@@ -1,4 +1,0 @@
-oss-core
-========
-
-OpenSubsystems Core
