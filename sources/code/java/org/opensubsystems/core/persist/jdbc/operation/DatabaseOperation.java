@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -202,7 +202,7 @@ public abstract class DatabaseOperation
             if (iCount >  0)
             {
                // Use ArrayList since it is fast, lightweight and we know the count 
-               lstData = new ArrayList<String>(iCount);
+               lstData = new ArrayList<>(iCount);
                // We have to call next here because we have to call next below
                // so that we know if to allocate data
                rsQueryResults.next();
@@ -221,7 +221,7 @@ public abstract class DatabaseOperation
                   // Here we do not know the count so we do not know how many 
                   // items to load, for now use ArrayList even though it may be 
                   // slow if it has to expand a lot
-                  lstData = new ArrayList<String>();
+                  lstData = new ArrayList<>();
                }
             }
             if (lstData != null)
@@ -292,7 +292,7 @@ public abstract class DatabaseOperation
                // if it has to expand a lot
                if (rsQueryResults.next())
                {
-                  List<Integer> lstData = new ArrayList<Integer>();
+                  List<Integer> lstData = new ArrayList<>();
                   do
                   {  
                      lstData.add(new Integer(rsQueryResults.getInt(1)));
@@ -369,7 +369,7 @@ public abstract class DatabaseOperation
                // if it has to expand a lot
                if (rsQueryResults.next())
                {
-                  List<TwoIntStruct> lstData = new ArrayList<TwoIntStruct>();
+                  List<TwoIntStruct> lstData = new ArrayList<>();
                   do
                   {  
                      lstData.add(new TwoIntStruct(rsQueryResults.getInt(1),
@@ -476,7 +476,7 @@ public abstract class DatabaseOperation
             if (iCount >  0)
             {
                // Use ArrayList since it is fast, lightweight and we know the count 
-               lstData = new ArrayList<DataObject>(iCount);
+               lstData = new ArrayList<>(iCount);
                // We have to call next here because we have to call next below
                // so that we know if to allocate data
                rsQueryResults.next();
@@ -495,7 +495,7 @@ public abstract class DatabaseOperation
                   // Here we do not know the count so we do not know how many 
                   // items to load, for now use ArrayList even though it may be 
                   // slow if it has to expand a lot
-                  lstData = new ArrayList<DataObject>();
+                  lstData = new ArrayList<>();
                }
             }
             if (lstData != null)
@@ -552,7 +552,7 @@ public abstract class DatabaseOperation
             if (iCount >  0)
             {
                // Use HashSet since it is fast, lightweight and we know the count
-               returnSet = new HashSet<DataObject>(iCount);
+               returnSet = new HashSet<>(iCount);
                // We have to call next here because we have to call next below
                // so that we know if to allocate data
                rsQueryResults.next();
@@ -571,7 +571,7 @@ public abstract class DatabaseOperation
                   // Here we do not know the count so we do not know how many 
                   // items to load, for now use HashSet even though it may be 
                   // slow if it has to expand a lot
-                  returnSet = new HashSet<DataObject>();
+                  returnSet = new HashSet<>();
                }
             }
             if (returnSet != null)
@@ -631,7 +631,7 @@ public abstract class DatabaseOperation
             if (iCount >  0)
             {
                // Use HashSet since it is fast, lightweight and we know the count
-               returnSet = new HashSet<String>(iCount);
+               returnSet = new HashSet<>(iCount);
                // We have to call next here because we have to call next below
                // so that we know if to allocate data
                rsQueryResults.next();
@@ -650,7 +650,7 @@ public abstract class DatabaseOperation
                   // Here we do not know the count so we do not know how many 
                   // items to load, for now use HashSet even though it may be 
                   // slow if it has to expand a lot
-                  returnSet = new HashSet<String>();
+                  returnSet = new HashSet<>();
                }
             }
             if (returnSet != null)
