@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2005 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -97,6 +97,7 @@ public class DatabaseCreateMultipleDataObjectsOperation<T> extends DatabaseUpdat
     * {@inheritDoc}
     */
    @SuppressWarnings("unchecked")
+   @Override
    protected void performOperation(
       DatabaseFactory   dbfactory,
       Connection        cntConnection, 
@@ -107,10 +108,10 @@ public class DatabaseCreateMultipleDataObjectsOperation<T> extends DatabaseUpdat
       int[]           arrInsertedReturn;
       int             iBatchedCount = 0;
       Iterator<T>     items;
-      BasicDataObject data = null;
+      BasicDataObject data;
       int             size;
       int             iTotalInsertedReturn = 0;
-      int             iIndex = 0;
+      int             iIndex;
       int             iBatchSize;
       Database        database;
       
