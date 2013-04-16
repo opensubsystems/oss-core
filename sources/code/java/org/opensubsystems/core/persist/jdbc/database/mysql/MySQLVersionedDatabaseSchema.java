@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -87,6 +87,7 @@ public class MySQLVersionedDatabaseSchema extends VersionedDatabaseSchemaImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    public void create(
       Connection cntDBConnection, 
       String     strUserName
@@ -115,7 +116,7 @@ public class MySQLVersionedDatabaseSchema extends VersionedDatabaseSchemaImpl
                // Close any results
                stmQuery.getMoreResults(Statement.CLOSE_ALL_RESULTS);
             }
-            s_logger.log(Level.FINEST, "Table " + SCHEMA_TABLE_NAME + " created.");
+            s_logger.log(Level.FINEST, "Table {0} created.", SCHEMA_TABLE_NAME);
 
             ///////////////////////////////////////////////////////////////////////
 
@@ -126,8 +127,8 @@ public class MySQLVersionedDatabaseSchema extends VersionedDatabaseSchemaImpl
                // Close any results
                stmQuery.getMoreResults(Statement.CLOSE_ALL_RESULTS);
             }
-            s_logger.log(Level.FINEST, "Index IND_" + SCHEMA_TABLE_NAME 
-                                       + "_MODIFICATION_DATE created.");
+            s_logger.log(Level.FINEST, "Index IND_{0}_MODIFICATION_DATE created.", 
+                         SCHEMA_TABLE_NAME);
 
             ///////////////////////////////////////////////////////////////////////
          }
@@ -156,10 +157,11 @@ public class MySQLVersionedDatabaseSchema extends VersionedDatabaseSchemaImpl
     * @return String - simple insert schema query
     * @throws OSSException - exception during getting query
     */
+   @Override
    public String getInsertSchema(
    ) throws OSSException
    {
-      StringBuffer buffer = new StringBuffer();
+      StringBuilder buffer = new StringBuilder();
       
       buffer.append("insert into " + SCHEMA_TABLE_NAME 
                     + " (ID, SCHEMA_NAME, SCHEMA_VERSION,"
