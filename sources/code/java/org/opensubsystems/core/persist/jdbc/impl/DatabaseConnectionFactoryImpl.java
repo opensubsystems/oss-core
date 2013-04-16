@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -260,9 +260,8 @@ public class DatabaseConnectionFactoryImpl extends OSSObject
       m_transactionFactory = transactionFactory;
       
       // Use ConcurrentHashMap so that it is synchronized
-      m_mpDataSources = new ConcurrentHashMap<String, DatabaseConnectionDefinition>();
-      m_mpConnectionDataSourceCrossRef = new ConcurrentHashMap<Connection, 
-                                                DatabaseConnectionDefinition>();
+      m_mpDataSources = new ConcurrentHashMap<>();
+      m_mpConnectionDataSourceCrossRef = new ConcurrentHashMap<>();
    }
 
    // Factory methods //////////////////////////////////////////////////////////
@@ -312,8 +311,7 @@ public class DatabaseConnectionFactoryImpl extends OSSObject
 
                ClassFactory<DatabaseConnectionFactory> cf;
                
-               cf = new ClassFactory<DatabaseConnectionFactory>(
-                         DatabaseConnectionFactory.class);
+               cf = new ClassFactory<>(DatabaseConnectionFactory.class);
                
                connectionFactory = cf.createInstance(
                                       DatabaseConnectionFactory.class,
@@ -357,8 +355,8 @@ public class DatabaseConnectionFactoryImpl extends OSSObject
       synchronized (IMPL_LOCK)
       {
          s_defaultInstance = defaultConnectionFactory;
-         s_logger.fine("Default database connection factory is " 
-                       + s_defaultInstance.getClass().getName());
+         s_logger.log(Level.FINE, "Default database connection factory is {0}", 
+                      s_defaultInstance.getClass().getName());
       }   
    }
 
@@ -387,12 +385,13 @@ public class DatabaseConnectionFactoryImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public synchronized void stop(
    ) throws OSSException
    {
       // Now close all the data sources
       // Create a copy since the map will be modified as we close them
-      List<String>     lstDataSources = new ArrayList<String>(m_mpDataSources.keySet());
+      List<String>     lstDataSources = new ArrayList<>(m_mpDataSources.keySet());
       String           strDataSourceName;
       Iterator<String> itrNames;
       
@@ -438,6 +437,7 @@ public class DatabaseConnectionFactoryImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public final Connection requestConnection(
       boolean bAutoCommit
    ) throws OSSException
@@ -465,6 +465,7 @@ public class DatabaseConnectionFactoryImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public final Connection requestConnection(
       boolean bAutoCommit,
       String  strUser, 
@@ -494,6 +495,7 @@ public class DatabaseConnectionFactoryImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public final Connection requestConnection(
       boolean bAutoCommit,
       String  strDataSourceName
@@ -522,6 +524,7 @@ public class DatabaseConnectionFactoryImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public final Connection requestConnection(
       boolean bAutoCommit,
       String  strDataSourceName, 
@@ -554,6 +557,7 @@ public class DatabaseConnectionFactoryImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public final void returnConnection(
       Connection cntDBConnection
    )
@@ -611,8 +615,9 @@ public class DatabaseConnectionFactoryImpl extends OSSObject
             // If we are in transaction disable autocommit.
             if (m_transactionFactory.isTransactionMonitored())
             {
-               s_logger.finest("Setting autocommit to false. Requested autocommit"
-                               + bAutoCommit + " and transaction is in progress.");
+               s_logger.log(Level.FINEST, "Setting autocommit to false."
+                            + " Requested autocommit{0} and transaction is in progress.", 
+                            bAutoCommit);
             }
             cntDBConnection.setAutoCommit(false);
          }
@@ -622,8 +627,9 @@ public class DatabaseConnectionFactoryImpl extends OSSObject
             if ((m_transactionFactory != null) 
                 && (m_transactionFactory.isTransactionMonitored()))
             {
-               s_logger.finest("Setting autocommit to requested autocommit "
-                               + bAutoCommit + " since no transaction is in progress.");
+               s_logger.log(Level.FINEST, "Setting autocommit to requested"
+                            + " autocommit {0} since no transaction is in progress.", 
+                            bAutoCommit);
             }
             cntDBConnection.setAutoCommit(bAutoCommit);
          }
@@ -659,6 +665,7 @@ public class DatabaseConnectionFactoryImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public final String getDefaultDataSourceName(
    )
    {
@@ -679,6 +686,7 @@ public class DatabaseConnectionFactoryImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public synchronized final void setDefaultDataSource(
       String strDataSourceName
    )
@@ -701,6 +709,7 @@ public class DatabaseConnectionFactoryImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public boolean isDataSourceDefined(
       String strDataSourceName
    )
@@ -711,6 +720,7 @@ public class DatabaseConnectionFactoryImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public DatabaseSourceDefinition getDefaultDataSource(
    ) throws OSSException
    {
@@ -725,6 +735,7 @@ public class DatabaseConnectionFactoryImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public DatabaseSourceDefinition getDataSource(
       String strDataSourceName
    ) throws OSSException
@@ -740,6 +751,7 @@ public class DatabaseConnectionFactoryImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public DatabaseSourceDefinition getDataSource(
       Connection cntDBConnection
    ) throws OSSException
@@ -778,6 +790,7 @@ public class DatabaseConnectionFactoryImpl extends OSSObject
     * @return int - how many connections were currently requested from this 
     *               connection factory and were not returned yet.
     */
+   @Override
    public int getTotalRequestedConnectionCount(
    )
    {
@@ -787,6 +800,7 @@ public class DatabaseConnectionFactoryImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public int getRequestedConnectionCount()
    {
       return m_defaultDataSource.getRequestedConnectionCount();
@@ -795,6 +809,7 @@ public class DatabaseConnectionFactoryImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public int getRequestedConnectionCount(
       String strDataSourceName
    )
@@ -822,6 +837,7 @@ public class DatabaseConnectionFactoryImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public final DatabaseSourceDefinition addDataSource(
       String strDataSourceName
    ) throws OSSException
@@ -832,6 +848,7 @@ public class DatabaseConnectionFactoryImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public final DatabaseSourceDefinition addDataSource(
       String   strDataSourceName,
       Database database
@@ -886,6 +903,7 @@ public class DatabaseConnectionFactoryImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public synchronized final DatabaseSourceDefinition addDataSource(
       String   strDataSourceName,
       Database database,
@@ -906,12 +924,12 @@ public class DatabaseConnectionFactoryImpl extends OSSObject
                                        strDriverName, strUrl, strUser, 
                                        strPassword, iTransactionIsolation);      
          m_mpDataSources.put(strDataSourceName, dataSource);
-         s_logger.fine("Data source " + strDataSourceName + " registered.");
+         s_logger.log(Level.FINE, "Data source {0} registered.", strDataSourceName);
       }
       else
       {
-         s_logger.warning("Data source " + strDataSourceName + " already exists"
-                          + " and it wasn't added second time.");
+         s_logger.log(Level.WARNING,"Data source {0}" + " already exists"
+                          + " and it wasn''t added second time.", strDataSourceName);
          throw new IllegalArgumentException("Data source " + strDataSourceName 
                                             + " already exists.");
       }
@@ -922,6 +940,7 @@ public class DatabaseConnectionFactoryImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public synchronized final void removeDataSource(
       String strDataSourceName
    ) throws OSSException
@@ -937,14 +956,15 @@ public class DatabaseConnectionFactoryImpl extends OSSObject
       else
       {
          destroyDataSource(dataSource);
-         s_logger.fine("Data source " + strDataSourceName 
-                       + " was unregistered.");
+         s_logger.log(Level.FINE, "Data source {0} was unregistered.", 
+                      strDataSourceName);
       }
    }
    
    /**
     * {@inheritDoc}
     */
+   @Override
    public final Connection requestAdminConnection(
       boolean bAutoCommit
    ) throws OSSException
@@ -974,6 +994,7 @@ public class DatabaseConnectionFactoryImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public final Connection requestAdminConnection(
       boolean bAutoCommit,
       String  strDataSourceName
@@ -985,7 +1006,7 @@ public class DatabaseConnectionFactoryImpl extends OSSObject
       
       if (bUseAdminDataSource)
       {
-         StringBuffer sbBuffer = new StringBuffer(strDataSourceName);
+         StringBuilder sbBuffer = new StringBuilder(strDataSourceName);
          
          // Modify the data source name to add suffix to it identifying one that 
          // should be configured to get us connection with administration tights
