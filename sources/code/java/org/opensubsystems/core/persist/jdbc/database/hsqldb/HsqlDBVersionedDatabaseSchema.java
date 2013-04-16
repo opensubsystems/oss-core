@@ -82,6 +82,7 @@ public class HsqlDBVersionedDatabaseSchema extends VersionedDatabaseSchemaImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    public void create(
       Connection cntDBConnection, 
       String     strUserName
@@ -111,7 +112,7 @@ public class HsqlDBVersionedDatabaseSchema extends VersionedDatabaseSchemaImpl
                // Close any results
                stmQuery.getMoreResults(Statement.CLOSE_ALL_RESULTS);
             }
-            s_logger.log(Level.FINEST, "Table " + SCHEMA_TABLE_NAME + " created.");
+            s_logger.log(Level.FINEST, "Table {0} created.", SCHEMA_TABLE_NAME);
 
             if (stmQuery.execute("grant all on " + SCHEMA_TABLE_NAME + " to " 
                                  + strUserName))
@@ -119,8 +120,8 @@ public class HsqlDBVersionedDatabaseSchema extends VersionedDatabaseSchemaImpl
                // Close any results
                stmQuery.getMoreResults(Statement.CLOSE_ALL_RESULTS);
             }
-            s_logger.log(Level.FINEST, "Access for table " + SCHEMA_TABLE_NAME 
-                                       + " set for user " + strUserName);
+            s_logger.log(Level.FINEST, "Access for table {0} set for user {1}", 
+                         new Object[]{SCHEMA_TABLE_NAME, strUserName});
             
             ///////////////////////////////////////////////////////////////////////
          }
@@ -149,10 +150,11 @@ public class HsqlDBVersionedDatabaseSchema extends VersionedDatabaseSchemaImpl
     * @return String - simple insert schema query
     * @throws OSSException - exception during getting query
     */
+   @Override
    public String getInsertSchema(
    ) throws OSSException
    {
-      StringBuffer buffer = new StringBuffer();
+      StringBuilder buffer = new StringBuilder();
       
       buffer.append("insert into " + SCHEMA_TABLE_NAME 
                     + " (ID, SCHEMA_NAME, SCHEMA_VERSION,"
