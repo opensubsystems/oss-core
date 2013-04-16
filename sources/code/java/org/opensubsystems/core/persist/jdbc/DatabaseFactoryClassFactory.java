@@ -82,9 +82,9 @@ public class DatabaseFactoryClassFactory extends ClassFactory<DatabaseFactory>
       List<String> lstClassNames
    ) throws OSSException
    {
-      int          iIndex;
-      int          iIndex2;
-      StringBuffer sbClassName = new StringBuffer();
+      int           iIndex;
+      int           iIndex2;
+      StringBuilder sbClassName = new StringBuilder();
       
       // Assuming name of the class aaa.AAAFactory
       
