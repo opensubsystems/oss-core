@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -137,6 +137,7 @@ public abstract class PooledDatabaseConnectionFactoryImpl extends DatabaseConnec
    /**
     * {@inheritDoc} 
     */
+   @Override
    protected final DatabaseConnectionDefinition createDataSource(
       String   strDataSourceName,
       Database database,
@@ -163,6 +164,7 @@ public abstract class PooledDatabaseConnectionFactoryImpl extends DatabaseConnec
    /**
     * {@inheritDoc} 
     */ 
+   @Override
    protected final void destroyDataSource(
       DatabaseConnectionDefinition dataSource
    ) throws OSSException
@@ -180,6 +182,7 @@ public abstract class PooledDatabaseConnectionFactoryImpl extends DatabaseConnec
    /**
     * {@inheritDoc}
     */
+   @Override
    protected final Connection getConnection(
       DatabaseConnectionDefinition dataSource
    ) throws OSSException
@@ -199,6 +202,7 @@ public abstract class PooledDatabaseConnectionFactoryImpl extends DatabaseConnec
    /**
     * {@inheritDoc}
     */
+   @Override
    protected final Connection getConnection(
       DatabaseConnectionDefinition dataSource,
       String               strUser,
@@ -221,6 +225,7 @@ public abstract class PooledDatabaseConnectionFactoryImpl extends DatabaseConnec
    /**
     * {@inheritDoc}
     */
+   @Override
    protected final void returnConnection(
       Connection           cntDBConnection,
       DatabaseConnectionDefinition dataSource
