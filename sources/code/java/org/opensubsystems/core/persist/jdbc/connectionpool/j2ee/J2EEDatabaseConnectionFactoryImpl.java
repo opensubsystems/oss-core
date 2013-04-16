@@ -77,6 +77,7 @@ public class J2EEDatabaseConnectionFactoryImpl extends PooledDatabaseConnectionF
    /**
     * {@inheritDoc}
     */
+   @Override
    public void initializeConnection(
       Connection cntDBConnection,
       boolean    bAutoCommit 
@@ -97,9 +98,10 @@ public class J2EEDatabaseConnectionFactoryImpl extends PooledDatabaseConnectionF
             }
             else
             {
-               s_logger.finest("Ignoring request to set autocommit to " 
-                               + bAutoCommit + " since we are running inside of"
-                               + " JBoss and transaction is in progress.");
+               s_logger.log(Level.FINEST, "Ignoring request to set autocommit to {0}" 
+                            + " since we are running inside of"
+                            + " JBoss and transaction is in progress.", 
+                            bAutoCommit);
             }
          }
          catch (OSSException ossExc)
@@ -118,6 +120,7 @@ public class J2EEDatabaseConnectionFactoryImpl extends PooledDatabaseConnectionF
    /**
     * {@inheritDoc}
     */
+   @Override
    protected Connection getPooledConnection(
       ConnectionPoolDefinition connectionpool
    ) throws OSSException
@@ -140,6 +143,7 @@ public class J2EEDatabaseConnectionFactoryImpl extends PooledDatabaseConnectionF
    /**
     * {@inheritDoc}
     */
+   @Override
    protected Connection getPooledConnection(
       ConnectionPoolDefinition connectionpool,
       String                   strUser,
@@ -190,6 +194,7 @@ public class J2EEDatabaseConnectionFactoryImpl extends PooledDatabaseConnectionF
    /**
     * {@inheritDoc}
     */
+   @Override
    protected Object createConnectionPool(
       String   strConnectionPoolName,
       Database database,
@@ -236,13 +241,14 @@ public class J2EEDatabaseConnectionFactoryImpl extends PooledDatabaseConnectionF
          
          dataSourceName.append(strConnectionPoolName);
          
-         s_logger.finest("Looking up datasource " + dataSourceName.toString());
+         s_logger.log(Level.FINEST, "Looking up datasource {0}", 
+                      dataSourceName.toString());
 
          // Obtain the DataSource object associated with the logical name.
          context      = new InitialContext(); 
          dsDataSource = (DataSource) context.lookup(dataSourceName.toString());
 
-         s_logger.fine("Found datasource " + dataSourceName.toString());
+         s_logger.log(Level.FINE, "Found datasource {0}", dataSourceName.toString());
          // Given the logical name for the resource, the lookup method returns 
          // the DataSource object that is bound to the JNDI name in the directory. 
      
@@ -250,7 +256,7 @@ public class J2EEDatabaseConnectionFactoryImpl extends PooledDatabaseConnectionF
       }
       catch (NamingException neExc)
       {
-         s_logger.finest("Datasource " + dataSourceName + " not found.");
+         s_logger.log(Level.FINEST, "Datasource {0} not found.", dataSourceName);
          // This has to be OSSDatabaseAccessException since we can detect it
          // if user we are using for connection doesn't exist. This exception
          // is encountered for example in Jonas if the user for the data source
@@ -261,13 +267,16 @@ public class J2EEDatabaseConnectionFactoryImpl extends PooledDatabaseConnectionF
       }
       finally
       {
-         try
+         if (context != null)
          {
-            context.close();
-         }
-         catch (NamingException nExc)
-         {
-            s_logger.log(Level.WARNING, "Unable to close context", nExc);
+             try
+             {
+                context.close();
+             }
+             catch (NamingException nExc)
+             {
+                s_logger.log(Level.WARNING, "Unable to close context", nExc);
+             }
          }
       }
 
@@ -277,6 +286,7 @@ public class J2EEDatabaseConnectionFactoryImpl extends PooledDatabaseConnectionF
    /**
     * {@inheritDoc}
     */
+   @Override
    protected void destroyConnectionPool(
       ConnectionPoolDefinition connectionpool
    ) throws OSSException
