@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -90,6 +90,7 @@ public class PostgreSQLDatabaseImpl extends DatabaseImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    public void stop(
    ) throws OSSException
    {
@@ -110,6 +111,7 @@ public class PostgreSQLDatabaseImpl extends DatabaseImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    public Object[] getSQLAnalyzeFunctionCall(
       Map<Integer, String> mpTableNames
    )
@@ -120,7 +122,7 @@ public class PostgreSQLDatabaseImpl extends DatabaseImpl
       // so there has to be set up autoCommit = true
 
       String[]         arrReturn = new String[mpTableNames.size()];
-      StringBuffer     buffer = new StringBuffer();
+      StringBuilder    buffer = new StringBuilder();
       Iterator<String> itItem;
       int              iIndex = 0;
 
@@ -142,6 +144,7 @@ public class PostgreSQLDatabaseImpl extends DatabaseImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    public boolean isCallableStatement(
       String strQuery
    )
@@ -154,6 +157,7 @@ public class PostgreSQLDatabaseImpl extends DatabaseImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    public void insertAndFetchGeneratedValues(
       Connection        dbConnection,
       PreparedStatement insertStatement,
@@ -194,6 +198,7 @@ public class PostgreSQLDatabaseImpl extends DatabaseImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    public void updatedAndFetchGeneratedValues(
       String               strDataName,
       Connection           dbConnection,
@@ -240,6 +245,7 @@ public class PostgreSQLDatabaseImpl extends DatabaseImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    protected void createUser(
       DatabaseConnectionFactory connectionFactory, 
       Connection                cntAdminDBConnection
@@ -249,7 +255,7 @@ public class PostgreSQLDatabaseImpl extends DatabaseImpl
       PreparedStatement pstmQuery = null;
       try
       {
-         StringBuffer             buffer = new StringBuffer();
+         StringBuilder            buffer = new StringBuilder();
          DatabaseSourceDefinition defaultSource;
          
          defaultSource = connectionFactory.getDefaultDataSource();
@@ -314,13 +320,11 @@ public class PostgreSQLDatabaseImpl extends DatabaseImpl
          DatabaseTransactionFactoryImpl.getInstance().commitTransaction(
                                                  cntAdminDBConnection);
          
-         s_logger.log(Level.FINER, "Database user " 
-                      + defaultSource.getUser() 
-                      + " with password " 
-                      + defaultSource.getPassword()
-                      + " and database schema "
-                      + defaultSource.getUser()
-                      + " created.");
+         s_logger.log(Level.FINER, "Database user {0} with password {1} and"
+                      + " database schema {2} created.", 
+                      new Object[]{defaultSource.getUser(), 
+                                   defaultSource.getPassword(), 
+                                   defaultSource.getUser()});
       }
       catch (SQLException sqleExc)
       {
@@ -355,6 +359,7 @@ public class PostgreSQLDatabaseImpl extends DatabaseImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    protected void startDatabaseServer() throws OSSException
    {
       // TODO: PostgreSQL: Implement starting database server
@@ -366,6 +371,7 @@ public class PostgreSQLDatabaseImpl extends DatabaseImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    protected void createDatabaseInstance() throws OSSException
    {
       // TODO: PostgreSQL: Implement creating database instance
