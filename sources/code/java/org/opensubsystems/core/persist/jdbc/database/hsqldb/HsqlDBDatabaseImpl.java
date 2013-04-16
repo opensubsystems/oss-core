@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -200,6 +200,7 @@ public class HsqlDBDatabaseImpl extends DatabaseImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    public void stop(
    ) throws OSSException
    {
@@ -286,6 +287,7 @@ public class HsqlDBDatabaseImpl extends DatabaseImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    public Object[] getSQLAnalyzeFunctionCall(
       Map<Integer, String> mpTableNames
    )
@@ -298,6 +300,7 @@ public class HsqlDBDatabaseImpl extends DatabaseImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    public int getTransactionIsolation(
       int iTransactionIsolation
    )
@@ -310,6 +313,7 @@ public class HsqlDBDatabaseImpl extends DatabaseImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    public boolean isCallableStatement(
       String strQuery
    )
@@ -321,6 +325,7 @@ public class HsqlDBDatabaseImpl extends DatabaseImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    public void insertAndFetchGeneratedValues(
       Connection        dbConnection,
       PreparedStatement insertStatement,
@@ -349,6 +354,7 @@ public class HsqlDBDatabaseImpl extends DatabaseImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    public void updatedAndFetchGeneratedValues(
       String               strDataName,
       Connection           dbConnection,
@@ -396,6 +402,7 @@ public class HsqlDBDatabaseImpl extends DatabaseImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    protected void createUser(
       DatabaseConnectionFactory connectionFactory, 
       Connection                cntAdminDBConnection
@@ -405,7 +412,7 @@ public class HsqlDBDatabaseImpl extends DatabaseImpl
       PreparedStatement pstmQuery = null;
       try
       {
-         StringBuffer             buffer = new StringBuffer();
+         StringBuilder            buffer = new StringBuilder();
          DatabaseSourceDefinition defaultSource;
          
          defaultSource = connectionFactory.getDefaultDataSource();
@@ -445,11 +452,8 @@ public class HsqlDBDatabaseImpl extends DatabaseImpl
          DatabaseTransactionFactoryImpl.getInstance().commitTransaction(
                                                  cntAdminDBConnection);
          
-         s_logger.log(Level.FINER, "Database user " 
-            + defaultSource.getUser() 
-            + " with password " 
-            + defaultSource.getPassword()
-            + " created.");
+         s_logger.log(Level.FINER, "Database user {0} with password {1} created.", 
+                      new Object[]{defaultSource.getUser(), defaultSource.getPassword()});
       }
       catch (SQLException sqleExc)
       {
@@ -484,6 +488,7 @@ public class HsqlDBDatabaseImpl extends DatabaseImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    protected void startDatabaseServer(
    ) throws OSSException
    {
@@ -494,6 +499,7 @@ public class HsqlDBDatabaseImpl extends DatabaseImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    protected void createDatabaseInstance(
    ) throws OSSException 
    {
@@ -520,7 +526,7 @@ public class HsqlDBDatabaseImpl extends DatabaseImpl
       boolean    bModifiable
    ) throws OSSException
    {
-      StringBuffer     sbQuery = new StringBuffer();
+      StringBuilder          sbQuery = new StringBuilder();
       CachedInsertStatements cache;
       
       sbQuery.append("select CREATION_DATE");
@@ -618,7 +624,7 @@ public class HsqlDBDatabaseImpl extends DatabaseImpl
          
          if (lGeneratedKey != DataObject.NEW_ID)
          {   
-            PreparedStatement selectStatement = null;
+            PreparedStatement selectStatement;
    
             try
             {
@@ -676,7 +682,7 @@ public class HsqlDBDatabaseImpl extends DatabaseImpl
    ) throws OSSException
    {
       ResultSet         rsResults = null;
-      PreparedStatement selectStatement = null;
+      PreparedStatement selectStatement;
    
       try
       {
@@ -728,7 +734,7 @@ public class HsqlDBDatabaseImpl extends DatabaseImpl
       String     strTableName
    ) throws OSSException
    {
-      StringBuffer     sbQuery = new StringBuffer();
+      StringBuilder          sbQuery = new StringBuilder();
       CachedUpdateStatements cache;
       
       sbQuery.append("select MODIFICATION_DATE from ");
