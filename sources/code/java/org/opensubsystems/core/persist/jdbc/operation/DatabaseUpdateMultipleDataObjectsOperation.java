@@ -85,6 +85,7 @@ public class DatabaseUpdateMultipleDataObjectsOperation<T> extends DatabaseUpdat
     * {@inheritDoc}
     */
    @SuppressWarnings("unchecked")
+   @Override
    protected void performOperation(
       DatabaseFactory   dbfactory,
       Connection        cntConnection, 
@@ -95,7 +96,7 @@ public class DatabaseUpdateMultipleDataObjectsOperation<T> extends DatabaseUpdat
       int[]       arrUpdatedReturn;
       int         iBatchedCount = 0;
       Iterator<T> items;
-      DataObject  data = null;
+      DataObject  data;
       int         size;
       int         iTotalUpdatedReturn = 0;
       int         iBatchSize;
