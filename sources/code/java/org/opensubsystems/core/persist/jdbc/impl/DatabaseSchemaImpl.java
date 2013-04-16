@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -133,6 +133,7 @@ public abstract class DatabaseSchemaImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public boolean isInDomain()
    {
       return m_bIsInDomain;
@@ -141,6 +142,7 @@ public abstract class DatabaseSchemaImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public DatabaseSchema[] getDependentSchemas(
    ) throws OSSException
    {
@@ -150,6 +152,7 @@ public abstract class DatabaseSchemaImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public String getName(
    )
    {
@@ -159,6 +162,7 @@ public abstract class DatabaseSchemaImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public int getVersion(
    )
    {
@@ -168,6 +172,7 @@ public abstract class DatabaseSchemaImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public void upgrade(
       Connection cntDBConnection,
       String strUserName,
@@ -212,6 +217,7 @@ public abstract class DatabaseSchemaImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public void handleSQLException(
       SQLException exc,
       Connection   dbConnection,
@@ -275,7 +281,7 @@ public abstract class DatabaseSchemaImpl extends OSSObject
                // Close any results
                stmQuery.getMoreResults(Statement.CLOSE_ALL_RESULTS);      
             }
-            s_logger.log(Level.FINEST, "View " + strViewName + " deleted.");
+            s_logger.log(Level.FINEST, "View {0} deleted.", strViewName);
 
             // And now recreate it again
             create(cntDBConnection, strUserName);
