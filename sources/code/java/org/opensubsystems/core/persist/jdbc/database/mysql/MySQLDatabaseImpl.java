@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -215,6 +215,7 @@ public class MySQLDatabaseImpl extends DatabaseImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    public void stop(
    ) throws OSSException
    {
@@ -243,6 +244,7 @@ public class MySQLDatabaseImpl extends DatabaseImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    public Object[] getSQLAnalyzeFunctionCall(
       Map<Integer, String> mpTableNames
    )
@@ -251,7 +253,7 @@ public class MySQLDatabaseImpl extends DatabaseImpl
       // and increase performance.
 
       String[]         arrReturn = new String[1];
-      StringBuffer     buffer = new StringBuffer();
+      StringBuilder    buffer = new StringBuilder();
       Iterator<String> itItem;
       int              iIndex = 0;
 
@@ -275,6 +277,7 @@ public class MySQLDatabaseImpl extends DatabaseImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    public boolean isCallableStatement(
       String strQuery
    )
@@ -286,6 +289,7 @@ public class MySQLDatabaseImpl extends DatabaseImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    public void insertAndFetchGeneratedValues(
       Connection        dbConnection,
       PreparedStatement insertStatement,
@@ -314,6 +318,7 @@ public class MySQLDatabaseImpl extends DatabaseImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    public void updatedAndFetchGeneratedValues(
       String               strDataName,
       Connection           dbConnection,
@@ -361,6 +366,7 @@ public class MySQLDatabaseImpl extends DatabaseImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    protected void createUser(
       DatabaseConnectionFactory connectionFactory, 
       Connection                cntAdminDBConnection
@@ -372,7 +378,7 @@ public class MySQLDatabaseImpl extends DatabaseImpl
       {
          String                   strDatabaseURL; 
          String                   strHost; 
-         StringBuffer             buffer = new StringBuffer();
+         StringBuilder            buffer = new StringBuilder();
          DatabaseSourceDefinition defaultSource;
          
          defaultSource = connectionFactory.getDefaultDataSource();
@@ -386,7 +392,9 @@ public class MySQLDatabaseImpl extends DatabaseImpl
                           strDatabaseURL.lastIndexOf("/") + 1, strDatabaseURL.length()));
          buffer.append(".* TO '");
          buffer.append(defaultSource.getUser());
-         buffer.append("'@'" + strHost + "' ");
+         buffer.append("'@'");
+         buffer.append(strHost);
+         buffer.append("' ");
          buffer.append("IDENTIFIED BY '");
          buffer.append(defaultSource.getPassword());
          buffer.append("'");
@@ -444,9 +452,8 @@ public class MySQLDatabaseImpl extends DatabaseImpl
          DatabaseTransactionFactoryImpl.getInstance().commitTransaction(
                                                  cntAdminDBConnection);
          
-         s_logger.log(Level.FINER, "Database user " + defaultSource.getUser() 
-                      + " with password " + defaultSource.getPassword()
-                      + " created.");
+         s_logger.log(Level.FINER, "Database user {0} with password {1} created.", 
+                      new Object[]{defaultSource.getUser(), defaultSource.getPassword()});
       }
       catch (SQLException sqleExc)
       {
@@ -481,6 +488,7 @@ public class MySQLDatabaseImpl extends DatabaseImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    protected void startDatabaseServer() throws OSSException
    {
       // TODO: MySQL: Implement starting database server
@@ -501,6 +509,7 @@ public class MySQLDatabaseImpl extends DatabaseImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    protected void createDatabaseInstance() throws OSSException
    {
       // TODO: MySQL: Implement creating database instance
@@ -561,7 +570,7 @@ public class MySQLDatabaseImpl extends DatabaseImpl
          
          if (lGeneratedKey != DataObject.NEW_ID)
          {   
-            PreparedStatement selectStatement = null;
+            PreparedStatement selectStatement;
    
             try
             {
@@ -624,8 +633,8 @@ public class MySQLDatabaseImpl extends DatabaseImpl
       boolean    bModifiable
    ) throws OSSException
    {
-      StringBuffer     sbQueryID = new StringBuffer();
-      StringBuffer     sbQuery = new StringBuffer();
+      StringBuilder          sbQueryID = new StringBuilder();
+      StringBuilder          sbQuery = new StringBuilder();
       CachedInsertStatements cache;
       
       // construct query to select last inserted ID (generated key)
@@ -692,7 +701,7 @@ public class MySQLDatabaseImpl extends DatabaseImpl
    ) throws OSSException
    {
       ResultSet         rsResults = null;
-      PreparedStatement selectStatement = null;
+      PreparedStatement selectStatement;
    
       try
       {
@@ -744,7 +753,7 @@ public class MySQLDatabaseImpl extends DatabaseImpl
       String     strTableName
    ) throws OSSException
    {
-      StringBuffer     sbQuery = new StringBuffer();
+      StringBuilder          sbQuery = new StringBuilder();
       CachedUpdateStatements cache;
       
       sbQuery.append("select MODIFICATION_DATE from ");
