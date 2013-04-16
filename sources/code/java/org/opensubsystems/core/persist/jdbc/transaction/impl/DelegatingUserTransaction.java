@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2005 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -19,6 +19,7 @@
 
 package org.opensubsystems.core.persist.jdbc.transaction.impl;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.transaction.HeuristicMixedException;
@@ -72,20 +73,22 @@ public class DelegatingUserTransaction implements UserTransaction
    /**
     * {@inheritDoc}
     */
+   @Override
    public void begin(
    ) throws NotSupportedException, 
             SystemException
    {
-      s_logger.finest("UserTransaction.begin for " 
-                      + m_originalTransaction.toString());
+      s_logger.log(Level.FINEST, "UserTransaction.begin for {0}", 
+                   m_originalTransaction.toString());
       m_originalTransaction.begin();
-      s_logger.finest("UserTransaction.begin successful for " 
-                      + m_originalTransaction.toString());
+      s_logger.log(Level.FINEST, "UserTransaction.begin successful for {0}", 
+                   m_originalTransaction.toString());
    }
 
    /**
     * {@inheritDoc}
     */
+   @Override
    public void commit(
    ) throws HeuristicMixedException,
             HeuristicRollbackException,
@@ -94,31 +97,33 @@ public class DelegatingUserTransaction implements UserTransaction
             SecurityException,
             SystemException
    {
-      s_logger.finest("UserTransaction.commit for " 
-                      + m_originalTransaction.toString());
+      s_logger.log(Level.FINEST, "UserTransaction.commit for {0}", 
+                   m_originalTransaction.toString());
       m_originalTransaction.commit();
-      s_logger.finest("UserTransaction.commit successful for " 
-                      + m_originalTransaction.toString());
+      s_logger.log(Level.FINEST, "UserTransaction.commit successful for {0}", 
+                   m_originalTransaction.toString());
    }
 
    /**
     * {@inheritDoc}
     */
+   @Override
    public void rollback(
    ) throws IllegalStateException, 
             SecurityException, 
             SystemException
    {
-      s_logger.finest("UserTransaction.rollback for " 
-                      + m_originalTransaction.toString());
+      s_logger.log(Level.FINEST, "UserTransaction.rollback for {0}", 
+                   m_originalTransaction.toString());
       m_originalTransaction.rollback();
-      s_logger.finest("UserTransaction.rollback successful for " 
-                      + m_originalTransaction.toString());
+      s_logger.log(Level.FINEST, "UserTransaction.rollback successful for {0}", 
+                   m_originalTransaction.toString());
    }
 
    /**
     * {@inheritDoc}
     */
+   @Override
    public int getStatus(
    ) throws SystemException
    {
@@ -128,6 +133,7 @@ public class DelegatingUserTransaction implements UserTransaction
    /**
     * {@inheritDoc}
     */
+   @Override
    public void setRollbackOnly(
    ) throws IllegalStateException, 
             SystemException
@@ -138,6 +144,7 @@ public class DelegatingUserTransaction implements UserTransaction
    /**
     * {@inheritDoc}
     */
+   @Override
    public void setTransactionTimeout(
       int iTransactionTimeout
    ) throws SystemException
