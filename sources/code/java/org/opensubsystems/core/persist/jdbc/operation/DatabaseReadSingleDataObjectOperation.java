@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2006 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -108,13 +108,14 @@ public class DatabaseReadSingleDataObjectOperation extends DatabaseReadOperation
    /**
     * {@inheritDoc}
     */
+   @Override
    protected Object performOperation(
       DatabaseFactory     dbfactory, 
       Connection          cntConnection, 
       PreparedStatement   pstmQuery
    ) throws OSSException, SQLException
    {
-      StringBuffer buffer = new StringBuffer();
+      StringBuilder buffer = new StringBuilder();
       // construct error message
       buffer.append("Multiple records loaded from database for ID ");
       buffer.append(m_iId);
