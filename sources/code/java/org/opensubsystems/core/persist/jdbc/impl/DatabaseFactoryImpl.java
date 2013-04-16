@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -91,6 +91,7 @@ public abstract class DatabaseFactoryImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public Database getDatabase(
    )
    {
@@ -100,6 +101,7 @@ public abstract class DatabaseFactoryImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public Class<DataDescriptor> getDataDescriptorClass(
    )
    {
@@ -109,6 +111,7 @@ public abstract class DatabaseFactoryImpl extends OSSObject
    /**
     * {@inheritDoc}
     */
+   @Override
    public DataDescriptor getDataDescriptor(
    )
    {
