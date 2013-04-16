@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -418,9 +418,9 @@ public class SimpleLocalTransactionFactoryImpl extends    DatabaseTransactionFac
       
       // Don't make it inheritable so that spawn threads can have their own
       // connections and transactions
-      m_connection     = new ThreadLocal<TransactionalConnection>();
-      m_realConnection = new ThreadLocal<Connection>();
-      m_transaction    = new ThreadLocal<Integer>();
+      m_connection     = new ThreadLocal<>();
+      m_realConnection = new ThreadLocal<>();
+      m_transaction    = new ThreadLocal<>();
    }
 
    // DatabaseTransactionFactory methods ///////////////////////////////////////
@@ -443,6 +443,7 @@ public class SimpleLocalTransactionFactoryImpl extends    DatabaseTransactionFac
    /**
     * {@inheritDoc}
     */
+   @Override
    public void reset(
    ) throws OSSException
    {
@@ -450,14 +451,15 @@ public class SimpleLocalTransactionFactoryImpl extends    DatabaseTransactionFac
       // should be used only for testing
       s_logger.severe("About to reset state of transaction manager." +
                       " Hope you know what you are doing.");
-      m_connection     = new ThreadLocal<TransactionalConnection>();
-      m_realConnection = new ThreadLocal<Connection>();      
-      m_transaction    = new ThreadLocal<Integer>();
+      m_connection     = new ThreadLocal<>();
+      m_realConnection = new ThreadLocal<>();      
+      m_transaction    = new ThreadLocal<>();
    }
    
    /**
     * {@inheritDoc}
     */
+   @Override
    public void stop(
    ) throws OSSException
    {
@@ -468,6 +470,7 @@ public class SimpleLocalTransactionFactoryImpl extends    DatabaseTransactionFac
    /**
     * {@inheritDoc}
     */
+   @Override
    public TransactionManager getTransactionManager(
    )
    {
@@ -482,6 +485,7 @@ public class SimpleLocalTransactionFactoryImpl extends    DatabaseTransactionFac
    /**
     * {@inheritDoc}
     */
+   @Override
    public void begin(
    ) throws NotSupportedException, 
             SystemException
@@ -554,6 +558,7 @@ public class SimpleLocalTransactionFactoryImpl extends    DatabaseTransactionFac
    /**
     * {@inheritDoc}
     */
+   @Override
    public void commit(
    ) throws RollbackException, 
             HeuristicMixedException, 
@@ -568,6 +573,7 @@ public class SimpleLocalTransactionFactoryImpl extends    DatabaseTransactionFac
    /**
     * {@inheritDoc}
     */
+   @Override
    public int getStatus(
    ) throws SystemException
    {
@@ -589,6 +595,7 @@ public class SimpleLocalTransactionFactoryImpl extends    DatabaseTransactionFac
    /**
     * {@inheritDoc}
     */
+   @Override
    public void rollback(
    ) throws IllegalStateException, 
             SecurityException, 
@@ -600,6 +607,7 @@ public class SimpleLocalTransactionFactoryImpl extends    DatabaseTransactionFac
    /**
     * {@inheritDoc}
     */
+   @Override
    public void setRollbackOnly(
    ) throws IllegalStateException, 
             SystemException
@@ -639,6 +647,7 @@ public class SimpleLocalTransactionFactoryImpl extends    DatabaseTransactionFac
     *                   thread.
     * @throws OSSException - error occurred while getting the transaction status
     */
+   @Override
    public boolean isTransactionInProgress(
    ) throws OSSException 
    {
@@ -648,6 +657,7 @@ public class SimpleLocalTransactionFactoryImpl extends    DatabaseTransactionFac
    /**
     * {@inheritDoc}
     */
+   @Override
    public void setTransactionTimeout(
       int arg0
    ) throws SystemException
@@ -681,6 +691,7 @@ public class SimpleLocalTransactionFactoryImpl extends    DatabaseTransactionFac
     * @return {@inheritDoc}
     * @throws OSSDatabaseAccessException {@inheritDoc}
     */
+   @Override
    protected Connection requestTransactionalConnection(
       boolean                       bAutoCommit,
       String                        strDataSourceName, 
@@ -815,6 +826,7 @@ public class SimpleLocalTransactionFactoryImpl extends    DatabaseTransactionFac
    /**
     * {@inheritDoc}
     */
+   @Override
    protected void returnTransactionalConnection(
       Connection                    cntDBConnection,
       DatabaseConnectionFactoryImpl connectionFactory
