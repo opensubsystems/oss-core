@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -74,6 +74,7 @@ public class DBCPDatabaseConnectionFactoryImpl extends PooledDatabaseConnectionF
    /**
     * {@inheritDoc}
     */
+   @Override
    protected Connection getPooledConnection(
       ConnectionPoolDefinition connectionpool
    ) throws OSSException
@@ -99,6 +100,7 @@ public class DBCPDatabaseConnectionFactoryImpl extends PooledDatabaseConnectionF
    /**
     * {@inheritDoc}
     */
+   @Override
    protected Connection getPooledConnection(
       ConnectionPoolDefinition connectionpool,
       String                   strUser,
@@ -113,6 +115,7 @@ public class DBCPDatabaseConnectionFactoryImpl extends PooledDatabaseConnectionF
    /**
     * {@inheritDoc}
     */
+   @Override
    protected Object createConnectionPool(
       String   strConnectionPoolName,
       Database database,
@@ -242,6 +245,7 @@ public class DBCPDatabaseConnectionFactoryImpl extends PooledDatabaseConnectionF
    /**
     * {@inheritDoc}
     */
+   @Override
    protected void destroyConnectionPool(
       ConnectionPoolDefinition connectionpool
    ) throws OSSException
