@@ -22,6 +22,7 @@ package org.opensubsystems.core.persist.jdbc.impl;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.opensubsystems.core.error.OSSDatabaseAccessException;
@@ -118,11 +119,10 @@ public abstract class DatabaseTransactionFactoryImpl extends OSSObject
          {
             if (s_defaultInstance == null)
             {
-               DatabaseTransactionFactory transactionFactory = null;
+               DatabaseTransactionFactory transactionFactory;
                ClassFactory<DatabaseTransactionFactory> cf;
                
-               cf = new ClassFactory<DatabaseTransactionFactory>(
-                     DatabaseTransactionFactory.class);
+               cf = new ClassFactory<>(DatabaseTransactionFactory.class);
                
                try
                {                
@@ -185,14 +185,15 @@ public abstract class DatabaseTransactionFactoryImpl extends OSSObject
       synchronized (IMPL_LOCK)
       {
          s_defaultInstance = defaultFactory;
-         s_logger.fine("Default database transaction factory is " 
-                       + s_defaultInstance.getClass().getName());
+         s_logger.log(Level.FINE, "Default database transaction factory is {0}", 
+                      s_defaultInstance.getClass().getName());
       }   
    }
    
    /**
     * {@inheritDoc}
     */
+   @Override
    public void commitTransaction(
       Connection cntConnection
    ) throws SQLException
@@ -209,53 +210,50 @@ public abstract class DatabaseTransactionFactoryImpl extends OSSObject
             // this connection since the transaction has to be connection based
             if (bMonitorTransaction)
             {
-               s_logger.finest("commitTransaction on connection " 
-                               + cntConnection.toString());
+               s_logger.log(Level.FINEST, "commitTransaction on connection {0}", 
+                            cntConnection.toString());
             }
             cntConnection.commit();
             if (bMonitorTransaction)
             {
-               s_logger.finest("commitTransaction successful on connection " 
-                               + cntConnection.toString());
+               s_logger.log(Level.FINEST, "commitTransaction successful on connection {0}", 
+                            cntConnection.toString());
             }
          }
          else
          {
             if (bMonitorTransaction)
             {
-               s_logger.finest("commitTransaction on connection " 
-                               + cntConnection.toString()
-                               + " ignored since either transaction in progress"
-                               + " or autoCommit is set. Autocommit value is " 
-                               + bAutoCommit);
+               s_logger.log(Level.FINEST,"commitTransaction on connection {0}"
+                            + " ignored since either transaction in progress" 
+                            + " or autoCommit is set. Autocommit value is {1}", 
+                            new Object[]{cntConnection.toString(), bAutoCommit});
             }
          }
       }
       catch (OSSException osseExc)
       {
-         SQLException sqlExc = new SQLException(
-                                      "Cannot check state of the transaction");
-         sqlExc.initCause(osseExc);
-         throw sqlExc;
+         throw new SQLException("Cannot check state of the transaction", osseExc);
       }
    }
 
    /**
     * {@inheritDoc}
     */
+   @Override
    public void rollbackTransaction(
       Connection cntConnection
    ) throws SQLException
    {
       try
       {
-         boolean bAutoCommit = cntConnection.getAutoCommit();
-         boolean bMonitorTransaction = isTransactionMonitored();
-         
          // Connection can be null in case an exception is thrown when
          // getting connection
          if (cntConnection != null) 
          {
+             boolean bAutoCommit = cntConnection.getAutoCommit();
+             boolean bMonitorTransaction = isTransactionMonitored();
+
             try
             {
                if ((!isTransactionInProgress()) && (!bAutoCommit))
@@ -266,25 +264,25 @@ public abstract class DatabaseTransactionFactoryImpl extends OSSObject
                   // connection based
                   if (bMonitorTransaction)
                   {
-                     s_logger.finest("rollbackTransaction on connection " 
-                                     + cntConnection.toString());
+                     s_logger.log(Level.FINEST, "rollbackTransaction on connection {0}", 
+                                  cntConnection.toString());
                   }
                   cntConnection.rollback();
                   if (bMonitorTransaction)
                   {
-                     s_logger.finest("rollbackTransaction successful on connection " 
-                                     + cntConnection.toString());
+                     s_logger.log(Level.FINEST, "rollbackTransaction successful"
+                                  + " on connection {0}", cntConnection.toString());
                   }
                }
                else
                {
                   if (bMonitorTransaction)
                   {
-                     s_logger.finest("rollbackTransaction on connection " 
-                                     + cntConnection.toString()
-                                     + " ignored since either transaction in"
-                                     + " progress or autoCommit is set. Autocommit"
-                                     + " value is " + bAutoCommit);
+                     s_logger.log(Level.FINEST,"rollbackTransaction on connection {0}"
+                                  + " ignored since either transaction in"
+                                  + " progress or autoCommit is set. Autocommit" 
+                                  + " value is {1}", 
+                                  new Object[]{cntConnection.toString(), bAutoCommit});
                   }
                }
             }
@@ -300,10 +298,7 @@ public abstract class DatabaseTransactionFactoryImpl extends OSSObject
       }
       catch (OSSException osseExc)
       {
-         SQLException sqlExc = new SQLException(
-                                      "Cannot check state of the transaction");
-         sqlExc.initCause(osseExc);
-         throw sqlExc;
+         throw new SQLException("Cannot check state of the transaction", osseExc);
       }
    }
 
