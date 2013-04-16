@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -21,6 +21,7 @@ package org.opensubsystems.core.persist.jdbc;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.opensubsystems.core.error.OSSException;
@@ -59,7 +60,7 @@ public class DatabaseSchemaManager extends OSSObject
     * Cache where already instantiated database schemas will be cached. We can 
     * cache them since database schemas should be reentrant.
     */
-   private Map<String, DatabaseSchema> m_mpSchemaCache; 
+   private final Map<String, DatabaseSchema> m_mpSchemaCache; 
    
    // Cached values ////////////////////////////////////////////////////////////
 
@@ -84,7 +85,7 @@ public class DatabaseSchemaManager extends OSSObject
    ) throws OSSException
    {
       m_schemaClassFactory = new DatabaseSchemaClassFactory();
-      m_mpSchemaCache = new HashMap<String, DatabaseSchema>();
+      m_mpSchemaCache = new HashMap<>();
    }
    
    /**
@@ -143,8 +144,7 @@ public class DatabaseSchemaManager extends OSSObject
             {
                ClassFactory<DatabaseSchemaManager> cf;
                
-               cf = new ClassFactory<DatabaseSchemaManager>(
-                           DatabaseSchemaManager.class);
+               cf = new ClassFactory<>(DatabaseSchemaManager.class);
                setManagerInstance(cf.createInstance(DatabaseSchemaManager.class, 
                                                     DatabaseSchemaManager.class));
             }
@@ -173,8 +173,8 @@ public class DatabaseSchemaManager extends OSSObject
       synchronized (IMPL_LOCK)
       {
          s_defaultInstance = defaultInstance;
-         s_logger.fine("Default database schema manager is " 
-                       + s_defaultInstance.getClass().getName());
+         s_logger.log(Level.FINE, "Default database schema manager is {0}", 
+                      s_defaultInstance.getClass().getName());
       }   
    }
 
