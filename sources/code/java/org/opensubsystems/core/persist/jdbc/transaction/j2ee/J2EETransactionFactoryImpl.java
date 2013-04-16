@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2005 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -95,6 +95,7 @@ public class J2EETransactionFactoryImpl extends DatabaseTransactionFactoryImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    public UserTransaction requestTransaction(
    ) throws OSSException
    {
@@ -142,6 +143,7 @@ public class J2EETransactionFactoryImpl extends DatabaseTransactionFactoryImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    public TransactionManager getTransactionManager(
    )
    {
@@ -182,6 +184,7 @@ public class J2EETransactionFactoryImpl extends DatabaseTransactionFactoryImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    public void reset(
    ) throws OSSException
    {
@@ -192,6 +195,7 @@ public class J2EETransactionFactoryImpl extends DatabaseTransactionFactoryImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    public void stop(
    ) throws OSSException
    {
@@ -202,6 +206,7 @@ public class J2EETransactionFactoryImpl extends DatabaseTransactionFactoryImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    public boolean isTransactionInProgress(
    ) throws OSSException 
    {
@@ -220,12 +225,12 @@ public class J2EETransactionFactoryImpl extends DatabaseTransactionFactoryImpl
       String userTransactionName
    ) 
    {
-      Object             jndiObject = null;
-      UserTransaction    userTran   = null;
-      InitialContext     context    = null;
+      Object          jndiObject;
+      UserTransaction userTran   = null;
+      InitialContext  context    = null;
 
-      s_logger.finest("Looking up UserTransaction at location " 
-                      + userTransactionName);
+      s_logger.log(Level.FINEST, "Looking up UserTransaction at location {0}", 
+                   userTransactionName);
 
       // There are not needed properties when we are running in J2EE server. 
       // It should be just possible to do context = new InitialContext();
@@ -241,17 +246,17 @@ public class J2EETransactionFactoryImpl extends DatabaseTransactionFactoryImpl
          if (jndiObject instanceof UserTransaction)
          {
             userTran = (UserTransaction) jndiObject;
-            s_logger.fine("UserTransaction found at " + userTransactionName);
+            s_logger.log(Level.FINE, "UserTransaction found at {0}", userTransactionName);
          }
          else
          {
             // there was found particular string but it does not represent 
             // UserTransaction object so just log it here
-            s_logger.log(Level.WARNING, "Object " + jndiObject 
-                         + " available at JNDI location " + userTransactionName 
+            s_logger.log(Level.WARNING, "Object {0} available at JNDI location {1}" 
                          + " does not implement javax.transaction.UserTransaction."
                          + " This may be caused by class loading conflict between"
-                         + " multiple jar files containing this interface.");
+                         + " multiple jar files containing this interface.", 
+                         new Object[]{jndiObject, userTransactionName});
          }
       }
       catch (NameNotFoundException nnfExc)
@@ -259,26 +264,30 @@ public class J2EETransactionFactoryImpl extends DatabaseTransactionFactoryImpl
          // This may not be serious error so just log it
          // Do not print the exception since it would be just concerning
          // user and this is normal situation
-         s_logger.log(Level.FINEST, "UserTransaction is not available at " +
-                                    "JNDI location " + userTransactionName);
+         s_logger.log(Level.FINEST, "UserTransaction is not available at JNDI"
+                      + " location {0}", userTransactionName);
       }
       catch (NamingException nExc) 
       {
          // This may not be serious error so just log it
          // Do not print the exception since it would be just concerning
          // user and this is normal situation
-         s_logger.log(Level.FINEST, "UserTransaction is not available at " +
-                                    "JNDI location " + userTransactionName);
+         s_logger.log(Level.FINEST, "UserTransaction is not available at JNDI"
+                      + " location {0}", userTransactionName);
       }
       finally
       {
-         try
+         if (context != null)
          {
-            context.close();
-         }
-         catch (NamingException nExc)
-         {
-            s_logger.log(Level.FINE, "Unable to close context for user transaction", nExc);
+            try
+            {
+               context.close();
+            }
+            catch (NamingException nExc)
+            {
+               s_logger.log(Level.FINE, "Unable to close context for user"
+                            + " transaction", nExc);
+            }
          }
       }
 
@@ -296,12 +305,12 @@ public class J2EETransactionFactoryImpl extends DatabaseTransactionFactoryImpl
       String transactionManagerName
    ) 
    {
-      Object             jndiObject  = null;
+      Object             jndiObject;
       TransactionManager tranManager = null;
       InitialContext     context     = null;
 
-      s_logger.finest("Looking up TransactionManager at location " 
-                      + transactionManagerName);
+      s_logger.log(Level.FINEST, "Looking up TransactionManager at location {0}", 
+                   transactionManagerName);
 
       // There are not needed properties when we are running in J2EE server. 
       // It should be just possible to do context = new InitialContext();
@@ -317,17 +326,18 @@ public class J2EETransactionFactoryImpl extends DatabaseTransactionFactoryImpl
          if (jndiObject instanceof TransactionManager)
          {
             tranManager = (TransactionManager) jndiObject;
-            s_logger.fine("TransactionManager found at " + transactionManagerName);
+            s_logger.log(Level.FINE, "TransactionManager found at {0}", 
+                         transactionManagerName);
          }
          else
          {
             // there was found particular string but it does not represent 
             // TransactionManager object so just log it here
-            s_logger.log(Level.WARNING, "Object " + jndiObject
-                         + " available at JNDI location " + transactionManagerName 
+            s_logger.log(Level.WARNING, "Object {0} available at JNDI location {1}" 
                          + " does not implement javax.transaction.TransactionManager"
                          + " This may be caused by class loading conflict between"
-                         + " multiple jar files containing this interface.");
+                         + " multiple jar files containing this interface.", 
+                         new Object[]{jndiObject, transactionManagerName});
          }
       }
       catch (NameNotFoundException nnfExc)
@@ -335,28 +345,31 @@ public class J2EETransactionFactoryImpl extends DatabaseTransactionFactoryImpl
          // This may not be serious error so just log it
          // Do not print the exception since it would be just concerning
          // user and this is normal situation
-         s_logger.log(Level.FINEST, "TransactionManager is not available at " +
-                                    "JNDI location " + transactionManagerName);
+         s_logger.log(Level.FINEST, "TransactionManager is not available at JNDI"
+                      + " location {0}", transactionManagerName);
       }
       catch (NamingException nExc) 
       {
          // This may not be serious error so just log it
          // Do not print the exception since it would be just concerning
          // user and this is normal situation
-         s_logger.log(Level.FINEST, "TransactionManager is not available at " +
-                                    "JNDI location " + transactionManagerName);
+         s_logger.log(Level.FINEST, "TransactionManager is not available at JNDI"
+                      + " location {0}", transactionManagerName);
       }
       finally
       {
-         try
+         if (context != null)
          {
-            context.close();
-         }
-         catch (NamingException nExc)
-         {
-            s_logger.log(Level.FINE, 
-                         "Unable to close context for transaction manager", 
-                         nExc);
+            try
+            {
+               context.close();
+            }
+            catch (NamingException nExc)
+            {
+               s_logger.log(Level.FINE, 
+                            "Unable to close context for transaction manager", 
+                            nExc);
+            }
          }
       }
 
@@ -366,6 +379,7 @@ public class J2EETransactionFactoryImpl extends DatabaseTransactionFactoryImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    protected Connection requestTransactionalConnection(
       boolean                       bAutoCommit,
       String                        strDataSourceName, 
@@ -393,10 +407,10 @@ public class J2EETransactionFactoryImpl extends DatabaseTransactionFactoryImpl
                                                   connectionFactory);
    }
 
-
    /**
     * {@inheritDoc}
     */
+   @Override
    protected void returnTransactionalConnection(
       Connection                    cntDBConnection,
       DatabaseConnectionFactoryImpl connectionFactory
