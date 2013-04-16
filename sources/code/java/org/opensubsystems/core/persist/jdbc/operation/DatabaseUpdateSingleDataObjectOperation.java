@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2006 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -85,6 +85,7 @@ public class DatabaseUpdateSingleDataObjectOperation extends DatabaseUpdateOpera
    /**
     * {@inheritDoc}
     */
+   @Override
    protected void performOperation(
       DatabaseFactory     dbfactory, 
       Connection          cntConnection, 
