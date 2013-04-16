@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -121,7 +121,7 @@ public abstract class ModifiableDatabaseSchemaImpl extends    DatabaseSchemaImpl
       
       if ((strModifiableTableName != null) && (strModifiableTableName.length() > 0))
       {
-         m_mpModifiableTableNames = new HashMap<Integer, String>(1);
+         m_mpModifiableTableNames = new HashMap<>(1);
          m_mpModifiableTableNames.put(iModifiableDataType, strModifiableTableName);
       }
    }
@@ -162,7 +162,7 @@ public abstract class ModifiableDatabaseSchemaImpl extends    DatabaseSchemaImpl
          dataDescriptor = DataDescriptorManager.getInstance(clsDataDescriptor);
          iModifiableDataType = dataDescriptor.getDataTypeAsObject();
          
-         m_mpModifiableTableNames = new HashMap<Integer, String>(1);
+         m_mpModifiableTableNames = new HashMap<>(1);
          m_mpModifiableTableNames.put(iModifiableDataType, strModifiableTableName);
       }
    }
@@ -253,6 +253,7 @@ public abstract class ModifiableDatabaseSchemaImpl extends    DatabaseSchemaImpl
    /**
     * {@inheritDoc}
     */
+   @Override
    public void checkUpdateError(
       Connection dbConnection,
       String     strDataName,
@@ -266,7 +267,7 @@ public abstract class ModifiableDatabaseSchemaImpl extends    DatabaseSchemaImpl
       
       try
       {
-         StringBuffer sbBuffer = new StringBuffer();
+         StringBuilder sbBuffer = new StringBuilder();
          
          // first try to select from DB existing data identified by ID
          sbBuffer.append("select ID, MODIFICATION_DATE from ");
