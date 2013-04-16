@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -123,6 +123,7 @@ public abstract class DatabaseReadMultipleOperation extends DatabaseReadOperatio
     * @throws OSSException - an error has occurred
     * @throws SQLException - an error has occurred
     */
+   @Override
    protected PreparedStatement prepareQuery(
       DatabaseFactory dbfactory,
       Connection      cntConnection,
