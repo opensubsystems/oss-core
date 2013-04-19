@@ -33,10 +33,13 @@ import org.opensubsystems.core.util.ObjectUtils;
  * description. Since for most objects with name and description, these attributes
  * can change, the parent is modifiable data object.
  * 
+ * This class is not abstract since name and description are sufficient 
+ * attributes for some objects.
+ * 
  * @author bastafidli
  */
-public abstract class IdentifiableDataObjectImpl extends    ModifiableDataObjectImpl
-                                                 implements IdentifiableDataObject
+public class IdentifiableDataObjectImpl extends    ModifiableDataObjectImpl
+                                        implements IdentifiableDataObject
 {
    // Attributes ///////////////////////////////////////////////////////////////
 
@@ -163,7 +166,7 @@ public abstract class IdentifiableDataObjectImpl extends    ModifiableDataObject
     * {@inheritDoc}
     */
    @Override
-   public boolean equals(
+   public boolean isSame(
       Object oObject
    )
    {
@@ -178,8 +181,7 @@ public abstract class IdentifiableDataObjectImpl extends    ModifiableDataObject
       {
          helper = (IdentifiableDataObject) oObject;
          bReturn = ObjectUtils.equals(getName(), helper.getName()) 
-                   && ObjectUtils.equals(getDescription(), helper.getDescription()) 
-                   && (super.equals(oObject));
+                   && ObjectUtils.equals(getDescription(), helper.getDescription());
       }
 
       return bReturn;
