@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -42,9 +42,27 @@ public interface IdentifiableDataObject
    String getName();
    
    /**
+    * Set name of the data object
+    * 
+    * @param strName - name of the generic data
+    */
+   void setName(
+      String strName
+   );
+   
+   /**
     * Get description of the data object
     * 
     * @return String - description of the generic data
     */
    String getDescription();
+   
+   /**
+    * Set description of the data object
+    * 
+    * @param strDescription - description of the generic data
+    */
+   void setDescription(
+      String strDescription
+   );
 }
