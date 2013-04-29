@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.opensubsystems.core.data.DataObject;
+import org.opensubsystems.core.data.IdentifiableDataObject;
 
 /**
  * Utility methods for DataObject manipulation.
@@ -100,21 +101,44 @@ public final class DataObjectUtils extends OSSObject
    /**
     * Convert collection of data objects to map keyed by their ids.
     * 
-    * @param colDataObjects - collection of data objects to parse
+    * @param colDataObjects - collection of data objects to convert
     * @return Map<Long, DataObject> - map of data objects keyed by ids
     */
-   public static Map<Long, DataObject> convertCollectionToMap(
-      Collection<DataObject> colDataObjects
+   public static <T extends DataObject> Map<Long, T> convertCollectionToMapById(
+      Collection<T> colDataObjects
    ) 
    {
-      Map<Long, DataObject> mpData = Collections.emptyMap();
+      Map<Long, T> mpData = Collections.emptyMap();
       
       if ((colDataObjects != null) && (!colDataObjects.isEmpty()))
       {
          mpData = new HashMap<>(colDataObjects.size());
-         for (DataObject data : colDataObjects)
+         for (T data : colDataObjects)
          {
             mpData.put(data.getIdAsObject(), data);
+         }
+      }
+      return mpData;  
+   }
+
+   /**
+    * Convert collection of identifiable data objects to map keyed by their names.
+    * 
+    * @param colDataObjects - collection of identifiable data objects to convert
+    * @return Map<String, ? extends IdentifiableDataObject> - map of data objects keyed by name
+    */
+   public static <T extends IdentifiableDataObject> Map<String, T> convertCollectionToMapByName(
+      Collection<T> colDataObjects
+   ) 
+   {
+      Map<String, T> mpData = Collections.emptyMap();
+      
+      if ((colDataObjects != null) && (!colDataObjects.isEmpty()))
+      {
+         mpData = new HashMap<>(colDataObjects.size());
+         for (T data : colDataObjects)
+         {
+            mpData.put(data.getName(), data);
          }
       }
       return mpData;  
