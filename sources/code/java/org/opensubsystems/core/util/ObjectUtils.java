@@ -19,6 +19,12 @@
 
 package org.opensubsystems.core.util;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
  * Class containing methods for working with objects.
@@ -54,5 +60,103 @@ public final class ObjectUtils extends OSSObject
    {
       return (((first == null) && (second == null))
              || ((first != null) && (first.equals(second))));
+   }
+
+   /**
+    * Convert collection of objects to map keyed by some value from the object.
+    * 
+    * @param colSource - collection of data objects to convert
+    * @return Map<K, V> - converted map of data objects keyed by values from the 
+    *                     objects
+    */
+   public static <K, V> Map<K, V> convertCollectionToMap(
+      Collection<V>           colSource,
+      ObjectValueReader<K, V> reader
+   ) 
+   {
+      Map<K, V> mpDestination = Collections.emptyMap();
+      
+      if ((colSource != null) && (!colSource.isEmpty()))
+      {
+         mpDestination = new HashMap<>(colSource.size());
+         for (V data : colSource)
+         {
+            mpDestination.put(reader.getValue(data), data);
+         }
+      }
+      return mpDestination;  
+   }
+
+   /**
+    * Convert collection of objects to map keyed by some value from the object.
+    * 
+    * @param colSource - collection of data objects to convert
+    * @return Map<K, V> - converted map of data objects keyed by values from the 
+    *                     objects
+    */
+   public static <K, V> Map<K, Collection<V>> convertCollectionToMultiValueMap(
+      Collection<V>           colSource,
+      ObjectValueReader<K, V> reader
+   ) 
+   {
+      Map<K, Collection<V>> mpDestination = Collections.emptyMap();
+      
+      if ((colSource != null) && (!colSource.isEmpty()))
+      {
+         K             key;
+         Collection<V> colExisting;
+         
+         mpDestination = new HashMap<>(colSource.size());
+         for (V data : colSource)
+         {
+            key = reader.getValue(data);
+            colExisting = mpDestination.get(key);
+            if (colExisting == null)
+            {
+               colExisting = new ArrayList<>();
+               mpDestination.put(key, colExisting);
+            }
+            colExisting.add(data);
+         }
+      }
+      return mpDestination;  
+   }
+
+   /**
+    * Convert collection of objects to map keyed by some value from the object.
+    * 
+    * @param colSource - collection of data objects to convert
+    * @return Map<K, V> - converted map of data objects keyed by values from the 
+    *                     objects
+    */
+   public static <K, V> Map<K, Collection<V>> convertCollectionToMultiKeyValueMap(
+      Collection<V>                colSource,
+      ObjectMultiValueReader<K, V> reader
+   ) 
+   {
+      Map<K, Collection<V>> mpDestination = Collections.emptyMap();
+      
+      if ((colSource != null) && (!colSource.isEmpty()))
+      {
+         Collection<K> colKeys;
+         Collection<V> colExisting;
+         
+         mpDestination = new HashMap<>(colSource.size());
+         for (V data : colSource)
+         {
+            colKeys = reader.getValues(data);
+            for (K key: colKeys)
+            {
+               colExisting = mpDestination.get(key);
+               if (colExisting == null)
+               {
+                  colExisting = new ArrayList<>();
+                  mpDestination.put(key, colExisting);
+               }
+               colExisting.add(data);
+            }
+         }
+      }
+      return mpDestination;  
    }
 }
