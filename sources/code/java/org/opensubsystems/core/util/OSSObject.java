@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2012 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -30,7 +30,7 @@ public class OSSObject
    // Constants ////////////////////////////////////////////////////////////////
    
    /**
-    * Limit how many indendation are supported.
+    * Limit how many levels of indentation are supported.
     */
    public static final int INDENTATION_LIMIT = 100;
    
