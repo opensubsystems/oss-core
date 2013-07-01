@@ -41,6 +41,7 @@ public class ThreeElementStruct<X, Y, Z> extends TwoElementStruct<X, Y>
     * 
     * @param first - first object
     * @param second - second object
+    * @param third  - third object
     */
    public ThreeElementStruct(
       X first, 
@@ -64,7 +65,7 @@ public class ThreeElementStruct<X, Y, Z> extends TwoElementStruct<X, Y>
    {
       super(input);
       
-      assert input != null : "Can't create empty ThreeObjectStruct";
+      assert input != null : "Can't create empty ThreeElementStruct";
       
 
       m_third = input.getThird();
