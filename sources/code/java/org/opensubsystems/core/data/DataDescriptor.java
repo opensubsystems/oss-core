@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -35,6 +35,20 @@ package org.opensubsystems.core.data;
 // TODO: JDK 1.4: Annotation should be able to replace this interface.
 public interface DataDescriptor
 {
+   /**
+    * Constant that can be used at times when no data descriptor was defined
+    * but yet one is required to be specified. This will allow us to identify
+    * all such places at later time and define the data descriptors if needed.
+    */
+   DataDescriptor NO_DATA_DESCRIPTOR = null;
+   
+   /**
+    * Constant that can be used at times when no data descriptor was defined
+    * but yet one is required to be specified. This will allow us to identify
+    * all such places at later time and define the data descriptors if needed.
+    */
+   Class<DataDescriptor> NO_DATA_DESCRIPTOR_CLASS = null;
+   
    /**
     * Class identifying parent data descriptor for which this data descriptor 
     * provides just a different view for the same data objects. These two data 
