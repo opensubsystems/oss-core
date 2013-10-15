@@ -480,169 +480,23 @@ public final class DateUtils extends OSSObject
    ) throws OSSInvalidDataException
    {
       Timestamp tsReturn = null;
-      Calendar workCal = GregorianCalendar.getInstance();
       
       if (strValue != null && strValue.length() > 0)
       {
          strValue = strValue.trim();
          if (strValue.startsWith(CURRENT_DATE_CODE))
          {
+            long lDelay;
+            
+            strValue = strValue.substring(CURRENT_DATE_CODE.length());
             strValue = strValue.replaceAll("[ ]", "");
 
-            // If the user specified "UseCurrent", then substitute the
-            // current date/time in the value
-            workCal.setTime(new Date());
-
 //            Log.getInstance().debug("Parsing current date " + strValue);
-
-            // Parse the date math
-            int iBeginIndex = CURRENT_DATE_CODE.length();
-            int iMaxLength = strValue.length();
-            int iSign = 1;
-            int iNumberIndex;
-            int iValue;
-            char cChar = ' ';
-
-            while (iBeginIndex < iMaxLength)
-            {
-               // This has to be sign
-               if (strValue.charAt(iBeginIndex) == '+')
-               {
-                  iSign = 1;
-               }
-               else if (strValue.charAt(iBeginIndex) == '-')
-               {
-                  iSign = -1;
-               }
-               else
-               {
-                  // Incorrect String
-                  throw new OSSInvalidDataException(
-                           "Date function is in incorrect format: "
-                           + strValue + " at " + strValue.substring(iBeginIndex));
-               }
-               iBeginIndex++;
-
-               // Now we have to have number
-               iNumberIndex = iBeginIndex;
-               
-               while (((iBeginIndex == iNumberIndex) || Character.isDigit(cChar)) 
-                     && (iBeginIndex < iMaxLength))
-               {
-                  cChar = strValue.charAt(iBeginIndex++);
-               }
-
-               // We have to go one back because we should stop on modifier (e.g 1m)
-               iBeginIndex--;
-
-               try
-               {
-                  iValue = Integer.parseInt(strValue.substring(iNumberIndex, iBeginIndex));
-               }
-               catch (NumberFormatException nmeExc)
-               {
-                  // Incorrect String
-                  throw new OSSInvalidDataException(
-                           "Date function is in incorrect format: "
-                           + strValue + " at " + strValue.substring(iNumberIndex));
-               }
-
-               // This has to be modifier: y - year, M - month, w - week, 
-               // d - day, h - hour, m - minute, s - second
-               cChar = strValue.charAt(iBeginIndex);
-               switch(cChar)
-               {
-                  case(YEAR_CODE):
-                  {
-                     if (iDateType == DATE_TYPE_TIME)
-                     {
-                        throw new OSSInvalidDataException(
-                           "Date function is in incorrect format: " +
-                           "used YEAR modifier for TIME type");
-                     }
-                     workCal.add(Calendar.YEAR, iSign * iValue);
-                     break;
-                  }
-                  case(MONTH_CODE):
-                  {
-                     if (iDateType == DATE_TYPE_TIME)
-                     {
-                        throw new OSSInvalidDataException(
-                           "Date function is in incorrect format: " +
-                           "used MONTH modifier for TIME type");
-                     }
-                     workCal.add(Calendar.MONTH, iSign * iValue);
-                     break;
-                  }
-                  case(WEEK_CODE):
-                  {
-                     if (iDateType == DATE_TYPE_TIME)
-                     {
-                        throw new OSSInvalidDataException(
-                           "Date function is in incorrect format: " +
-                           "used WEEK modifier for TIME type");
-                     }
-                     workCal.add(Calendar.WEEK_OF_YEAR, iSign * iValue);
-                     break;
-                  }
-                  case(DAY_CODE):
-                  {
-                     if (iDateType == DATE_TYPE_TIME)
-                     {
-                        throw new OSSInvalidDataException(
-                           "Date function is in incorrect format: " +
-                           "used DAY modifier for TIME type");
-                     }
-                     workCal.add(Calendar.DATE, iSign * iValue);
-                     break;
-                  }
-                  case(HOUR_CODE):
-                  {
-                     if (iDateType == DATE_TYPE_DATE)
-                     {
-                        throw new OSSInvalidDataException(
-                           "Date function is in incorrect format: " +
-                           "used HOUR modifier for DATE type");
-                     }
-                     workCal.add(Calendar.HOUR, iSign * iValue);
-                     break;
-                  }
-                  case(MINUTE_CODE):
-                  {
-                     if (iDateType == DATE_TYPE_DATE)
-                     {
-                        throw new OSSInvalidDataException(
-                           "Date function is in incorrect format: " +
-                           "used MINUTE modifier for DATE type");
-                     }
-                     workCal.add(Calendar.MINUTE, iSign * iValue);
-                     break;
-                  }
-                  case(SECOND_CODE):
-                  {
-                     if (iDateType == DATE_TYPE_DATE)
-                     {
-                        throw new OSSInvalidDataException(
-                           "Date function is in incorrect format: " +
-                           "used SECOND modifier for DATE type");
-                     }
-                     workCal.add(Calendar.SECOND, iSign * iValue);
-                     break;
-                  }
-                  default:
-                  {
-                     // Incorrect String
-                     throw new OSSInvalidDataException(
-                           "Date function is in incorrect format: "
-                           + strValue + " at " + strValue.substring(iBeginIndex));
-                  }
-               }
-
-               iBeginIndex++;
-            }
             
-            tsReturn = new Timestamp(workCal.getTimeInMillis());
-            
+            lDelay = parseDateMathDelayIntoMillis(strValue, iDateType);
+        
+            Date drCurrent = new Date();
+            tsReturn = new Timestamp(drCurrent.getTime() + lDelay);
          }
          else
          {
@@ -709,6 +563,184 @@ public final class DateUtils extends OSSObject
       }
 
       return tsReturn;
+   }
+
+   /**
+    * Parse delay resolving any functions or formulas the string can contain. 
+    * This method  can be therefore used if the passed string contains string 
+    * representation date, time or timestamp or a formula such as 3h - 1m + 4d
+    * or simply just 4d 3h 1m. 
+    *
+    * @param strValue - string representation of date or date function
+    * @param iDateType - date type code, one of the DATE_TYPE_XXX constants to 
+    *                    limit what variables are allowed in the formula
+    * @return long - parsed delay in milliseconds
+    * @throws OSSInvalidDataException - error during parsing
+    */
+   public static long parseDateMathDelayIntoMillis(
+      String strValue,
+      int    iDateType
+   ) throws OSSInvalidDataException
+   {
+      // Parse the date math
+      Calendar workCal = GregorianCalendar.getInstance();
+      Date     dtCurrent = new Date();
+      int      iBeginIndex = 0;
+      int      iMaxLength = strValue.length();
+      int      iSign = 1;
+      int      iNumberIndex;
+      int      iValue;
+      char     cChar = ' ';
+
+      // If the user specified "UseCurrent", then substitute the
+      // current date/time in the value
+      workCal.setTime(dtCurrent);
+      
+      while (iBeginIndex < iMaxLength)
+      {
+         // This has to be sign
+         if ((strValue.charAt(iBeginIndex) == '+')
+            // Treat space as + for formulas such as 4d 3h 2m
+            || (strValue.charAt(iBeginIndex) == ' '))
+         {
+            iSign = 1;
+         }
+         else if (strValue.charAt(iBeginIndex) == '-')
+         {
+            iSign = -1;
+         }
+         else
+         {
+            // Incorrect String
+            throw new OSSInvalidDataException(
+                     "Date function is in incorrect format: "
+                     + strValue + " at " + strValue.substring(iBeginIndex));
+         }
+         iBeginIndex++;
+
+         // Now we have to have number
+         iNumberIndex = iBeginIndex;
+
+         while (((iBeginIndex == iNumberIndex) || Character.isDigit(cChar)) 
+               && (iBeginIndex < iMaxLength))
+         {
+            cChar = strValue.charAt(iBeginIndex++);
+         }
+
+         // We have to go one back because we should stop on modifier (e.g 1m)
+         iBeginIndex--;
+
+         try
+         {
+            iValue = Integer.parseInt(strValue.substring(iNumberIndex, iBeginIndex));
+         }
+         catch (NumberFormatException nmeExc)
+         {
+            // Incorrect String
+            throw new OSSInvalidDataException(
+                     "Date function is in incorrect format: "
+                     + strValue + " at " + strValue.substring(iNumberIndex));
+         }
+
+         // This has to be modifier: y - year, M - month, w - week, 
+         // d - day, h - hour, m - minute, s - second
+         cChar = strValue.charAt(iBeginIndex);
+         switch(cChar)
+         {
+            case(YEAR_CODE):
+            {
+               if (iDateType == DATE_TYPE_TIME)
+               {
+                  throw new OSSInvalidDataException(
+                     "Date function is in incorrect format: " +
+                     "used YEAR modifier for TIME type");
+               }
+               workCal.add(Calendar.YEAR, iSign * iValue);
+               break;
+            }
+            case(MONTH_CODE):
+            {
+               if (iDateType == DATE_TYPE_TIME)
+               {
+                  throw new OSSInvalidDataException(
+                     "Date function is in incorrect format: " +
+                     "used MONTH modifier for TIME type");
+               }
+               workCal.add(Calendar.MONTH, iSign * iValue);
+               break;
+            }
+            case(WEEK_CODE):
+            {
+               if (iDateType == DATE_TYPE_TIME)
+               {
+                  throw new OSSInvalidDataException(
+                     "Date function is in incorrect format: " +
+                     "used WEEK modifier for TIME type");
+               }
+               workCal.add(Calendar.WEEK_OF_YEAR, iSign * iValue);
+               break;
+            }
+            case(DAY_CODE):
+            {
+               if (iDateType == DATE_TYPE_TIME)
+               {
+                  throw new OSSInvalidDataException(
+                     "Date function is in incorrect format: " +
+                     "used DAY modifier for TIME type");
+               }
+               workCal.add(Calendar.DATE, iSign * iValue);
+               break;
+            }
+            case(HOUR_CODE):
+            {
+               if (iDateType == DATE_TYPE_DATE)
+               {
+                  throw new OSSInvalidDataException(
+                     "Date function is in incorrect format: " +
+                     "used HOUR modifier for DATE type");
+               }
+               workCal.add(Calendar.HOUR, iSign * iValue);
+               break;
+            }
+            case(MINUTE_CODE):
+            {
+               if (iDateType == DATE_TYPE_DATE)
+               {
+                  throw new OSSInvalidDataException(
+                     "Date function is in incorrect format: " +
+                     "used MINUTE modifier for DATE type");
+               }
+               workCal.add(Calendar.MINUTE, iSign * iValue);
+               break;
+            }
+            case(SECOND_CODE):
+            {
+               if (iDateType == DATE_TYPE_DATE)
+               {
+                  throw new OSSInvalidDataException(
+                     "Date function is in incorrect format: " +
+                     "used SECOND modifier for DATE type");
+               }
+               workCal.add(Calendar.SECOND, iSign * iValue);
+               break;
+            }
+            default:
+            {
+               // Incorrect String
+               throw new OSSInvalidDataException(
+                     "Date function is in incorrect format: "
+                     + strValue + " at " + strValue.substring(iBeginIndex));
+            }
+         }
+
+         iBeginIndex++;
+      }
+
+      long lReturn;
+      
+      lReturn = workCal.getTimeInMillis() - dtCurrent.getTime();
+      
+      return lReturn;
    }
    
    /**
