@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2014 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -36,6 +36,10 @@ import org.opensubsystems.core.util.ModifierClassFactory;
  */
 public class DatabaseSchemaClassFactory extends ModifierClassFactory<DatabaseSchema>
 {
+   // Constant /////////////////////////////////////////////////////////////////
+   
+   public static final String OPTIONAL_PACKAGE_NAME = "database";
+   
    // Constructors /////////////////////////////////////////////////////////////
    
    /**
@@ -44,7 +48,7 @@ public class DatabaseSchemaClassFactory extends ModifierClassFactory<DatabaseSch
    public DatabaseSchemaClassFactory(
    ) throws OSSException
    {
-      super(DatabaseSchema.class,
+      super(DatabaseSchema.class, OPTIONAL_PACKAGE_NAME,
             // TODO: Dependency: Remove this dependency on implementation class
             DatabaseImpl.getInstance().getDatabaseTypeIdentifier());
    }         
