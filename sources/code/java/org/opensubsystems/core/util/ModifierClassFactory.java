@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2014 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -48,6 +48,11 @@ public class ModifierClassFactory<T> extends ImplementationClassFactory<T>
    // Attributes ///////////////////////////////////////////////////////////////
    
    /**
+    * Package where the classes or the modifier based package can exist.
+    */
+   protected String m_strPackage;
+   
+   /**
     * Modifier used to construct classes.
     */
    protected String m_strModifier;
@@ -58,14 +63,18 @@ public class ModifierClassFactory<T> extends ImplementationClassFactory<T>
     * Constructor
     * 
     * @param type - type for objects instantiated by this factory 
+    * @param strPackage - package where the classes or the modifier based package 
+    *                     can exist.
     * @param strModifier - modifier that should be used to construct the classes
     */
    public ModifierClassFactory(
       Class<? extends T> type,
+      String             strPackage,
       String             strModifier
    )
    {
       super(type);
+      m_strPackage  = strPackage;
       m_strModifier = strModifier;
    }
   
@@ -82,7 +91,9 @@ public class ModifierClassFactory<T> extends ImplementationClassFactory<T>
    ) throws OSSException
    {
       int           iIndex;
+      int           iInsertion;
       StringBuilder sbClassName = new StringBuilder();
+      StringBuilder sbPackageClassName = new StringBuilder();
       
       // Assuming name of the interface aaa.AAA
       
@@ -94,6 +105,7 @@ public class ModifierClassFactory<T> extends ImplementationClassFactory<T>
       {
          // There is a package
          sbClassName.append(strClassIdentifier.substring(0, iIndex + 1));
+         iInsertion = sbClassName.length();
          sbClassName.append(strModifier.toLowerCase());
          sbClassName.append(".");
          sbClassName.append(strModifier);
@@ -102,6 +114,7 @@ public class ModifierClassFactory<T> extends ImplementationClassFactory<T>
       }
       else
       {
+         iInsertion = sbClassName.length();
          sbClassName.append(strModifier.toLowerCase());
          sbClassName.append(".");
          sbClassName.append(strModifier);
@@ -109,6 +122,15 @@ public class ModifierClassFactory<T> extends ImplementationClassFactory<T>
       }
       sbClassName.append("Impl");
       lstClassNames.add(sbClassName.toString());
+      if ((m_strPackage != null) && (!m_strPackage.isEmpty()))
+      {
+         sbPackageClassName.append(sbClassName.substring(0, iInsertion));
+         sbPackageClassName.append(m_strPackage);
+         sbPackageClassName.append(".");
+         sbPackageClassName.append(sbClassName.substring(iInsertion));
+         lstClassNames.add(sbPackageClassName.toString());
+         sbPackageClassName.delete(0, sbPackageClassName.length());
+      }
       sbClassName.delete(0, sbClassName.length());
       
       // Then try class name aaa.modifier.ModifierAAA
@@ -116,6 +138,7 @@ public class ModifierClassFactory<T> extends ImplementationClassFactory<T>
       {
          // There is a package
          sbClassName.append(strClassIdentifier.substring(0, iIndex + 1));
+         iInsertion = sbClassName.length();
          sbClassName.append(strModifier.toLowerCase());
          sbClassName.append(".");
          sbClassName.append(strModifier);
@@ -124,12 +147,22 @@ public class ModifierClassFactory<T> extends ImplementationClassFactory<T>
       }
       else
       {
+         iInsertion = sbClassName.length();
          sbClassName.append(strModifier.toLowerCase());
          sbClassName.append(".");
          sbClassName.append(strModifier);
          sbClassName.append(strClassIdentifier);            
       }
       lstClassNames.add(sbClassName.toString());
+      if ((m_strPackage != null) && (!m_strPackage.isEmpty()))
+      {
+         sbPackageClassName.append(sbClassName.substring(0, iInsertion));
+         sbPackageClassName.append(m_strPackage);
+         sbPackageClassName.append(".");
+         sbPackageClassName.append(sbClassName.substring(iInsertion));
+         lstClassNames.add(sbPackageClassName.toString());
+         sbPackageClassName.delete(0, sbPackageClassName.length());
+      }
       sbClassName.delete(0, sbClassName.length());
       
       // Then try class name aaa.impl.ModifierAAAImpl
@@ -139,6 +172,7 @@ public class ModifierClassFactory<T> extends ImplementationClassFactory<T>
          sbClassName.append(strClassIdentifier.substring(0, iIndex + 1));
          sbClassName.append("impl");
          sbClassName.append(".");
+         iInsertion = sbClassName.length();
          sbClassName.append(strModifier);
          sbClassName.append(strClassIdentifier.substring(iIndex + 1, 
                                strClassIdentifier.length()));
@@ -147,11 +181,21 @@ public class ModifierClassFactory<T> extends ImplementationClassFactory<T>
       {
          sbClassName.append("impl");
          sbClassName.append(".");
+         iInsertion = sbClassName.length();
          sbClassName.append(strModifier);
          sbClassName.append(strClassIdentifier);            
       }
       sbClassName.append("Impl");
       lstClassNames.add(sbClassName.toString());
+      if ((m_strPackage != null) && (!m_strPackage.isEmpty()))
+      {
+         sbPackageClassName.append(sbClassName.substring(0, iInsertion));
+         sbPackageClassName.append(m_strPackage);
+         sbPackageClassName.append(".");
+         sbPackageClassName.append(sbClassName.substring(iInsertion));
+         lstClassNames.add(sbPackageClassName.toString());
+         sbPackageClassName.delete(0, sbPackageClassName.length());
+      }
       sbClassName.delete(0, sbClassName.length());
       
       // Then try class name aaa.ModifierAAAImpl
@@ -194,6 +238,7 @@ public class ModifierClassFactory<T> extends ImplementationClassFactory<T>
       {
          // There is a package
          sbClassName.append(strClassIdentifier.substring(0, iIndex + 1));
+         iInsertion = sbClassName.length();
          sbClassName.append(strModifier.toLowerCase());
          sbClassName.append(".");
          sbClassName.append(strClassIdentifier.substring(iIndex + 1, 
@@ -201,12 +246,22 @@ public class ModifierClassFactory<T> extends ImplementationClassFactory<T>
       }
       else
       {
+         iInsertion = sbClassName.length();
          sbClassName.append(strModifier.toLowerCase());
          sbClassName.append(".");
          sbClassName.append(strClassIdentifier);            
       }
       sbClassName.append("Impl");
       lstClassNames.add(sbClassName.toString());
+      if ((m_strPackage != null) && (!m_strPackage.isEmpty()))
+      {
+         sbPackageClassName.append(sbClassName.substring(0, iInsertion));
+         sbPackageClassName.append(m_strPackage);
+         sbPackageClassName.append(".");
+         sbPackageClassName.append(sbClassName.substring(iInsertion));
+         lstClassNames.add(sbPackageClassName.toString());
+         sbPackageClassName.delete(0, sbPackageClassName.length());
+      }
       sbClassName.delete(0, sbClassName.length());
 
       // Then try class aaa.modifier.AAA
@@ -214,6 +269,7 @@ public class ModifierClassFactory<T> extends ImplementationClassFactory<T>
       {
          // There is a package
          sbClassName.append(strClassIdentifier.substring(0, iIndex + 1));
+         iInsertion = sbClassName.length();
          sbClassName.append(strModifier.toLowerCase());
          sbClassName.append(".");
          sbClassName.append(strClassIdentifier.substring(iIndex + 1, 
@@ -221,11 +277,22 @@ public class ModifierClassFactory<T> extends ImplementationClassFactory<T>
       }
       else
       {
+         iInsertion = sbClassName.length();
          sbClassName.append(strModifier.toLowerCase());
          sbClassName.append(".");
          sbClassName.append(strClassIdentifier);            
       }
       lstClassNames.add(sbClassName.toString());
+      if ((m_strPackage != null) && (!m_strPackage.isEmpty()))
+      {
+         sbPackageClassName.append(sbClassName.substring(0, iInsertion));
+         sbPackageClassName.append(m_strPackage);
+         sbPackageClassName.append(".");
+         sbPackageClassName.append(sbClassName.substring(iInsertion));
+         lstClassNames.add(sbPackageClassName.toString());
+         sbPackageClassName.delete(0, sbPackageClassName.length());
+      }
+      sbClassName.delete(0, sbClassName.length());
       
       super.createDefaultClassNames(strClassIdentifier, strModifier, lstClassNames);
    }
