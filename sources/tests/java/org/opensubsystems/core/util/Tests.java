@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2010 - 2014 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -41,6 +41,18 @@ import junit.framework.TestSuite;
  */
 public class Tests
 {
+   // Constants ////////////////////////////////////////////////////////////////
+
+   /**
+    * Default log file used to run tests.
+    */
+   public static final String DEFAULT_LOG_FILE = "osstestlog.properties";
+
+   /**
+    * Default property file used to run tests.
+    */
+   public static final String DEFAULT_PROPERTY_FILE = "osstest.properties";
+
    // Cached values ////////////////////////////////////////////////////////////
 
    /**
@@ -54,9 +66,8 @@ public class Tests
    {
       // Configure the tests to use separate logging configuration file and 
       // separate property file so that it is easy to test the code 
-      System.setProperty("java.util.logging.config.file", 
-                         "osstestlog.properties");
-      System.setProperty(Config.CONFIG_FILE_NAME, "osstest.properties");
+      System.setProperty("java.util.logging.config.file", DEFAULT_LOG_FILE);
+      System.setProperty(Config.CONFIG_FILE_NAME, DEFAULT_PROPERTY_FILE);
       s_logger = Log.getInstance(Tests.class);
       // No need to do this since by setting the property above the Config will
       // use the correct property file
