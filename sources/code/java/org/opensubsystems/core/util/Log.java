@@ -157,7 +157,7 @@ public class Log extends OSSObject
             s_logger = Log.getInstance(Log.class);
             // Print this as info because otherwise we wouldn't know where to 
             // change it
-            s_logger.log(Level.INFO, "Using log configuration file {0}", 
+            s_logger.log(Level.CONFIG, "Using log configuration file {0}", 
                         s_strConfigFile);
          }
       }
