@@ -263,10 +263,10 @@ public final class TimeTest extends Tests
                deleteStatement.execute();
                m_transaction.commit();
             }
-            catch (Exception eExc)
+            catch (Throwable throwable2)
             {
                m_transaction.rollback();
-               throw eExc;
+               throw throwable2;
             }
             finally
             {
