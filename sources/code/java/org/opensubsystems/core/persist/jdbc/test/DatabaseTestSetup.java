@@ -17,10 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
-package org.opensubsystems.core.persist.jdbc;
+package org.opensubsystems.core.persist.jdbc.test;
 
 import junit.extensions.TestSetup;
 import junit.framework.Test;
+import org.opensubsystems.core.persist.jdbc.Database;
 
 import org.opensubsystems.core.persist.jdbc.impl.DatabaseImpl;
 import org.opensubsystems.core.util.Config;

@@ -17,10 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
-package org.opensubsystems.core.application;
+package org.opensubsystems.core.application.test;
 
 import junit.extensions.TestSetup;
 import junit.framework.Test;
+import org.opensubsystems.core.application.Application;
 
 import org.opensubsystems.core.application.impl.ApplicationImpl;
 import org.opensubsystems.core.util.Config;

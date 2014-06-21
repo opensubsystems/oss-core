@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
  
-package org.opensubsystems.core.util;
+package org.opensubsystems.core.util.test;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -25,6 +25,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import junit.framework.TestSuite;
+import org.opensubsystems.core.util.Config;
+import org.opensubsystems.core.util.Log;
 
 /**
  * This is base class for various test that ensures that correct configuration 

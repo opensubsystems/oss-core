@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
-package org.opensubsystems.core.persist.jdbc;
+package org.opensubsystems.core.persist.jdbc.test;
 
 import java.util.Enumeration;
 

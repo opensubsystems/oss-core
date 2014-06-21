@@ -23,8 +23,8 @@ import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.opensubsystems.core.persist.jdbc.DatabaseTestSetup;
-import org.opensubsystems.core.persist.jdbc.DatabaseTestSuite;
+import org.opensubsystems.core.persist.jdbc.test.DatabaseTestSetup;
+import org.opensubsystems.core.persist.jdbc.test.DatabaseTestSuite;
 import org.opensubsystems.core.persist.jdbc.database.AddBatchTest.AddBatchTestInternal;
 import org.opensubsystems.core.persist.jdbc.database.DBProcReturnInsertedRowsCountTest.DBProcReturnInsertedRowsCountTestInternal;
 import org.opensubsystems.core.persist.jdbc.database.DateTest.DateTestInternal;
@@ -40,7 +40,7 @@ import org.opensubsystems.core.persist.jdbc.database.TimestampTest.TimestampTest
 import org.opensubsystems.core.persist.jdbc.database.TransactionTest.TransactionTestInternal;
 import org.opensubsystems.core.persist.jdbc.database.UpdatableResultSetTest.UpdatableResultSetTestInternal;
 import org.opensubsystems.core.persist.jdbc.database.UpdateDBProcWithoutOutputTest.UpdateDBProcWithoutOutputTestInternal;
-import org.opensubsystems.core.util.Tests;
+import org.opensubsystems.core.util.test.Tests;
 
 /**
  * Test suite containing all tests verifying behavior of different database 

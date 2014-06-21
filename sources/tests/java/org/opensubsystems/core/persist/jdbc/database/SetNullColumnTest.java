@@ -28,12 +28,12 @@ import junit.framework.TestSuite;
 
 import org.opensubsystems.core.error.OSSException;
 import org.opensubsystems.core.persist.jdbc.Database;
-import org.opensubsystems.core.persist.jdbc.DatabaseTest;
-import org.opensubsystems.core.persist.jdbc.DatabaseTestSetup;
-import org.opensubsystems.core.persist.jdbc.DatabaseTestSuite;
+import org.opensubsystems.core.persist.jdbc.test.DatabaseTest;
+import org.opensubsystems.core.persist.jdbc.test.DatabaseTestSetup;
+import org.opensubsystems.core.persist.jdbc.test.DatabaseTestSuite;
 import org.opensubsystems.core.persist.jdbc.impl.DatabaseImpl;
 import org.opensubsystems.core.util.GlobalConstants;
-import org.opensubsystems.core.util.Tests;
+import org.opensubsystems.core.util.test.Tests;
 import org.opensubsystems.core.util.jdbc.DatabaseUtils;
 
 /**
