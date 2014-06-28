@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2007 - 2014 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -60,11 +60,11 @@ public final class ThrowableUtils extends OSSObject
      Throwable thr 
   )
   {
-     StringBuffer sbBuffer = new StringBuffer();
+     StringBuilder builder = new StringBuilder();
 
-     toString(1, MAX_NESTED_CAUSES, sbBuffer, thr);
+     toString(1, MAX_NESTED_CAUSES, builder, thr);
     
-     return sbBuffer.toString();
+     return builder.toString();
   }
   
   // Helper methods ////////////////////////////////////////////////////////////
@@ -74,49 +74,50 @@ public final class ThrowableUtils extends OSSObject
    * 
    * @param iCurrentLevel - current level of nesting
    * @param iMaxLevel - maximal level of nesting to prevent recursion
-   * @param sbBuffer - string buffer to put the output to
-   * @param thr - throwable to include in the output
+   * @param builder - string builder to put the output to
+   * @param cause - throwable to include in the output
    */
   private static void toString(
-    int          iCurrentLevel,
-    int          iMaxLevel,
-    StringBuffer sbBuffer,
-    Throwable    thr
+    int           iCurrentLevel,
+    int           iMaxLevel,
+    StringBuilder builder,
+    Throwable     cause
   )
   {
     if (iCurrentLevel <= iMaxLevel)
     {
-      sbBuffer.append("#");
-      sbBuffer.append(iCurrentLevel);
-      sbBuffer.append(" ");
-      sbBuffer.append(thr.getClass().getName());
-      sbBuffer.append(": ");
-      if (thr.getMessage() != null)
+      builder.append("--> Cause# ");
+      builder.append(iCurrentLevel);
+      builder.append("\n");
+      builder.append(cause.getClass().getName());
+      builder.append(": ");
+      if (cause.getMessage() != null)
       {
-        sbBuffer.append(thr.getMessage());
-        sbBuffer.append("\n");
+        builder.append(cause.getMessage());
+        builder.append("\n");
       }
       else
       {
-        sbBuffer.append("null\n");
+        builder.append("null\n");
       }
       StringWriter stringWriter = new StringWriter();
       PrintWriter  printWriter = new PrintWriter(stringWriter);
       
-      thr.printStackTrace(printWriter);
-      sbBuffer.append(stringWriter.toString());
-      sbBuffer.append("\n");
+      cause.printStackTrace(printWriter);
+      builder.append(stringWriter.toString());
+      builder.append("\n");
       
-      if ((thr.getCause() != null) && (thr.getCause() != thr))
+      if ((cause.getCause() != null) && (cause.getCause() != cause))
       {
-        toString(iCurrentLevel + 1, iMaxLevel, sbBuffer, thr.getCause());
+        toString(iCurrentLevel + 1, iMaxLevel, builder, cause.getCause());
       }
     }
     else
     {
-      sbBuffer.append("# ");
-      sbBuffer.append(iCurrentLevel);
-      sbBuffer.append(" exceeds maximum allowed level of nesting.\n");
+      builder.append("--> Cause# ");
+      builder.append(iCurrentLevel);
+      builder.append(" and higher will not be included since it exceeds maximum"
+                     + " allowed level of nesting.\n");
     }
   }
 }
