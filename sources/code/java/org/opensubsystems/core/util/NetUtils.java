@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2014 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -22,7 +22,6 @@ package org.opensubsystems.core.util;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import org.opensubsystems.core.error.OSSException;
 
 /**
  * Class containing methods for working with network.
@@ -48,15 +47,16 @@ public final class NetUtils extends OSSObject
     * Get textual representation just of the server machine IP address. 
     * 
     * @return strAddress - IP address of the server
-    * @throws OSSException - an error occurred while getting server IP address
     */
    public static String getServerIPAddress(
-   ) throws OSSException
+   )
    {
       String strAddress;
        
       try
       {
+         // TODO: Performance: Profile performance and if impacted cache
+         // and periodically check for update
          strAddress = InetAddress.getLocalHost().getHostAddress();
       } 
       catch (UnknownHostException eExc)
@@ -76,15 +76,16 @@ public final class NetUtils extends OSSObject
     * its name. 
     * 
     * @return strAddress - IP address of the server
-    * @throws OSSException - an error occurred while getting server IP address
     */
    public static String getServerIPAddressAndName(
-   ) throws OSSException
+   )
    {
       String strAddress;
        
       try
       {
+         // TODO: Performance: Profile performance and if impacted cache
+         // and periodically check for update
          strAddress = InetAddress.getLocalHost().toString();
       } 
       catch (UnknownHostException eExc)
