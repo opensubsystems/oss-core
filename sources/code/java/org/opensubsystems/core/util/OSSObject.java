@@ -19,6 +19,9 @@
  
 package org.opensubsystems.core.util;
 
+import java.util.Collection;
+import java.util.Map;
+
 /**
  * Base class for all classes in this project. It is a place to define 
  * alternative or enhanced behavior of standard Java methods 
@@ -110,14 +113,7 @@ public class OSSObject
       Object        value
    )
    {
-      if (value == null)
-      {
-         sb.append(StringUtils.NULL_STRING);
-      }
-      else
-      {
-         sb.append(value);
-      }
+      append(sb, 0, value);
    }
 
    /**
@@ -133,14 +129,28 @@ public class OSSObject
       Object        value
    )
    {
-      sb.append(INDENTATION[iIndentLevel]);
+      if (iIndentLevel > 0)
+      {
+         sb.append(INDENTATION[iIndentLevel]);
+      }
       if (value == null)
       {
          sb.append(StringUtils.NULL_STRING);
       }
       else
       {
-         sb.append(value);
+         if (value instanceof Map)
+         {
+            StringUtils.toStringMap(sb, iIndentLevel, (Map)value);
+         }
+         else if (value instanceof Collection)
+         {
+            StringUtils.toStringCollection(sb, iIndentLevel, (Collection)value);
+         }
+         else
+         {
+            sb.append(value);
+         }
       }
    }
 
@@ -160,14 +170,7 @@ public class OSSObject
    )
    {
       sb.append(INDENTATION[iIndentLevel]);
-      sb.append(value);
-      if (value == null)
-      {
-         sb.append(StringUtils.NULL_STRING);
-      }
-      else
-      {
-         sb.append(value);
-      }
+      sb.append(label);
+      append(sb, value);
    }
 }

@@ -23,10 +23,12 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -36,6 +38,7 @@ import java.util.logging.Level;
 
 import org.opensubsystems.core.error.OSSException;
 import org.opensubsystems.core.error.OSSMultiException;
+import static org.opensubsystems.core.util.Log.s_strConfigFile;
 
 /**
  * Collection of methods to make work with files easier.
@@ -865,5 +868,42 @@ public final class FileUtils extends OSSObject
             throw exec2;
          }
       }
+   }
+   
+   /**
+    * Find file on a classpath.
+    * 
+    * @param  strFileName - name of the file to find
+    * @return URL - resource locator of the found file 
+    * @throws FileNotFoundException - file cannot be found
+    */
+   public static URL findFileOnClassPath(
+      String strFileName
+   ) throws FileNotFoundException
+   {
+      InputStream isConfigFile = null;
+      URL         urlDefaultPropertyFile;
+
+      urlDefaultPropertyFile = ClassLoader.getSystemResource(strFileName);
+      if (urlDefaultPropertyFile == null)
+      {
+         // If the file cannot be found as a system resource using
+         // ClassLoader.getSystemResource(), try to use 
+         // getClass().getClassLoader().getResource()
+         // This is here due to the fact that in J2EE server
+         // ClassLoader.getSystemResource() searches the configuration file
+         // OUTSIDE of the packaged application (ear, war, jar) so that this
+         // file can override the configuration file which is packaged INSIDE
+         // the application which will be found using with class loader 
+         // for this class
+         urlDefaultPropertyFile = FileUtils.class.getClassLoader().getResource(
+                                     strFileName);
+      }      
+      if (urlDefaultPropertyFile == null)
+      {
+         throw new FileNotFoundException("Cannot find file " + strFileName);
+      }
+      
+      return urlDefaultPropertyFile;
    }
 }

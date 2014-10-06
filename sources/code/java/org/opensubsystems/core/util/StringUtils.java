@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2014 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -25,10 +25,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.opensubsystems.core.error.OSSInvalidDataException;
 import org.opensubsystems.core.error.OSSException;
+import static org.opensubsystems.core.util.OSSObject.INDENTATION;
 
 /**
  * Utility methods for String manipulation.
@@ -1217,5 +1219,111 @@ public final class StringUtils extends OSSObject
    {
       String strEncoded = URLEncoder.encode(strInput, "UTF-8");
       return strEncoded.replaceAll("\\+", "%20");
+   }
+
+   
+   /**
+    * Produce string representation of the object properly indented to display
+    * the object hierarchy
+    * 
+    * @param sb - string builder used to create the representation
+    * @param iIndentIndex - indentation index
+    * @param colValues - collection to print out
+    */
+   public static void toStringCollection(
+      StringBuilder sb,
+      int           iIndentIndex,
+      Collection    colValues
+   )
+   {
+      if (colValues != null)
+      {
+         Object objValue;
+         
+         sb.append(INDENTATION[iIndentIndex]);
+         sb.append("{");
+         for (Iterator it = colValues.iterator(); it.hasNext();)
+         {
+            objValue = it.next();
+            
+            if (objValue instanceof OSSObject)
+            {
+               ((OSSObject)objValue).toString(sb, iIndentIndex + 1);
+            }
+            else if (objValue instanceof Map)
+            {
+               toStringMap(sb, iIndentIndex + 1, (Map)objValue);
+            }
+            else
+            {
+               sb.append(INDENTATION[iIndentIndex + 1]);
+               sb.append(objValue);
+            }
+            sb.append(",");
+         }
+         sb.append(INDENTATION[iIndentIndex]);
+         sb.append("}");
+      }
+      else
+      {
+         sb.append(NULL_STRING);
+      }
+   }
+
+   /**
+    * Produce string representation of the object properly indented to display
+    * the object hierarchy
+    * 
+    * @param sb - string builder used to create the representation
+    * @param iIndentIndex - indentation index
+    * @param mpValues - map to print out
+    */
+   public static void toStringMap(
+      StringBuilder sb,
+      int           iIndentIndex,
+      Map           mpValues
+   )
+   {
+      if (mpValues != null)
+      {
+         Map.Entry entry;
+         Object    objValue;
+         
+         sb.append(INDENTATION[iIndentIndex]);
+         sb.append("{");
+         for (Iterator it = mpValues.entrySet().iterator(); it.hasNext();)
+         {
+            entry = (Map.Entry)it.next();
+            
+            sb.append(INDENTATION[iIndentIndex + 1]);
+            sb.append(entry.getKey());
+            sb.append("=");
+            
+            objValue = entry.getValue();
+            if (objValue instanceof OSSObject)
+            {
+               ((OSSObject)objValue).toString(sb, iIndentIndex + 1);
+            }
+            else if (objValue instanceof Map)
+            {
+               toStringMap(sb, iIndentIndex + 1, (Map)objValue);
+            }
+            else if (objValue instanceof Collection)
+            {
+               toStringCollection(sb, iIndentIndex + 1, (Collection)objValue);
+            }
+            else
+            {
+               sb.append(entry.getValue());
+            }
+            sb.append(",");
+         }
+         sb.append(INDENTATION[iIndentIndex]);
+         sb.append("}");
+      }
+      else
+      {
+         sb.append(NULL_STRING);
+      }
    }
 }

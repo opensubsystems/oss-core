@@ -210,12 +210,12 @@ public class Log extends OSSObject
    // Helper methods ///////////////////////////////////////////////////////////
    
    /**
-    * Find and configuration file.
+    * Find configuration file.
     * 
     * @param  strConfigFileName - name of the configuration file
-    * @return InputStream - opened config file
+    * @return InputStream - opened configuration file
     * @throws IOException - an error has occurred opening configuration file
-    * @throws FileNotFoundException - file cannot be found
+    * @throws FileNotFoundException - configuration file cannot be found
     */
    protected static InputStream findConfigFile(
       String strConfigFileName
@@ -225,31 +225,9 @@ public class Log extends OSSObject
       InputStream isConfigFile = null;
       URL         urlDefaultPropertyFile;
 
-      urlDefaultPropertyFile = ClassLoader.getSystemResource(strConfigFileName);
-      if (urlDefaultPropertyFile == null)
-      {
-         // if there was not found configuration file by using 
-         // ClassLoader.getSystemResource(), try to use 
-         // getClass().getClassLoader().getResource()
-         // This is here due to the fact that in J2EE server
-         // ClassLoader.getSystemResource() search the configuration file
-         // OUTSIDE of the packaged application (ear, war, jar) so that this
-         // file can override the configuration file which is packaged INSIDE
-         // the application which will be found belog with class loader 
-         // for this class
-         urlDefaultPropertyFile = Log.class.getClassLoader().getResource(
-                                     strConfigFileName);
-      }      
-      if (urlDefaultPropertyFile == null)
-      {
-         throw new FileNotFoundException("Cannot find configuration file "
-                                         + strConfigFileName);
-      }
-      else
-      {
-         isConfigFile = urlDefaultPropertyFile.openStream();
-         s_strConfigFile = urlDefaultPropertyFile.toString();
-      }
+      urlDefaultPropertyFile = FileUtils.findFileOnClassPath(strConfigFileName);
+      isConfigFile = urlDefaultPropertyFile.openStream();
+      s_strConfigFile = urlDefaultPropertyFile.toString();
       
       return isConfigFile;
    }
