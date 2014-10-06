@@ -21,8 +21,8 @@ package org.opensubsystems.core.persist.jdbc;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import org.opensubsystems.core.error.OSSException;
 import org.opensubsystems.core.util.ClassFactory;

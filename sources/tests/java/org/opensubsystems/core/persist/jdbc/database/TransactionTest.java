@@ -22,8 +22,8 @@ package org.opensubsystems.core.persist.jdbc.database;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import junit.extensions.TestSetup;
 import junit.framework.Test;

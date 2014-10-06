@@ -19,8 +19,8 @@
 
 package org.opensubsystems.core.util.j2ee;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import org.opensubsystems.core.util.Log;
 import org.opensubsystems.core.util.OSSObject;

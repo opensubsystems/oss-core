@@ -22,6 +22,7 @@ package org.opensubsystems.core.persist.jdbc.transaction.impl;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
@@ -449,7 +450,7 @@ public class SimpleLocalTransactionFactoryImpl extends    DatabaseTransactionFac
    {
       // The only thing we can do is reset the thread local again. This method
       // should be used only for testing
-      s_logger.severe("About to reset state of transaction manager." +
+      s_logger.log(Level.SEVERE, "About to reset state of transaction manager." +
                       " Hope you know what you are doing.");
       m_connection     = new ThreadLocal<>();
       m_realConnection = new ThreadLocal<>();      

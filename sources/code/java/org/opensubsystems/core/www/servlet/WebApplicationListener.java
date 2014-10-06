@@ -20,8 +20,8 @@
 package org.opensubsystems.core.www.servlet;
 
 import java.util.Properties;
-import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;

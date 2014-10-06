@@ -19,8 +19,8 @@
 
 package org.opensubsystems.core.persist.jdbc.transaction.impl;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;

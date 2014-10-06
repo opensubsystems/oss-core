@@ -20,8 +20,8 @@
 package org.opensubsystems.core.persist.jdbc.transaction.j2ee;
 
 import java.sql.Connection;
-import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import javax.naming.InitialContext;
 import javax.naming.NameNotFoundException;

@@ -19,8 +19,8 @@
  
 package org.opensubsystems.core.util.jta;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import javax.transaction.Status;
 import javax.transaction.SystemException;

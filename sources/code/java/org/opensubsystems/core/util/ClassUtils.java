@@ -22,8 +22,8 @@ package org.opensubsystems.core.util;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import org.opensubsystems.core.error.OSSDynamicClassException;
 import org.opensubsystems.core.error.OSSException;

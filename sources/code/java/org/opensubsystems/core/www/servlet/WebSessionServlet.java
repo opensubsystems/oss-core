@@ -23,8 +23,8 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.Date;
 import java.util.Properties;
-import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;

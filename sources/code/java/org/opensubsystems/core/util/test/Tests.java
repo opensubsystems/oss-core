@@ -21,8 +21,8 @@ package org.opensubsystems.core.util.test;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import junit.framework.TestSuite;
 import org.opensubsystems.core.util.Config;

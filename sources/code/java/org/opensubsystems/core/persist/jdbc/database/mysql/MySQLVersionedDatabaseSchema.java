@@ -22,8 +22,8 @@ package org.opensubsystems.core.persist.jdbc.database.mysql;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import org.opensubsystems.core.error.OSSException;
 import org.opensubsystems.core.persist.jdbc.impl.DatabaseImpl;

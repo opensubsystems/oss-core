@@ -20,8 +20,8 @@
 package org.opensubsystems.core.application;
 
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import org.apache.commons.collections.map.LinkedMap;
 import org.opensubsystems.core.error.OSSException;

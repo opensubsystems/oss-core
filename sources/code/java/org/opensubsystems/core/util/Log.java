@@ -24,9 +24,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 /**
  * Class responsible for instantiating of the system logger. This way anybody
@@ -130,7 +129,9 @@ public class Log extends OSSObject
          }
          if (isConfigFile != null)
          {
-            LogManager.getLogManager().readConfiguration(isConfigFile);
+// TODO: Fix bug: For now disable this since when running application under Tomcat it breaks the logging            
+//            LogManager.getLogManager().readConfiguration(isConfigFile);
+            System.out.println("Logging subsystem initialized.");
          }
       }
       catch (IOException ioeExc)
@@ -157,6 +158,7 @@ public class Log extends OSSObject
             s_logger = Log.getInstance(Log.class);
             // Print this as info because otherwise we wouldn't know where to 
             // change it
+            System.out.println("Using log configuration file " + s_strConfigFile);
             s_logger.log(Level.CONFIG, "Using log configuration file {0}", 
                         s_strConfigFile);
          }
