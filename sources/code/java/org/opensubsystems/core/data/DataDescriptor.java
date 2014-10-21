@@ -19,6 +19,8 @@
  
 package org.opensubsystems.core.data;
 
+import org.opensubsystems.core.data.impl.UndefinedDataDescriptor;
+
 /**
  * Interface representing collection of metadata elements that describe data 
  * objects and their attributes. 
@@ -40,14 +42,14 @@ public interface DataDescriptor
     * but yet one is required to be specified. This will allow us to identify
     * all such places at later time and define the data descriptors if needed.
     */
-   DataDescriptor NO_DATA_DESCRIPTOR = null;
+   DataDescriptor NO_DATA_DESCRIPTOR = new UndefinedDataDescriptor();
    
    /**
     * Constant that can be used at times when no data descriptor was defined
     * but yet one is required to be specified. This will allow us to identify
     * all such places at later time and define the data descriptors if needed.
     */
-   Class<DataDescriptor> NO_DATA_DESCRIPTOR_CLASS = null;
+   Class<? extends DataDescriptor> NO_DATA_DESCRIPTOR_CLASS = UndefinedDataDescriptor.class;
    
    /**
     * Class identifying parent data descriptor for which this data descriptor 

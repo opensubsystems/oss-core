@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2014 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -57,8 +57,8 @@ public final class SimplestModifiableData extends    ModifiableDataObjectImpl
     * @throws OSSException - an error has occurred
     */
    public SimplestModifiableData(
-      Class<DataDescriptor> clsDataDescriptor,
-      long                  lDomainId
+      Class<? extends DataDescriptor> clsDataDescriptor,
+      long                            lDomainId
    ) throws OSSException
    {
       this(DataObject.NEW_ID, clsDataDescriptor, lDomainId, null, null);
@@ -89,11 +89,11 @@ public final class SimplestModifiableData extends    ModifiableDataObjectImpl
     * @throws OSSException - an error has occurred
     */
    public SimplestModifiableData(
-      long                  lId,
-      Class<DataDescriptor> clsDataDescriptor,
-      long                  lDomainId,
-      Timestamp             creationTimestamp,
-      Timestamp             modificationTimestamp
+      long                            lId,
+      Class<? extends DataDescriptor> clsDataDescriptor,
+      long                            lDomainId,
+      Timestamp                       creationTimestamp,
+      Timestamp                       modificationTimestamp
    ) throws OSSException
    {
       super(lId, clsDataDescriptor, lDomainId, creationTimestamp, 

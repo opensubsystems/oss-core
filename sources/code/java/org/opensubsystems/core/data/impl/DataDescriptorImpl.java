@@ -277,7 +277,7 @@ public class DataDescriptorImpl extends OSSObject
       int           ind
    )
    {
-      append(sb, ind + 0, "DataDescriptorImpl[");
+      append(sb, ind + 0, "DataDescriptorImpl[", true);
       append(sb, ind + 1, "m_clsParentDescriptor = ", m_clsParentDescriptor);
       append(sb, ind + 1, "m_iDesiredDataType = ", m_iDesiredDataType);
       append(sb, ind + 1, "m_iDataType = ", m_iDataType);
@@ -285,6 +285,6 @@ public class DataDescriptorImpl extends OSSObject
       append(sb, ind + 1, "m_strDisplayableViewName = ", m_strDisplayableViewName);
       append(sb, ind + 1, "m_iDataTypeObject = ", m_iDataTypeObject);
       super.toString(sb, ind + 1);
-      append(sb, ind + 0, "]");
+      append(sb, ind + 0, "]", true);
    }
 }

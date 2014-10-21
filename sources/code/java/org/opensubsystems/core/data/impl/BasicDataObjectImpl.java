@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2014 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -78,8 +78,8 @@ public abstract class BasicDataObjectImpl extends DataObjectImpl
     * @throws OSSException - an error has occurred
     */
    public BasicDataObjectImpl(
-      Class<DataDescriptor> clsDataDescriptor,
-      long                  lDomainId
+      Class<? extends DataDescriptor> clsDataDescriptor,
+      long                            lDomainId
    ) throws OSSException
    {
       this(DataObject.NEW_ID, clsDataDescriptor, lDomainId, null);
@@ -95,10 +95,10 @@ public abstract class BasicDataObjectImpl extends DataObjectImpl
     * @throws OSSException - an error has occurred
     */
    public BasicDataObjectImpl(
-      long                  lId,
-      Class<DataDescriptor> clsDataDescriptor,
-      long                  lDomainId,
-      Timestamp             creationTimestamp 
+      long                            lId,
+      Class<? extends DataDescriptor> clsDataDescriptor,
+      long                            lDomainId,
+      Timestamp                       creationTimestamp 
    ) throws OSSException
    {
       super(lId, clsDataDescriptor);
@@ -174,12 +174,12 @@ public abstract class BasicDataObjectImpl extends DataObjectImpl
       int           ind
    )
    {
-      append(sb, ind + 0, "BasicDataObjectImpl[");
+      append(sb, ind + 0, "BasicDataObjectImpl[", true);
       append(sb, ind + 1, "m_lDomainId = ", m_lDomainId);
       append(sb, ind + 1, "m_bFromPersistanceStore = ", m_bFromPersistanceStore);
       append(sb, ind + 1, "m_creationTimestamp = ", m_creationTimestamp);
       super.toString(sb, ind + 1);
-      append(sb, ind + 0, "]");
+      append(sb, ind + 0, "]", true);
    }
 
    /**

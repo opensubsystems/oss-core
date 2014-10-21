@@ -361,7 +361,7 @@ public abstract class DatabaseTransactionFactoryImpl extends OSSObject
                                prpSettings, TRANSACTION_MONITOR,
                                TRANSACTION_MONITOR_DEFAULT,
                                "Print transactions monitoring messages"
-                            ).booleanValue();
+                            );
       
       return bTransactionMonitor;
    }

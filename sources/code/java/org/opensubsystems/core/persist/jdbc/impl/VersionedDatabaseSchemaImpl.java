@@ -67,7 +67,7 @@ public abstract class VersionedDatabaseSchemaImpl extends    ModifiableDatabaseS
        * Protected since it can be reconfigured by the framework and the real value
        * can be different.
        */
-      protected static final int VERSIONED_DATABASE_SCHEMA_DATA_TYPE_DESIRED_VALUE = 1;
+      protected static final int VERSIONED_DATABASE_SCHEMA_DATA_TYPE_DESIRED_VALUE = 2;
       
       /**
        * Displayable name for specified data type code object. 

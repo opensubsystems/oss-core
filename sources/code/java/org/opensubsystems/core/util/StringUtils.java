@@ -47,6 +47,16 @@ public final class StringUtils extends OSSObject
    public static final String NULL_STRING = "null";
    
    /**
+    * String representing empty map.
+    */
+   public static final String EMPTY_MAP = "{}";
+   
+   /**
+    * String representing empty collection.
+    */
+   public static final String EMPTY_COLLECTION = "()";
+   
+   /**
     * Constant for assigning 
     */
    public static final String EMPTY_STRING = "";
@@ -1236,37 +1246,49 @@ public final class StringUtils extends OSSObject
       Collection    colValues
    )
    {
-      if (colValues != null)
+      if (colValues == null)
       {
-         Object objValue;
-         
-         sb.append(INDENTATION[iIndentIndex]);
-         sb.append("{");
-         for (Iterator it = colValues.iterator(); it.hasNext();)
-         {
-            objValue = it.next();
-            
-            if (objValue instanceof OSSObject)
-            {
-               ((OSSObject)objValue).toString(sb, iIndentIndex + 1);
-            }
-            else if (objValue instanceof Map)
-            {
-               toStringMap(sb, iIndentIndex + 1, (Map)objValue);
-            }
-            else
-            {
-               sb.append(INDENTATION[iIndentIndex + 1]);
-               sb.append(objValue);
-            }
-            sb.append(",");
-         }
-         sb.append(INDENTATION[iIndentIndex]);
-         sb.append("}");
+         sb.append(NULL_STRING);
+      }
+      else if (colValues.isEmpty())
+      {
+         sb.append(EMPTY_COLLECTION);
       }
       else
       {
-         sb.append(NULL_STRING);
+         Object objValue;
+         
+         objValue = colValues.iterator().next();
+         if (ClassUtils.isPrimitiveOrWrapped(objValue.getClass()))
+         {
+            sb.append(colValues);
+         }
+         else     
+         {
+            sb.append(INDENTATION[iIndentIndex]);
+            sb.append("[");
+            for (Iterator it = colValues.iterator(); it.hasNext();)
+            {
+               objValue = it.next();
+
+               if (objValue instanceof OSSObject)
+               {
+                  ((OSSObject)objValue).toString(sb, iIndentIndex + 1);
+               }
+               else if (objValue instanceof Map)
+               {
+                  toStringMap(sb, iIndentIndex + 1, (Map)objValue);
+               }
+               else
+               {
+                  sb.append(INDENTATION[iIndentIndex + 1]);
+                  sb.append(objValue);
+               }
+               sb.append(",");
+            }
+            sb.append(INDENTATION[iIndentIndex]);
+            sb.append("]");
+         }
       }
    }
 
@@ -1284,7 +1306,15 @@ public final class StringUtils extends OSSObject
       Map           mpValues
    )
    {
-      if (mpValues != null)
+      if (mpValues == null)
+      {
+         sb.append(NULL_STRING);
+      }
+      else if (mpValues.isEmpty())
+      {
+         sb.append(EMPTY_MAP);
+      }
+      else 
       {
          Map.Entry entry;
          Object    objValue;
@@ -1297,12 +1327,12 @@ public final class StringUtils extends OSSObject
             
             sb.append(INDENTATION[iIndentIndex + 1]);
             sb.append(entry.getKey());
-            sb.append("=");
+            sb.append(" = ");
             
             objValue = entry.getValue();
             if (objValue instanceof OSSObject)
             {
-               ((OSSObject)objValue).toString(sb, iIndentIndex + 1);
+               ((OSSObject)objValue).toString(sb, iIndentIndex + 2);
             }
             else if (objValue instanceof Map)
             {
@@ -1320,10 +1350,6 @@ public final class StringUtils extends OSSObject
          }
          sb.append(INDENTATION[iIndentIndex]);
          sb.append("}");
-      }
-      else
-      {
-         sb.append(NULL_STRING);
       }
    }
 }

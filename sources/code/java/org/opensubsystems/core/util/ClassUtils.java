@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2014 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -167,4 +167,30 @@ public final class ClassUtils extends OSSObject
          }
       }
    }
+   
+   /**
+    * Check if the specified class represents a primitive type of is a wrapper
+    * for a primitive type.
+    * 
+    * @param clsClass - class to check
+    * @return boolean - true if the class is a primitive type
+    */
+   public static boolean isPrimitiveOrWrapped(
+      Class<?> clsClass
+   ) 
+   {
+      // See http://stackoverflow.com/questions/709961/determining-if-an-object-is-of-primitive-type
+      // but treat also a String as a primitive type!!!
+      return clsClass.isPrimitive()
+             || clsClass.equals(Boolean.class) 
+             || clsClass.equals(Integer.class) 
+             || clsClass.equals(Character.class) 
+             || clsClass.equals(Byte.class) 
+             || clsClass.equals(Short.class) 
+             || clsClass.equals(Double.class) 
+             || clsClass.equals(Long.class) 
+             || clsClass.equals(Float.class)
+             // Our improvement
+             || clsClass.equals(String.class);
+   }   
 }

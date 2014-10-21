@@ -682,16 +682,29 @@ public class Config extends OSSObject
       
       // This will initialize it to defaults 
       prpSettings = new Properties();
-      m_prpProperties = prpSettings;                                             
-      // This will cause it to create the default file further down
-      if ((m_strRequestedConfigFile == null) 
-         || (m_strRequestedConfigFile.length() == 0))
+      synchronized (IMPL_LOCK)
       {
-         setPropertyFileName(Config.DEFAULT_CONFIG_FILE_NAME);
-      }
-      else
-      {
-         setPropertyFileName(m_strRequestedConfigFile);
+         m_prpProperties = prpSettings;
+
+         // We cannot call setPropertyFileName since this would cause infinite 
+         // loop. Instead just set the config file name here
+         /*
+         if ((m_strRequestedConfigFile == null) 
+            || (m_strRequestedConfigFile.length() == 0))
+         {
+            setPropertyFileName(Config.DEFAULT_CONFIG_FILE_NAME);
+         }
+         else
+         {
+            setPropertyFileName(m_strRequestedConfigFile);
+         }
+         */
+
+         if ((m_strRequestedConfigFile == null) 
+            || (m_strRequestedConfigFile.length() == 0))
+         {
+            m_strRequestedConfigFile = Config.DEFAULT_CONFIG_FILE_NAME;
+         }
       }
       
       return prpSettings;

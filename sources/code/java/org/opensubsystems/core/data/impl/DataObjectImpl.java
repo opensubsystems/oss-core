@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2014 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -58,7 +58,7 @@ public abstract class DataObjectImpl extends OSSObject
     * we can maintain the cached object value without fear that these two won't 
     * be in sync.
     */
-   private Class<DataDescriptor> m_clsDataDescriptor;
+   private Class<? extends DataDescriptor> m_clsDataDescriptor;
    
    // Cached values ////////////////////////////////////////////////////////////
    
@@ -84,7 +84,7 @@ public abstract class DataObjectImpl extends OSSObject
     * @throws OSSException - an error has occurred
     */
    public DataObjectImpl(
-      Class<DataDescriptor> clsDataDescriptor
+      Class<? extends DataDescriptor> clsDataDescriptor
    ) throws OSSException
    {
       this(DataObject.NEW_ID, clsDataDescriptor);
@@ -99,8 +99,8 @@ public abstract class DataObjectImpl extends OSSObject
     */
    @SuppressWarnings("LeakingThisInConstructor")
    public DataObjectImpl(
-      long                  lId,
-      Class<DataDescriptor> clsDataDescriptor
+      long                            lId,
+      Class<? extends DataDescriptor> clsDataDescriptor
    ) throws OSSException
    {
       restore(lId, clsDataDescriptor);
@@ -166,7 +166,7 @@ public abstract class DataObjectImpl extends OSSObject
     * {@inheritDoc}
     */
    @Override
-   public Class<DataDescriptor> getDataDescriptorClass(
+   public Class<? extends DataDescriptor> getDataDescriptorClass(
    )
    {
       return m_clsDataDescriptor;
@@ -211,13 +211,13 @@ public abstract class DataObjectImpl extends OSSObject
       int           ind
    )
    {
-      append(sb, ind + 0, "DataObjectImpl[");
+      append(sb, ind + 0, "DataObjectImpl[", true);
       append(sb, ind + 1, "m_lId = ", m_lId);
       append(sb, ind + 1, "m_clsDataDescriptor = ", m_clsDataDescriptor);
       append(sb, ind + 1, "m_lIdObject = ", m_lIdObject);
       append(sb, ind + 1, "m_dataDescriptor = ", m_dataDescriptor);
       super.toString(sb, ind + 1);
-      append(sb, ind + 0, "]");
+      append(sb, ind + 0, "]", true);
    }
 
    /**
@@ -277,14 +277,13 @@ public abstract class DataObjectImpl extends OSSObject
     * object in case it needs to be reused or reconstructed (e.g. when rollback
     * is issued).
     * 
-    * @param target - target object to restore
     * @param lId - id of this data object
     * @param clsDataDescriptor - class identifying data descriptor for the object
     * @throws OSSException - an error has occurred
     */
    protected final void restore(
-      long                  lId,
-      Class<DataDescriptor> clsDataDescriptor
+      long                            lId,
+      Class<? extends DataDescriptor> clsDataDescriptor
    ) throws OSSException
    {
       m_lId = lId;

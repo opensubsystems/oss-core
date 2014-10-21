@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2012 - 2014 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -21,6 +21,7 @@ package org.opensubsystems.core.util;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Base class for all classes in this project. It is a place to define 
@@ -30,6 +31,18 @@ import java.util.Map;
  */
 public class OSSObject 
 {
+   // Configuration settings ///////////////////////////////////////////////////
+   
+   /**
+    * Specifies if the toString output should be collapsed or not.
+    */
+   public static final String TOSTRING_COLLAPSE = "oss.tostring.collapse";
+
+   /**
+    * Specifies if the toString output should omit empty values.
+    */
+   public static final String TOSTRING_OMIT_EMPTY_VALUES = "oss.tostring.omit.empty.values";
+   
    // Constants ////////////////////////////////////////////////////////////////
    
    /**
@@ -43,6 +56,30 @@ public class OSSObject
     */
    public static final String[] INDENTATION = new String[INDENTATION_LIMIT];
 
+   /**
+    * Default toString collapse setting. Keep it false so that it doesn't hide 
+    * any values.
+    */
+   public static final Boolean TOSTRING_COLLAPSE_DEFAULT = Boolean.FALSE;
+   
+   /**
+    * Default toString omit empty values setting. Keep it false so that it 
+    * doesn't hide any values.
+    */
+   public static final Boolean TOSTRING_OMIT_EMPTY_VALUES_DEFAULT = Boolean.FALSE;
+   
+   // Cached values ////////////////////////////////////////////////////////////
+   
+   /**
+    * Flag specifying if the toString output should be collapsed.
+    */
+   protected static Boolean s_bCollapseToString = null;
+   
+   /**
+    * Flag specifying if the toString output should omit empty values.
+    */
+   protected static Boolean s_bOmitEmptyValuesInToString = null;
+   
    // Logic ////////////////////////////////////////////////////////////////////
    
    /**
@@ -129,27 +166,53 @@ public class OSSObject
       Object        value
    )
    {
-      if (iIndentLevel > 0)
+      append(sb, iIndentLevel, value, false);
+   }
+   
+   /**
+    * Safely append value to the buffer even if it is null.
+    * 
+    * @param sb - buffer to use to append values
+    * @param iIndentLevel - level at which to append the value
+    * @param value - value to append, can be null
+    * @param bCollapsable - if true then this call can be collapsed (omitted)
+    *                       if the configuration setting is set appropriately
+    */
+   protected final void append(
+      StringBuilder sb,
+      int           iIndentLevel,
+      Object        value,
+      boolean       bCollapsable
+   )
+   {
+      if ((!bCollapsable) || (!isToStringCollapsed()))
       {
-         sb.append(INDENTATION[iIndentLevel]);
-      }
-      if (value == null)
-      {
-         sb.append(StringUtils.NULL_STRING);
-      }
-      else
-      {
-         if (value instanceof Map)
+         if (iIndentLevel > 0)
          {
-            StringUtils.toStringMap(sb, iIndentLevel, (Map)value);
+            sb.append(INDENTATION[iIndentLevel]);
          }
-         else if (value instanceof Collection)
+         if (value == null)
          {
-            StringUtils.toStringCollection(sb, iIndentLevel, (Collection)value);
+            sb.append(StringUtils.NULL_STRING);
          }
          else
          {
-            sb.append(value);
+            if (value instanceof Map)
+            {
+               StringUtils.toStringMap(sb, iIndentLevel, (Map)value);
+            }
+            else if (value instanceof Collection)
+            {
+               StringUtils.toStringCollection(sb, iIndentLevel, (Collection)value);
+            }
+            else if (value instanceof OSSObject)
+            {
+               ((OSSObject)value).toString(sb, iIndentLevel);
+            }
+            else
+            {
+               sb.append(value);
+            }
          }
       }
    }
@@ -169,8 +232,112 @@ public class OSSObject
       Object        value
    )
    {
-      sb.append(INDENTATION[iIndentLevel]);
-      sb.append(label);
-      append(sb, value);
+      if ((isNonEmptyValue(value)) || (!isToStringToOmitEmptyValues()))
+      {
+         sb.append(INDENTATION[iIndentLevel]);
+         sb.append(label);
+         if (value instanceof Map)
+         {
+            StringUtils.toStringMap(sb, iIndentLevel, (Map)value);
+         }
+         else if (value instanceof Collection)
+         {
+            StringUtils.toStringCollection(sb, iIndentLevel, (Collection)value);
+         }
+         else if (value instanceof OSSObject)
+         {
+            ((OSSObject)value).toString(sb, iIndentLevel + 1);
+         }
+         else
+         {
+            append(sb, value);
+         }
+      }
+   }
+   
+   /**
+    * Get flag, which is telling us if we should collapse output of the toString.
+    * 
+    * 
+    * @return boolean - if true then the output of the toString will be collapsed
+    *                   (some boilerplate values will be omitted) otherwise 
+    *                   everything will be included.
+    */
+   public boolean isToStringCollapsed()
+   {
+      if (s_bCollapseToString == null)
+      {
+         // Read it here instead of in static block or constructor since if this 
+         // code is executed in different execution context, it might have 
+         // different configuration settings.
+         // No synchronization is needed since if the value is overwritten it
+         // doesn't change the logic
+         Properties prpSettings;
+
+         prpSettings = Config.getInstance().getProperties();
+         s_bCollapseToString = PropertyUtils.getBooleanProperty(
+                                  prpSettings, TOSTRING_COLLAPSE,
+                                  TOSTRING_COLLAPSE_DEFAULT,
+                                  "Collapse toString messages"
+                               );
+
+      }
+      
+      return s_bCollapseToString;
+   }
+   
+   /**
+    * Get flag, which is telling us if we should omit empty values in the toString.
+    * 
+    * 
+    * @return boolean - if true then the output of the toString will omit empty 
+    *                   values otherwise everything will be included.
+    */
+   public boolean isToStringToOmitEmptyValues()
+   {
+      if (s_bOmitEmptyValuesInToString == null)
+      {
+         // Read it here instead of in static block or constructor since if this 
+         // code is executed in different execution context, it might have 
+         // different configuration settings.
+         // No synchronization is needed since if the value is overwritten it
+         // doesn't change the logic
+         Properties prpSettings;
+
+         prpSettings = Config.getInstance().getProperties();
+         s_bOmitEmptyValuesInToString = PropertyUtils.getBooleanProperty(
+                                  prpSettings, TOSTRING_OMIT_EMPTY_VALUES,
+                                  TOSTRING_OMIT_EMPTY_VALUES_DEFAULT,
+                                  "Omit empty values in toString messages"
+                               );
+
+      }
+      
+      return s_bOmitEmptyValuesInToString;
+   }
+   
+   /**
+    * Test if the value would result in empty output.
+    * 
+    * @param value - value to test
+    * @return boolean - if true then the value would not result in empty output,
+    *                   false otherwise
+    */
+   protected final boolean isNonEmptyValue(
+      Object value
+   )
+   {
+      boolean bReturn = true;
+      
+      if (value == null)
+      {
+         bReturn = false;
+      }
+      else if (value instanceof String)
+      {
+         bReturn = !((String)value).isEmpty();
+      }
+    
+      return bReturn;
    }
 }
