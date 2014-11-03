@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2014 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -19,6 +19,8 @@
   
 package org.opensubsystems.core.error;
 
+import org.opensubsystems.core.util.StringUtils;
+
 /**
  * Base class for all custom exceptions created in this project. All custom 
  * exceptions should be derived from this base class so that it is easy to 
@@ -36,6 +38,20 @@ public abstract class OSSException extends Exception
     */
    private static final long serialVersionUID = -8900160561205655014L;
 
+   // Attributes //////////////////////////////////////////////////////////////
+   
+   /**
+    * String identifying location in the structure of the application where the
+    * error has occurred.
+    */
+   protected String m_strLocation;
+   
+   /**
+    * Was the exception already recorded in the data store that captures the 
+    * exception that occurred.
+    */
+   protected boolean m_bRecorded = false;
+   
    // Constructors /////////////////////////////////////////////////////////////
    
    /**
@@ -50,27 +66,61 @@ public abstract class OSSException extends Exception
    /**
     * Create new exception
     * 
-    * @param message - message to display
+    * @param strMessage - message to display
     */
    public OSSException(
-      String message
+      String strMessage
    )
    {
-      super(message);
+      super(strMessage);
    }
 
    /**
     * Create new exception
     * 
-    * @param message - message to display
+    * @param strLocation - location in the structure of the application where 
+    *                      the error has occurred
+    * @param strMessage - message to display
+    */
+   public OSSException(
+      String strLocation,
+      String strMessage
+   )
+   {
+      super(strMessage);
+      m_strLocation = strLocation;
+   }
+
+   /**
+    * Create new exception
+    * 
+    * @param strMessage - message to display
     * @param cause - cause for error
     */
    public OSSException(
-      String message, 
+      String    strMessage, 
       Throwable cause
    )
    {
-      super(message, cause);
+      super(strMessage, cause);
+   }
+
+   /**
+    * Create new exception
+    * 
+    * @param strLocation - location in the structure of the application where 
+    *                      the error has occurred
+    * @param strMessage - message to display
+    * @param cause - cause for error
+    */
+   public OSSException(
+      String    strLocation,
+      String    strMessage, 
+      Throwable cause
+   )
+   {
+      super(strMessage, cause);
+      m_strLocation = strLocation;
    }
 
    /**
@@ -83,5 +133,50 @@ public abstract class OSSException extends Exception
    )
    {
       super(cause);
+   }
+
+   // Logic ////////////////////////////////////////////////////////////////////
+   
+   @Override
+   public String toString()
+   {
+      return StringUtils.valueIfNotNull(m_strLocation) + super.toString();
+   }
+
+   /**
+    * Get the location in the structure of the application where the error has 
+    * occurred.
+    * 
+    * @return  String
+    */
+   public String getLocation()
+   {
+      return  m_strLocation;
+   }
+   
+   /**
+    * Get if the exception was already recorded in the data store that captures 
+    * the exception that occurred. 
+    * 
+    * @return boolean
+    */
+   public boolean isRecorded()
+   {
+      return m_bRecorded;
+   }
+   
+   /**
+    * Set this exception as recorded in the data store that captures 
+    * the exception that occurred. 
+    * 
+    * @param bRecorded - true if the exception has been already recorded in the 
+    *                    data store that captures the exception that occurred,
+    *                    false otherwise.
+    */
+   public void setRecorded(
+      boolean bRecorded
+   )
+   {
+      m_bRecorded = bRecorded;
    }
 }

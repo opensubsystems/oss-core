@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2014 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -59,26 +59,67 @@ public class OSSInvalidDataException extends OSSMultiException
    /**
     * Create new exception
     * 
-    * @param message - message to display
+    * @param strMessage - message to display
     */
-   public OSSInvalidDataException(String message)
+   public OSSInvalidDataException(
+      String strMessage
+   )
    {
-      super(message);
+      super(strMessage);
       m_errorMessages = new Messages();
-      m_errorMessages.addErrorMessage(message);
+      m_errorMessages.addErrorMessage(strMessage);
    }
 
    /**
     * Create new exception
     * 
-    * @param message - message to display
+    * @param strLocation - location in the structure of the application where 
+    *                      the error has occurred
+    * @param strMessage - message to display
+    */
+   public OSSInvalidDataException(
+      String strLocation,
+      String strMessage
+   )
+   {
+      super(strLocation, strMessage);
+      m_errorMessages = new Messages();
+      m_errorMessages.addErrorMessage(strMessage);
+   }
+   
+   /**
+    * Create new exception
+    * 
+    * @param strMessage - message to display
     * @param cause - cause for error
     */
-   public OSSInvalidDataException(String message, Throwable cause)
+   public OSSInvalidDataException(
+      String    strMessage, 
+      Throwable cause
+   )
    {
-      super(message, cause);
+      super(strMessage, cause);
       m_errorMessages = new Messages();
-      m_errorMessages.addErrorMessage(message);
+      m_errorMessages.addErrorMessage(strMessage);
+   }
+
+   /**
+    * Create new exception
+    * 
+    * @param strLocation - location in the structure of the application where 
+    *                      the error has occurred
+    * @param strMessage - message to display
+    * @param cause - cause for error
+    */
+   public OSSInvalidDataException(
+      String    strLocation,
+      String    strMessage, 
+      Throwable cause
+   )
+   {
+      super(strLocation, strMessage, cause);
+      m_errorMessages = new Messages();
+      m_errorMessages.addErrorMessage(strMessage);
    }
 
    /**
@@ -86,11 +127,48 @@ public class OSSInvalidDataException extends OSSMultiException
     * 
     * @param cause - cause for error
     */
-   public OSSInvalidDataException(Throwable cause)
+   public OSSInvalidDataException(
+      Throwable cause
+   )
    {
       super(cause);
       m_errorMessages = new Messages();
    }
+   
+   /**
+    * Create new exception
+    * 
+    * @param first - first exception which has occurred
+    * @param second - second exception which has occurred
+    */
+   public OSSInvalidDataException(
+      Throwable first,
+      Throwable second
+   )
+   {
+      super(first, second);
+      m_errorMessages = new Messages();
+   }
+   
+   /**
+    * Create new exception
+    * 
+    * @param strLocation - location in the structure of the application where 
+    *                      the error has occurred
+    * @param first - first exception which has occurred
+    * @param second - second exception which has occurred
+    */
+   public OSSInvalidDataException(
+      String    strLocation,
+      Throwable first,
+      Throwable second
+   )
+   {
+      super(strLocation, "Multiple exceptions");
+      m_errorMessages = new Messages();
+   }
+   
+   // Logic ////////////////////////////////////////////////////////////////////
    
    /**
     * @return Messages - error messages object

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2014 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -59,39 +59,77 @@ public class OSSMultiException extends OSSException
    /**
     * Create new exception
     * 
-    * @param message - message to display
+    * @param strMessage - message to display
     */
-   public OSSMultiException(String message)
+   public OSSMultiException(
+      String strMessage
+   )
    {
-      super(message);
+      super(strMessage);
    }
 
    /**
     * Create new exception
     * 
-    * @param message - message to display
+    * @param strLocation - location in the structure of the application where 
+    *                      the error has occurred
+    * @param strMessage - message to display
+    */
+   public OSSMultiException(
+      String strLocation,
+      String strMessage
+   )
+   {
+      super(strLocation, strMessage);
+   }
+   
+   /**
+    * Create new exception
+    * 
+    * @param strMessage - message to display
     * @param cause - cause for error
     */
-   public OSSMultiException(String message, Throwable cause)
+   public OSSMultiException(
+      String    strMessage, 
+      Throwable cause
+   )
    {
-      super(message, cause);
+      super(strMessage, cause);
       add(cause);
    }
 
    /**
     * Create new exception
     * 
+    * @param strLocation - location in the structure of the application where 
+    *                      the error has occurred
+    * @param strMessage - message to display
     * @param cause - cause for error
     */
-   public OSSMultiException(Throwable cause)
+   public OSSMultiException(
+      String    strLocation,
+      String    strMessage, 
+      Throwable cause
+   )
+   {
+      super(strLocation, strMessage, cause);
+   }
+   
+   /**
+    * Create new exception
+    * 
+    * @param cause - cause for error
+    */
+   public OSSMultiException(
+      Throwable cause
+   )
    {
       super(cause);
       add(cause);
    }
    
-
    /**
-    * Constructor.
+    * Create new exception
     * 
     * @param first - first exception which has occurred
     * @param second - second exception which has occurred
@@ -102,6 +140,27 @@ public class OSSMultiException extends OSSException
    )
    {
       super("Multiple exceptions");
+      
+      m_lstExceptions = new ArrayList<>(2);
+      add(first);
+      add(second);
+   }
+
+   /**
+    * Create new exception
+    * 
+    * @param strLocation - location in the structure of the application where 
+    *                      the error has occurred
+    * @param first - first exception which has occurred
+    * @param second - second exception which has occurred
+    */
+   public OSSMultiException(
+      String    strLocation,
+      Throwable first,
+      Throwable second
+   )
+   {
+      super(strLocation, "Multiple exceptions");
       
       m_lstExceptions = new ArrayList<>(2);
       add(first);
