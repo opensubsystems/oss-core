@@ -33,12 +33,10 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Logger;
 import java.util.logging.Level;
-
+import java.util.logging.Logger;
 import org.opensubsystems.core.error.OSSException;
 import org.opensubsystems.core.error.OSSMultiException;
-import static org.opensubsystems.core.util.Log.s_strConfigFile;
 
 /**
  * Collection of methods to make work with files easier.
