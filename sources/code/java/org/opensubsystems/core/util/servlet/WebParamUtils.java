@@ -503,24 +503,7 @@ public final class WebParamUtils extends OSSObject
       Map<String, FileItem> mpFiles;
       TwoElementStruct<Map<String, Object>, Map<String, FileItem>> params;
 
-      temp = request.getAttribute(REQUEST_PARAMS_MAP);
-      if (temp == null)
-      {
-         try 
-         {
-            params = parseMultipartRequest(strLogPrefix, request);
-         } 
-         catch (FileUploadException exc) 
-         {
-            throw new OSSInvalidDataException(strLogPrefix, 
-                         "Cannot parse multipart request", exc);
-         }
-         request.setAttribute(REQUEST_PARAMS_MAP, params);
-      }
-      else
-      {
-         params = (TwoElementStruct<Map<String, Object>, Map<String, FileItem>>)temp;
-      }
+      params = getMultipartParameters(strLogPrefix, request);
 
       mpFiles = params.getSecond();
       uploadedFile = mpFiles.get(strParamName);
@@ -544,7 +527,7 @@ public final class WebParamUtils extends OSSObject
          
          try 
          {
-            fileValue = File.createTempFile("oss", "upload", new File(strTempDir));
+            fileValue = File.createTempFile("oss-", ".upload", new File(strTempDir));
             try 
             {         
                uploadedFile.write(fileValue);
@@ -663,7 +646,7 @@ public final class WebParamUtils extends OSSObject
             if (temp instanceof String)
             {
                arValues = new String[1];
-               arValues[1] = (String)temp;
+               arValues[0] = (String)temp;
             }
             else
             {
@@ -680,6 +663,76 @@ public final class WebParamUtils extends OSSObject
       }
       
       return arValues;
+   }
+   
+   /**
+    * Get map of all parameters correctly handling regular and multipart requests.
+    * Returns a java.util.Map of the parameters of this request. Request 
+    * parameters are extra information sent with the request. For HTTP servlets, 
+    * parameters are contained in the query string or posted form data.
+    * 
+    * @param strLogPrefix - log prefix used for all log output to tie together
+    *                       the same invocations
+    * @param request - request to get parameter from
+    * @return Map<String, String[]> - an immutable java.util.Map containing 
+    *                                 parameter names as keys and parameter 
+    *                                 values as map values. The keys in the 
+    *                                 parameter map are of type String. The 
+    *                                 values in the parameter map are of type 
+    *                                 String array.
+    * @throws OSSInvalidDataException - an error has occurred
+    */
+   public static Map<String, String[]> getParameterMap(
+      String             strLogPrefix,
+      HttpServletRequest request
+   ) throws OSSInvalidDataException 
+   {
+      Map<String, String[]>  mpParamMap;
+      boolean                bIsMultipart;
+      
+      bIsMultipart = ServletFileUpload.isMultipartContent(request);
+      if (!bIsMultipart)
+      {
+         mpParamMap = request.getParameterMap();
+      }
+      else
+      {
+         String[]            arValues;
+         Object              temp;
+         Map<String, Object> mpParams;
+         TwoElementStruct<Map<String, Object>, Map<String, FileItem>> params;
+
+         params = getMultipartParameters(strLogPrefix, request);
+         mpParams = params.getFirst();
+         mpParamMap = new HashMap(mpParams.size());
+         
+         for (Map.Entry<String, Object> entry : mpParams.entrySet())
+         {
+            temp = entry.getValue();
+            if (temp != null)
+            {
+               if (temp instanceof String)
+               {
+                  arValues = new String[1];
+                  arValues[0] = (String)temp;
+               }
+               else
+               {
+                  List<String> lstValues;
+
+                  lstValues = (List<String>)temp;
+                  arValues = lstValues.toArray(new String[lstValues.size()]);
+               }
+            }
+            else
+            {
+               arValues = null;
+            }
+            mpParamMap.put(entry.getKey(), arValues);
+         }
+      }
+      
+      return mpParamMap;
    }
    
    /**
@@ -842,6 +895,39 @@ public final class WebParamUtils extends OSSObject
       Map<String, Object> mpParams;
       TwoElementStruct<Map<String, Object>, Map<String, FileItem>> params;
 
+      params = getMultipartParameters(strLogPrefix, request);
+      mpParams = params.getFirst();
+      temp = mpParams.get(strParamName);
+
+      return temp;
+   }
+
+   /**
+    * Get map of parsed multipart parameters.
+    * 
+    * @param strLogPrefix - log prefix used for all log output to tie together
+    *                       the same invocations
+    * @param request - request to get parameter from
+    * @return TwoElementStruct<Map<String, String>, Map<String, FileItem>> - the
+    *                  first element is map of parameter names and their values. 
+    *                  For uploaded files the files names are also stored here as 
+    *                  values of the parameters that are used to upload them.
+    *                  If there is only one value of the parameter then the value
+    *                  is stored directly as String. If there are multiple values
+    *                  then the values are stored as List<String>.
+    *                  The second element is map of parameter names and the files
+    *                  that are uploaded as these parameters.
+    * @throws OSSInvalidDataException - an error has occurred
+    */
+   protected static TwoElementStruct<Map<String, Object>, Map<String, FileItem>> getMultipartParameters(
+      String             strLogPrefix,
+      HttpServletRequest request
+   ) throws OSSInvalidDataException
+   {
+      Object              temp;
+      Map<String, Object> mpParams;
+      TwoElementStruct<Map<String, Object>, Map<String, FileItem>> params;
+
       temp = request.getAttribute(REQUEST_PARAMS_MAP);
       if (temp == null)
       {
@@ -861,9 +947,6 @@ public final class WebParamUtils extends OSSObject
          params = (TwoElementStruct<Map<String, Object>, Map<String, FileItem>>)temp;
       }
 
-      mpParams = params.getFirst();
-      temp = mpParams.get(strParamName);
-
-      return temp;
+      return params;
    }
 }

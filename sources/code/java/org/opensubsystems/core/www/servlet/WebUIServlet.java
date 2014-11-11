@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2014 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -34,12 +34,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.opensubsystems.core.error.OSSException;
+import org.opensubsystems.core.error.OSSInvalidDataException;
 import org.opensubsystems.core.util.CallContext;
 import org.opensubsystems.core.util.GlobalConstants;
 import org.opensubsystems.core.util.Log;
 import org.opensubsystems.core.util.PropertyUtils;
 import org.opensubsystems.core.util.StopWatch;
 import org.opensubsystems.core.util.WebConstants;
+import org.opensubsystems.core.util.servlet.WebParamUtils;
 import org.opensubsystems.core.util.servlet.WebSessionUtils;
 import org.opensubsystems.core.util.servlet.WebUtils;
 import org.opensubsystems.core.www.jsp.MessageTag;
@@ -344,12 +346,20 @@ public class WebUIServlet extends WebSessionServlet
       hsrqRequest.setAttribute(MessageTag.MESSAGES_REQUEST_PARAM, 
                                CallContext.getInstance().getMessages());
       
-      if (hsrqRequest.getParameter(FORCE_MAXIMIZE_PARAM) != null)
+      try
       {
-         // set up force maximize flag into the request attribute
-         hsrqRequest.setAttribute(FORCE_MAXIMIZE_PARAM, "true");
+         if (WebParamUtils.getParameter("WebUIServlet", hsrqRequest, 
+             FORCE_MAXIMIZE_PARAM) != null)
+         {
+            // set up force maximize flag into the request attribute
+            hsrqRequest.setAttribute(FORCE_MAXIMIZE_PARAM, "true");
+         }
       }
-        
+      catch(OSSInvalidDataException exc)
+      {
+         throw new ServletException(exc);
+      }
+      
       rdReturn.forward(hsrqRequest, hsrpResponse);
       timer.stop();
       s_logger.log(Level.FINE, "Displaying of {0} took {1}", 

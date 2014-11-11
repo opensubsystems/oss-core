@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2014 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.opensubsystems.core.error.OSSException;
+import org.opensubsystems.core.error.OSSInvalidDataException;
 import org.opensubsystems.core.util.CallContext;
 import org.opensubsystems.core.util.ClassUtils;
 import org.opensubsystems.core.util.Config;
@@ -43,6 +44,7 @@ import org.opensubsystems.core.util.Log;
 import org.opensubsystems.core.util.MultiConfig;
 import org.opensubsystems.core.util.PropertyUtils;
 import org.opensubsystems.core.util.StopWatch;
+import org.opensubsystems.core.util.servlet.WebParamUtils;
 import org.opensubsystems.core.util.servlet.WebSessionUtils;
 import org.opensubsystems.core.util.servlet.WebUtils;
 
@@ -925,24 +927,31 @@ public class WebSessionServlet extends HttpServlet
       sbUrl.append(strUrl);
       if (sbUrl.indexOf(ATTACH_INTERNAL_SESSION_ID_URL_PARAM) == -1)
       {
-         strAttachSessionId = hsrqRequest.getParameter(
-                                 ATTACH_INTERNAL_SESSION_ID_URL_PARAM);
-         if ((strAttachSessionId != null) && (strAttachSessionId.length() > 0))
-         {                                               
-            // The session parameter is not there yet
-            if (sbUrl.indexOf("?") == -1)
-            {
-               // There is no query string yet
-               sbUrl.append("?");
+         try
+         {
+            strAttachSessionId = WebParamUtils.getParameter("WebSessionServlet: ", 
+                                    hsrqRequest, ATTACH_INTERNAL_SESSION_ID_URL_PARAM);
+            if ((strAttachSessionId != null) && (strAttachSessionId.length() > 0))
+            {                                               
+               // The session parameter is not there yet
+               if (sbUrl.indexOf("?") == -1)
+               {
+                  // There is no query string yet
+                  sbUrl.append("?");
+               }
+               else
+               {
+                  // There is already a query string so just add another parameter
+                  sbUrl.append("&");
+               }
+               sbUrl.append(ATTACH_INTERNAL_SESSION_ID_URL_PARAM);
+               sbUrl.append("=");
+               sbUrl.append(strAttachSessionId);
             }
-            else
-            {
-               // There is already a query string so just add another parameter
-               sbUrl.append("&");
-            }
-            sbUrl.append(ATTACH_INTERNAL_SESSION_ID_URL_PARAM);
-            sbUrl.append("=");
-            sbUrl.append(strAttachSessionId);
+         }
+         catch(OSSInvalidDataException exc)
+         {
+            throw new ServletException(exc);
          }
       }
 
