@@ -26,10 +26,11 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -38,14 +39,16 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.opensubsystems.core.error.OSSInvalidDataException;
-
 import org.opensubsystems.core.util.Config;
 import org.opensubsystems.core.util.Log;
 import org.opensubsystems.core.util.MimeTypeConstants;
 import org.opensubsystems.core.util.OSSObject;
 import org.opensubsystems.core.util.PropertyUtils;
 import org.opensubsystems.core.util.StringUtils;
+import org.opensubsystems.core.util.TwoElementStruct;
 import org.opensubsystems.core.util.WebConstants;
 
 /**
@@ -471,10 +474,12 @@ public final class WebUtils extends OSSObject
    {
       Enumeration   enumNames;
       Enumeration   enumValues;
+      Iterator      iterValues;
       String        strName;
       String[]      arValues;
       Cookie[]      arCookies;
       int           iIndex;
+      Map<String, String[]>  mpParamMap;
       StringBuilder sbfReturn = new StringBuilder();
 
       sbfReturn.append("HttpServletRequest=[");
@@ -520,13 +525,24 @@ public final class WebUtils extends OSSObject
       sbfReturn.append("\nContentType=");
       sbfReturn.append(StringUtils.valueIfNotNull(hsrqRequest.getContentType()));
       sbfReturn.append(";");
-      for (enumNames = hsrqRequest.getParameterNames();
-           enumNames.hasMoreElements();)
+      sbfReturn.append("\nMultiPart=");
+      sbfReturn.append(ServletFileUpload.isMultipartContent(hsrqRequest));
+      sbfReturn.append(";");
+      
+      // Parameters ////////////////////////////////////////////////////////////
+      
+      try
       {
-         strName = (String)enumNames.nextElement();
-         try
+         Map.Entry<String, String[]> entry;
+
+         // Use getParameterMap rather than request.getParameterNames since it 
+         // correctly handles multipart requests
+         mpParamMap = WebParamUtils.getParameterMap("WebUtils: ", hsrqRequest);
+         for (iterValues = mpParamMap.entrySet().iterator(); iterValues.hasNext();)
          {
-            arValues = WebParamUtils.getParameterValues("WebUtils: ", hsrqRequest, strName);
+            entry = (Map.Entry<String, String[]> )iterValues.next();
+            strName = entry.getKey();
+            arValues = entry.getValue();
             sbfReturn.append("\nParam=");
             sbfReturn.append(strName);
             sbfReturn.append(" values=");
@@ -538,17 +554,60 @@ public final class WebUtils extends OSSObject
                   sbfReturn.append(";");
                }
             }
-            if (enumNames.hasMoreElements())
+            if (iterValues.hasNext())
             {
                sbfReturn.append(";");
             }
          }
+      }
+      catch (OSSInvalidDataException ex)
+      {
+         sbfReturn.append("<Cannot access parameter map of the request>");
+         s_logger.log(Level.SEVERE, "Cannot access parameter map of the request", ex);
+      }
+      
+      // Uploaded files ////////////////////////////////////////////////////////
+      
+      if (ServletFileUpload.isMultipartContent(hsrqRequest))
+      {
+         try
+         {
+            FileItem              item;
+            Map<String, FileItem> mpFiles;
+            TwoElementStruct<Map<String, Object>, Map<String, FileItem>> params;
+
+            params = WebParamUtils.getMultipartParameters("WebUtils: ", hsrqRequest);
+            mpFiles = params.getSecond();
+
+            for (iterValues = mpFiles.values().iterator(); iterValues.hasNext();)
+            {
+               item = (FileItem)iterValues.next();
+               sbfReturn.append("\nUpload=");
+               sbfReturn.append(item.getName());
+               sbfReturn.append(" field=");
+               sbfReturn.append(item.getFieldName());
+               sbfReturn.append(" contentType=");
+               sbfReturn.append(item.getContentType());
+               sbfReturn.append(" isInMemory=");
+               sbfReturn.append(item.isInMemory());
+               sbfReturn.append(" sizeInBytes=");
+               sbfReturn.append(item.getSize());
+               if (iterValues.hasNext())
+               {
+                  sbfReturn.append(";");
+               }
+            }
+         }
          catch (OSSInvalidDataException ex)
          {
-            sbfReturn.append("Cannot access parameter values of parameter " + strName);
-            s_logger.log(Level.SEVERE, "Cannot access parameter values of parameter " + strName, ex);
+            sbfReturn.append("<Cannot access list of multipart parameters>");
+            s_logger.log(Level.SEVERE, "Cannot access list of multipart parameters", 
+                         ex);
          }
       }
+      
+      // Headers ///////////////////////////////////////////////////////////////
+      
       for (enumNames = hsrqRequest.getHeaderNames();
            enumNames.hasMoreElements();)
       {
@@ -570,6 +629,9 @@ public final class WebUtils extends OSSObject
             sbfReturn.append(";");
          }
       }
+      
+      // Cookies ///////////////////////////////////////////////////////////////
+      
       arCookies = hsrqRequest.getCookies();
       if (arCookies != null)
       {
@@ -604,6 +666,9 @@ public final class WebUtils extends OSSObject
       {
          sbfReturn.append(";");
       }
+      
+      // Attributes ////////////////////////////////////////////////////////////
+      
       for (enumNames = hsrqRequest.getAttributeNames();
            enumNames.hasMoreElements();)
       {
@@ -617,6 +682,9 @@ public final class WebUtils extends OSSObject
             sbfReturn.append(";");
          }
       }
+      
+      // Content ///////////////////////////////////////////////////////////////
+      
       sbfReturn.append("\nContent=");
       try
       {
