@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2014 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -27,6 +27,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.FilterConfig;
@@ -34,14 +35,17 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.opensubsystems.core.error.OSSInvalidDataException;
 
 import org.opensubsystems.core.util.Config;
 import org.opensubsystems.core.util.Log;
 import org.opensubsystems.core.util.MimeTypeConstants;
 import org.opensubsystems.core.util.OSSObject;
 import org.opensubsystems.core.util.PropertyUtils;
+import org.opensubsystems.core.util.StringUtils;
 import org.opensubsystems.core.util.WebConstants;
 
 /**
@@ -454,7 +458,8 @@ public final class WebUtils extends OSSObject
 
    /**
     * Create debug string containing all parameter names and their values from
-    * the request.
+    * the request, all attributes, all cookies and other data characterizing the
+    * request.
     *
     * @param  hsrqRequest - the servlet request.
     * @return String - debug string containing all parameter names and their
@@ -468,32 +473,80 @@ public final class WebUtils extends OSSObject
       Enumeration   enumValues;
       String        strName;
       String[]      arValues;
+      Cookie[]      arCookies;
       int           iIndex;
       StringBuilder sbfReturn = new StringBuilder();
 
       sbfReturn.append("HttpServletRequest=[");
-      sbfReturn.append("FullURL=");
+      sbfReturn.append("\nRemoteAddress=");
+      sbfReturn.append(StringUtils.valueIfNotNull(hsrqRequest.getRemoteAddr()));
+      sbfReturn.append(";");
+      sbfReturn.append("\nRemotePort=");
+      sbfReturn.append(hsrqRequest.getRemotePort());
+      sbfReturn.append(";");
+      sbfReturn.append("\nRemoteHost=");
+      sbfReturn.append(StringUtils.valueIfNotNull(hsrqRequest.getRemoteHost()));
+      sbfReturn.append(";");
+      sbfReturn.append("\nRemoteUser=");
+      sbfReturn.append(StringUtils.valueIfNotNull(hsrqRequest.getRemoteUser()));
+      sbfReturn.append(";");
+      sbfReturn.append("\nFullURL=");
       sbfReturn.append(getFullRequestURL(hsrqRequest));
+      sbfReturn.append(";");
+      sbfReturn.append("\nContextPath=");
+      sbfReturn.append(hsrqRequest.getContextPath());
+      sbfReturn.append(";");
+      sbfReturn.append("\nServletPath=");
+      sbfReturn.append(hsrqRequest.getServletPath());
+      sbfReturn.append(";");
+      sbfReturn.append("\nPathInfo =");
+      sbfReturn.append(hsrqRequest.getPathInfo());
+      sbfReturn.append(";");
+      sbfReturn.append("\nRequestURI=");
+      sbfReturn.append(hsrqRequest.getRequestURI());
+      sbfReturn.append(";");
+      sbfReturn.append("\nRequestURL=");
+      sbfReturn.append(hsrqRequest.getRequestURL());
+      sbfReturn.append(";");
+      sbfReturn.append("\nMethod=");
+      sbfReturn.append(hsrqRequest.getMethod());
+      sbfReturn.append(";");
+      sbfReturn.append("\nAuthenticationType=");
+      sbfReturn.append(StringUtils.valueIfNotNull(hsrqRequest.getAuthType()));
+      sbfReturn.append(";");
+      sbfReturn.append("\nCharacterEncoding=");
+      sbfReturn.append(StringUtils.valueIfNotNull(hsrqRequest.getCharacterEncoding()));
+      sbfReturn.append(";");
+      sbfReturn.append("\nContentType=");
+      sbfReturn.append(StringUtils.valueIfNotNull(hsrqRequest.getContentType()));
       sbfReturn.append(";");
       for (enumNames = hsrqRequest.getParameterNames();
            enumNames.hasMoreElements();)
       {
          strName = (String)enumNames.nextElement();
-         arValues = hsrqRequest.getParameterValues(strName);
-         sbfReturn.append("\nParam=");
-         sbfReturn.append(strName);
-         sbfReturn.append(" values=");
-         for (iIndex = 0; iIndex < arValues.length; iIndex++)
+         try
          {
-            sbfReturn.append(arValues[iIndex]);
-            if (iIndex < (arValues.length - 1))
+            arValues = WebParamUtils.getParameterValues("WebUtils: ", hsrqRequest, strName);
+            sbfReturn.append("\nParam=");
+            sbfReturn.append(strName);
+            sbfReturn.append(" values=");
+            for (iIndex = 0; iIndex < arValues.length; iIndex++)
+            {
+               sbfReturn.append(arValues[iIndex]);
+               if (iIndex < (arValues.length - 1))
+               {
+                  sbfReturn.append(";");
+               }
+            }
+            if (enumNames.hasMoreElements())
             {
                sbfReturn.append(";");
             }
          }
-         if (enumNames.hasMoreElements())
+         catch (OSSInvalidDataException ex)
          {
-            sbfReturn.append(";");
+            sbfReturn.append("Cannot access parameter values of parameter " + strName);
+            s_logger.log(Level.SEVERE, "Cannot access parameter values of parameter " + strName, ex);
          }
       }
       for (enumNames = hsrqRequest.getHeaderNames();
@@ -517,6 +570,40 @@ public final class WebUtils extends OSSObject
             sbfReturn.append(";");
          }
       }
+      arCookies = hsrqRequest.getCookies();
+      if (arCookies != null)
+      {
+          Cookie cookie;
+          
+          for (iIndex = 0; iIndex < arCookies.length; iIndex++)
+          {
+             cookie = arCookies[iIndex];
+             sbfReturn.append("\nCookie=");
+             sbfReturn.append(cookie.getName());
+             sbfReturn.append(" path=");
+             sbfReturn.append(cookie.getPath());
+             sbfReturn.append(" path=");
+             sbfReturn.append(cookie.getDomain());
+             sbfReturn.append(" maxage=");
+             sbfReturn.append(cookie.getMaxAge());
+             sbfReturn.append(" version=");
+             sbfReturn.append(cookie.getVersion());
+             sbfReturn.append(" secure=");
+             sbfReturn.append(cookie.getSecure());
+             sbfReturn.append(" value=");
+             sbfReturn.append(cookie.getValue());
+             sbfReturn.append(" comment=");
+             sbfReturn.append(StringUtils.valueIfNotNull(cookie.getComment()));
+             if (iIndex < (arCookies.length - 1))
+             {
+                 sbfReturn.append(";");
+             }
+         }
+      }
+      if (enumNames.hasMoreElements())
+      {
+         sbfReturn.append(";");
+      }
       for (enumNames = hsrqRequest.getAttributeNames();
            enumNames.hasMoreElements();)
       {
@@ -530,7 +617,18 @@ public final class WebUtils extends OSSObject
             sbfReturn.append(";");
          }
       }
-      sbfReturn.append("]");
+      sbfReturn.append("\nContent=");
+      try
+      {
+         sbfReturn.append(StringUtils.convertStreamToString(
+            hsrqRequest.getInputStream(), true));
+      }
+      catch (IOException ex)
+      {
+         sbfReturn.append("<Cannot access input stream of the request>");
+         s_logger.log(Level.SEVERE, "Cannot access input stream of the request", ex);
+      }
+      sbfReturn.append(";");
 
       return sbfReturn.toString();
    }

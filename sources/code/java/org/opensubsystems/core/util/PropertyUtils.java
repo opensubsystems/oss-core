@@ -36,6 +36,7 @@ import org.opensubsystems.core.error.OSSConfigException;
 /**
  * Class containing methods for working with properties
  * 
+ * @see SetupReader - setup reader allows more advanced access to properties
  * @author bastafidli
  */
 public final class PropertyUtils extends OSSObject
@@ -335,7 +336,7 @@ public final class PropertyUtils extends OSSObject
     * @param strDisplayName - user friendly name of the property  
     * @param bAllowEmpty - if true then empty value is allowed  
     * @param bPrintMessage - if true then message about what value was read will
-    *                        be printed into the log, if false nothing wll be
+    *                        be printed into the log, if false nothing will be
     * @return String - value of the property or default value if the value is 
     *                  not specified
     */
