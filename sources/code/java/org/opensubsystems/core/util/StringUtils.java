@@ -19,6 +19,8 @@
 
 package org.opensubsystems.core.util;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -44,7 +46,7 @@ public final class StringUtils extends OSSObject
    /**
     * Constant for assigning 
     */
-   public static final String NULL_STRING = "null";
+   public static final String NULL_STRING = "NULL";
    
    /**
     * String representing empty map.
@@ -94,19 +96,41 @@ public final class StringUtils extends OSSObject
 
    // Logic ////////////////////////////////////////////////////////////////////
    
+   /**
+    * Return the specified value if it is not null otherwise return constant 
+    * representing null.
+    *
+    * @param value - value to convert to the String 
+    * @return String 
+    */
    public static String valueIfNotNull(
-      Object input
+      Object value
    )
    {
-      if (input == null)
-      {
-         return NULL_STRING;
-      }
-      else
-      {
-         return input.toString();
-      }
-   }
+      return valueIfNotNull(value, NULL_STRING);
+   }  
+   
+   /**
+    * Return the specified value if it is not null otherwise return constant 
+    * representing null.
+    *
+    * @param value - value to convert to the String 
+    * @param strAlternative - alternative value to use if the specified value
+    *                         is null
+    * @return String 
+    */
+   public static String valueIfNotNull(
+      Object value,
+      String strAlternative
+   )
+   {
+       if (value != null)
+       {
+           return value.toString();
+       }
+       
+       return strAlternative;
+   }    
    
    /**
     * Count number of occurrence of lookup in text.
@@ -1059,50 +1083,61 @@ public final class StringUtils extends OSSObject
    /**
     * Concat all the specified strings to a single one
     * 
-    * @param strings - strings to connect, all null and empty ones will be ignored
-    * @param separator - separator to put in between the string elements
-    * @param quote - quote string to put around string elements, if null nothing
+    * @param arValues - strings to connect, all null and empty ones will be ignored
+    * @param strSeparator - separator to put in between the string elements
+    * @param strQuote - quote string to put around string elements, if null nothing
     *                will be put around them
-    * @return String with concatenated inputs
+    * @return String - string with concatenated inputs
     */
    public static String concat(
-      String[] strings,
-      String   separator,
-      String   quote
+      String[] arValues,
+      String   strSeparator,
+      String   strQuote
    )
    {
-      StringBuilder output = new StringBuilder();
       
-      if (strings != null)
+      String strValue;
+      
+      if ((arValues == null) || (arValues.length == 0))
       {
-         int          iIndex;
-         boolean      bSeparator;
-         boolean      bQuote;
+         strValue = "";
+      }
+      else if (arValues.length == 1)
+      {
+         strValue = arValues[0];
+      }
+      else
+      {
+         boolean       bSeparator;
+         boolean       bQuote;
+         StringBuilder sbBuilder = new StringBuilder();
          
-         bSeparator = (separator != null) && (separator.length() > 0);
-         bQuote = (quote != null) && (quote.length() > 0);
-         for (iIndex = 0; iIndex < strings.length; iIndex++)
+         bSeparator = (strSeparator != null) && (strSeparator.length() > 0);
+         bQuote = (strQuote != null) && (strQuote.length() > 0);
+         for (String strCurrent : arValues)
          {
-            if ((strings[iIndex] != null) && (strings[iIndex].length() > 0))
+            if ((strCurrent != null) && (strCurrent.length() > 0))
             {
-               if ((output.length() > 0) && (bSeparator))
+               if ((sbBuilder.length() > 0) && (bSeparator))
                {
-                  output.append(separator);
+                  sbBuilder.append(strSeparator);
                }
                if (bQuote)
                {
-                  output.append(quote);
+                  sbBuilder.append(strQuote);
                }
-               output.append(strings[iIndex]);            
+               sbBuilder.append(strCurrent);            
                if (bQuote)
                {
-                  output.append(quote);
+                  sbBuilder.append(strQuote);
                }
             }
          }
+         
+         strValue = sbBuilder.toString();
       }
       
-      return output.toString();
+      return strValue;
    }
    
    /**
@@ -1351,5 +1386,122 @@ public final class StringUtils extends OSSObject
          sb.append(INDENTATION[iIndentIndex]);
          sb.append("}");
       }
+   }
+
+
+   /**
+    * Return the class of the specified value if it is not null otherwise return 
+    * constant representing null.
+    *
+    * @param value  
+    * @return String 
+    */
+   public static String classIfNotNull(
+      Object value
+   )
+   {
+      return valueIfNotNull(value, NULL_STRING);
+   }  
+   
+   /**
+    * Return the class of the specified value if it is not null otherwise return 
+    * constant representing null.
+    *
+    * @param value  
+    * @return String 
+    */
+   public static String classIfNotNull(
+      Object value,
+      String strAlternative
+   )
+   {
+       if (value != null)
+       {
+           return value.getClass().getName();
+       }
+       
+       return strAlternative;
+   }    
+
+   /**
+    * Convert input stream to a string
+    * 
+    * @param is - input stream to convert
+    * @param bRepeatable - should we retrieve the content in such a way that
+    *                      it can be repeated? If true and the stream doesn't 
+    *                      support repeating this operation that the content 
+    *                      will not be touched
+    * @return String - string value corresponding to the content of the input 
+    *                  stream
+    * @throws IOException - an error has occurred
+    */
+   public static String convertStreamToString(
+      InputStream is,
+      boolean     bRepeatable 
+   ) throws IOException
+   {
+      String strReturn = "";
+      final int iReadLimit = 64 * 1024;
+      
+      if (is != null)
+      {
+         if ((!bRepeatable) || (is.markSupported()))
+         {
+            try 
+            {
+               if ((bRepeatable) && (is.markSupported()))
+               {
+                  is.mark(iReadLimit);
+               }
+               strReturn = new java.util.Scanner(is).useDelimiter("\\A").next();
+            } 
+            catch (java.util.NoSuchElementException e) 
+            {
+              strReturn = "";
+            }
+            finally
+            {
+               if ((bRepeatable) && (is.markSupported()))
+               {
+                  is.reset();
+               }
+            }
+         }
+         else
+         {
+            strReturn = "<Cannot access input stream of the request in repeatable way>";
+         }
+      }
+      
+      return strReturn;
+   }
+   
+   /**
+    * Check if the array contains reference to a String value
+    * 
+    * @param arValues - array to search
+    * @param strTarget - value to find
+    * @return boolean - true if target is present in the array, false otherwise
+    */
+   public static boolean containsIgnoreCase(
+      String[] arValues,
+      String   strTarget
+   )
+   {
+      boolean bReturn = false;
+      
+      if ((arValues != null) && (arValues.length > 0))
+      {
+         for (String strValue : arValues)
+         {
+            if (strTarget.equalsIgnoreCase(strValue))
+            {
+               bReturn = true;
+               break;
+            }
+         }
+      }
+      
+      return bReturn;
    }
 }
