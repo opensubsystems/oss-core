@@ -1161,7 +1161,7 @@ public final class StringUtils extends OSSObject
          for (Iterator<String> itrElements = container.iterator(); 
              (itrElements.hasNext() && (!bReturn));)
          {
-            if ((itrElements.next()).indexOf(strSearch) != -1)
+            if ((itrElements.next()).contains(strSearch))
             {
                bReturn = true;
             }
@@ -1192,7 +1192,7 @@ public final class StringUtils extends OSSObject
          for (Iterator<String> itrElements = container.iterator(); 
              (itrElements.hasNext() && (!bReturn));)
          {
-            if (strSearch.indexOf(itrElements.next()) != -1)
+            if (strSearch.contains(itrElements.next()))
             {
                bReturn = true;
             }
@@ -1274,8 +1274,9 @@ public final class StringUtils extends OSSObject
     * @param sb - string builder used to create the representation
     * @param iIndentIndex - indentation index
     * @param colValues - collection to print out
+    * @return StringBuilder - the same string builder as passed in
     */
-   public static void toStringCollection(
+   public static StringBuilder toStringCollection(
       StringBuilder sb,
       int           iIndentIndex,
       Collection    colValues
@@ -1325,6 +1326,8 @@ public final class StringUtils extends OSSObject
             sb.append("]");
          }
       }
+      
+      return sb;
    }
 
    /**
@@ -1334,8 +1337,9 @@ public final class StringUtils extends OSSObject
     * @param sb - string builder used to create the representation
     * @param iIndentIndex - indentation index
     * @param mpValues - map to print out
+    * @return StringBuilder - the same string builder as passed in
     */
-   public static void toStringMap(
+   public static StringBuilder toStringMap(
       StringBuilder sb,
       int           iIndentIndex,
       Map           mpValues
@@ -1386,6 +1390,8 @@ public final class StringUtils extends OSSObject
          sb.append(INDENTATION[iIndentIndex]);
          sb.append("}");
       }
+      
+      return sb;
    }
 
 
@@ -1405,10 +1411,13 @@ public final class StringUtils extends OSSObject
    
    /**
     * Return the class of the specified value if it is not null otherwise return 
-    * constant representing null.
+    * the alternative
     *
-    * @param value  
-    * @return String 
+    * @param value - object to return class for
+    * @param strAlternative - alternative to return in case the specified value 
+    *                         is null
+    * @return String - class name of the specified value if not null, 
+    *                  the alternative otherwise
     */
    public static String classIfNotNull(
       Object value,
