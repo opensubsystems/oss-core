@@ -63,9 +63,12 @@ public final class CryptoUtils extends OSSObject
    
    /**
     * Default algorithm to use to encrypt passwords. Get a message digest object 
-    * using the SHA1 algorithm (since MD5 showed recently vulnerability).
+    * using the SHA-512 algorithm (since SHA1 and MD5 are not secure anymore).
+    * The standard names of the algorithms are defined by 
+    * Java Cryptography Architecture API Specification Reference
+    * http://java.sun.com/j2se/1.4.2/docs/guide/security/CryptoSpec.html#AppA
     */
-   public static final String PASSWORD_DIGEST_ALGORITHM_DEFAULT = "SHA-1";
+   public static final String PASSWORD_DIGEST_ALGORITHM_DEFAULT = "SHA-512";
    
    /**
     * Default provider algorithm of which to use. By default we use Bouncy 
@@ -106,39 +109,61 @@ public final class CryptoUtils extends OSSObject
    // Logic ////////////////////////////////////////////////////////////////////
 
    /**
-    * Generate message digest from specified data.
+    * Compute cryptographic has of the specified data.
     *
-    * @param strData - data to generate digest from
-    * @return String - generate message digest
+    * @param arData - data to compute cryptographic hash for
+    * @return String - generated cryptographic hash of the data
     * @throws OSSException - an error has occurred
     */
-   public static String getMessageDigest(
-      String strData
+   public static String computeHash(
+      byte[] arData
    ) throws OSSException
    {
-      byte[]         plainText;
       MessageDigest  messageDigest;
 
       messageDigest = getMessageDigestAlgorithmInstance();
       
       // Calculate the digest
-      plainText = strData.getBytes();
-      messageDigest.update(plainText);
+      messageDigest.update(arData);
 
       // Get the data hash
-      byte[] arrBytes = messageDigest.digest();
-      StringBuilder strFinal = new StringBuilder();
-      for (int iCount = 0; iCount < arrBytes.length; iCount++)
+      byte[] arBytes = messageDigest.digest();
+ 
+      // TODO: Improve: commons-codec: This can be replaced with
+      // strFinal = new String(Hex.encodeHex(arrBytes));
+      StringBuilder sbFinal = new StringBuilder();
+      for (int iCount = 0; iCount < arBytes.length; iCount++)
       {
          // By converting it into the hexa-decimal number format  it is 
          // guaranteed, that the final string will have maximal length 
          // 2 * length (e.g. 32 chars (16 chars is the output from SHA1 and each
          // sign from the SHA1 string can be converted at most to the 
          // 2 chars - hexa-decimal number (from 0 to 255))) 
-         strFinal.append(Integer.toHexString(
-            (int) arrBytes[iCount] + (-1 * Byte.MIN_VALUE)));
+         sbFinal.append(Integer.toHexString(
+            (int) arBytes[iCount] + (-1 * Byte.MIN_VALUE)));
       }
-      return strFinal.toString();
+      return sbFinal.toString();
+   }
+
+   /**
+    * Compute cryptographic has of the specified data.
+    *
+    * @param strData - data to compute cryptographic hash for
+    * @return String - generated cryptographic hash of the data
+    * @throws OSSException - an error has occurred
+    */
+   public static String computeHash(
+      String strData
+   ) throws OSSException
+   {
+      if (strData != null)
+      {
+         return computeHash(strData.getBytes());
+      }
+      else
+      {
+         return computeHash((byte[])null);
+      }      
    }
    
    // Helper methods ///////////////////////////////////////////////////////////
