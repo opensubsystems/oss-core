@@ -184,7 +184,7 @@ public class PostgreSQLDatabaseImpl extends DatabaseImpl
       }
       finally
       {
-         DatabaseUtils.closeResultSet(rsResults);
+         DatabaseUtils.close(rsResults);
       }
 
       data.setId(iGeneratedKey);
@@ -225,7 +225,7 @@ public class PostgreSQLDatabaseImpl extends DatabaseImpl
       }
       finally
       {
-         DatabaseUtils.closeResultSet(rsResults);
+         DatabaseUtils.close(rsResults);
       }
 
       if (iUpdateCount > 1)
@@ -286,7 +286,7 @@ public class PostgreSQLDatabaseImpl extends DatabaseImpl
          }
          finally
          {
-            DatabaseUtils.closeStatement(pstmQuery);
+            DatabaseUtils.close(pstmQuery);
             pstmQuery = null;
          }
          
@@ -309,7 +309,7 @@ public class PostgreSQLDatabaseImpl extends DatabaseImpl
          }
          finally
          {
-            DatabaseUtils.closeStatement(pstmQuery);
+            DatabaseUtils.close(pstmQuery);
             pstmQuery = null;
          }
 
@@ -352,7 +352,7 @@ public class PostgreSQLDatabaseImpl extends DatabaseImpl
       }
       finally
       {
-         DatabaseUtils.closeStatement(pstmQuery);
+         DatabaseUtils.close(pstmQuery);
       }                        
    }
 

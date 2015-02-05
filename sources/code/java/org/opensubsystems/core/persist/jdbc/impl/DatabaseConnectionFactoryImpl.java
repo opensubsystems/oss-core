@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2014 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2015 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -46,6 +46,7 @@ import org.opensubsystems.core.util.Log;
 import org.opensubsystems.core.util.OSSObject;
 import org.opensubsystems.core.util.PropertyUtils;
 import org.opensubsystems.core.util.j2ee.J2EEUtils;
+import org.opensubsystems.core.util.j2ee.J2EEUtils.J2EEServers;
 import org.opensubsystems.core.util.jdbc.DatabaseUtils;
 
 /**
@@ -304,7 +305,7 @@ public class DatabaseConnectionFactoryImpl extends OSSObject
                // Find out if we are running under a j2ee server. If yes, redefine
                // default variable defaultConnectionFactoryImpl to use 
                // j2ee database connection factory implementation.
-               if (J2EEUtils.getJ2EEServerType() != J2EEUtils.J2EE_SERVER_NO)
+               if (J2EEUtils.getJ2EEServerType() != J2EEServers.J2EE_SERVER_NONE)
                {
                   clsDefaultFactory = J2EEDatabaseConnectionFactoryImpl.class;
                }

@@ -172,7 +172,7 @@ public final class UpdateDBProcWithoutOutputTest extends Tests
                }
                finally
                {   
-                  DatabaseUtils.closeStatement(insertStatement);
+                  DatabaseUtils.close(insertStatement);
                }
                m_transaction.commit();
             }
@@ -229,7 +229,7 @@ public final class UpdateDBProcWithoutOutputTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeStatement(deleteStatement);
+               DatabaseUtils.close(deleteStatement);
             }
             assertEquals("Exactly 1 record with data shoud have been deleted.", 
                                 1, iDeletedCount);

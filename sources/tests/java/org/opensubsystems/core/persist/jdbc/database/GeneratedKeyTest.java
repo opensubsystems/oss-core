@@ -180,7 +180,7 @@ public final class GeneratedKeyTest extends Tests
          }
          finally
          {
-            DatabaseUtils.closeResultSetAndStatement(rsResults, insertStatement);
+            DatabaseUtils.close(rsResults, insertStatement);
          }
          
          assertEquals("Exactly one record have been inserted.", 
@@ -364,8 +364,8 @@ public final class GeneratedKeyTest extends Tests
          }
          finally
          {
-            DatabaseUtils.closeStatement(deleteStatement);
-            DatabaseUtils.closeStatement(insertStatement);
+            DatabaseUtils.close(deleteStatement);
+            DatabaseUtils.close(insertStatement);
          }
       }     
    }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 - 2014 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2010 - 2015 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -27,6 +27,7 @@ import java.util.logging.Level;
 import junit.framework.TestSuite;
 import org.opensubsystems.core.util.Config;
 import org.opensubsystems.core.util.Log;
+import org.opensubsystems.core.util.OSSObject;
 
 /**
  * This is base class for various test that ensures that correct configuration 
@@ -41,7 +42,7 @@ import org.opensubsystems.core.util.Log;
  * 
  * @author bastafidli
  */
-public class Tests
+public class Tests extends OSSObject
 {
    // Constants ////////////////////////////////////////////////////////////////
 

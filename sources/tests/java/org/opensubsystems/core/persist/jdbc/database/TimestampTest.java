@@ -270,7 +270,7 @@ public final class TimestampTest extends Tests
          }
          finally
          {
-            DatabaseUtils.closeResultSetAndStatement(results, selectStatement);
+            DatabaseUtils.close(results, selectStatement);
             
 //            DatabaseConnectionFactoryImpl.getInstance().returnConnection(m_connection);
             m_transaction.begin();
@@ -289,7 +289,7 @@ public final class TimestampTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeStatement(deleteStatement);
+               DatabaseUtils.close(deleteStatement);
             } 
          }
          
@@ -500,7 +500,7 @@ public final class TimestampTest extends Tests
          }
          finally
          {
-            DatabaseUtils.closeResultSetAndStatement(results, selectStatement);
+            DatabaseUtils.close(results, selectStatement);
             
 //            DatabaseConnectionFactoryImpl.getInstance().returnConnection(m_connection);
             m_transaction.begin();
@@ -520,7 +520,7 @@ public final class TimestampTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeStatement(deleteStatement);
+               DatabaseUtils.close(deleteStatement);
             } 
          }
          
@@ -688,7 +688,7 @@ public final class TimestampTest extends Tests
          }
          finally
          {
-            DatabaseUtils.closeResultSetAndStatement(results, selectStatement);
+            DatabaseUtils.close(results, selectStatement);
             
 //            DatabaseConnectionFactoryImpl.getInstance().returnConnection(m_connection);
             m_transaction.begin();
@@ -708,7 +708,7 @@ public final class TimestampTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeStatement(deleteStatement);
+               DatabaseUtils.close(deleteStatement);
             } 
          }
       }   

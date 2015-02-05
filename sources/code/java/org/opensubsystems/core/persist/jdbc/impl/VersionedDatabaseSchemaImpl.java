@@ -623,7 +623,7 @@ public abstract class VersionedDatabaseSchemaImpl extends    ModifiableDatabaseS
       }
       finally
       {
-         DatabaseUtils.closeResultSetAndStatement(rsQueryResults, stmQuery);
+         DatabaseUtils.close(rsQueryResults, stmQuery);
       }
    }
 
@@ -715,8 +715,8 @@ public abstract class VersionedDatabaseSchemaImpl extends    ModifiableDatabaseS
          }
          finally
          {
-            DatabaseUtils.closeStatement(pstmCreate);
-            DatabaseUtils.closeStatement(pstmUpdate);
+            DatabaseUtils.close(pstmCreate);
+            DatabaseUtils.close(pstmUpdate);
          }
       }
    }

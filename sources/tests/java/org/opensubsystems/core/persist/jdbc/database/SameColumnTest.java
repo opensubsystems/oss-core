@@ -170,7 +170,7 @@ public final class SameColumnTest extends Tests
             }
             finally
             {   
-               DatabaseUtils.closeResultSetAndStatement(rsResults, insertStatement);
+               DatabaseUtils.close(rsResults, insertStatement);
             }
             m_transaction.commit();
    

@@ -164,7 +164,7 @@ public final class TransactionTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeStatement(insertStatement);
+               DatabaseUtils.close(insertStatement);
                insertStatement = null;            
             }
          
@@ -189,7 +189,7 @@ public final class TransactionTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeStatement(insertStatement);
+               DatabaseUtils.close(insertStatement);
             }
                
             // Now select it back to be sure it is there so we cna delete it
@@ -220,7 +220,7 @@ public final class TransactionTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeStatement(updateStatement);
+               DatabaseUtils.close(updateStatement);
                updateStatement = null;
             }
          }
@@ -244,7 +244,7 @@ public final class TransactionTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeStatement(deleteStatement);
+               DatabaseUtils.close(deleteStatement);
             }
          }
       } 
@@ -289,7 +289,7 @@ public final class TransactionTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeStatement(insertStatement);
+               DatabaseUtils.close(insertStatement);
                insertStatement = null;            
             }
          
@@ -314,7 +314,7 @@ public final class TransactionTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeStatement(insertStatement);
+               DatabaseUtils.close(insertStatement);
             }
                
             // Now select it back to be sure it is there so we cna delete it
@@ -354,7 +354,7 @@ public final class TransactionTest extends Tests
                }
                finally
                {
-                  DatabaseUtils.closeStatement(updateStatement);
+                  DatabaseUtils.close(updateStatement);
                }
             }
             finally
@@ -385,7 +385,7 @@ public final class TransactionTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeStatement(deleteStatement);
+               DatabaseUtils.close(deleteStatement);
             }
          }
       }
@@ -442,7 +442,7 @@ public final class TransactionTest extends Tests
                   }
                   finally
                   {   
-                     DatabaseUtils.closeStatement(insertStatement);
+                     DatabaseUtils.close(insertStatement);
                   }
    
                   m_transaction.commit();
@@ -488,7 +488,7 @@ public final class TransactionTest extends Tests
                }
                finally
                {   
-                  DatabaseUtils.closeResultSetAndStatement(rsResults, selectStatement);
+                  DatabaseUtils.close(rsResults, selectStatement);
                }
             }
             finally
@@ -518,7 +518,7 @@ public final class TransactionTest extends Tests
                   }
                   finally
                   {   
-                     DatabaseUtils.closeStatement(updateStatement);
+                     DatabaseUtils.close(updateStatement);
                   }
                }
                finally
@@ -553,7 +553,7 @@ public final class TransactionTest extends Tests
                   }
                   finally
                   {   
-                     DatabaseUtils.closeResultSetAndStatement(rsResults, selectStatement);
+                     DatabaseUtils.close(rsResults, selectStatement);
                   }
                }
                finally
@@ -594,7 +594,7 @@ public final class TransactionTest extends Tests
                }
                finally
                {   
-                  DatabaseUtils.closeResultSetAndStatement(rsResults, selectStatement);
+                  DatabaseUtils.close(rsResults, selectStatement);
                }
             }
             finally
@@ -684,7 +684,7 @@ public final class TransactionTest extends Tests
                   }
                   finally
                   {   
-                     DatabaseUtils.closeStatement(insertStatement);
+                     DatabaseUtils.close(insertStatement);
                   }
       
                   m_transaction.commit();
@@ -725,7 +725,7 @@ public final class TransactionTest extends Tests
                   }
                   finally
                   {   
-                     DatabaseUtils.closeStatement(updateStatement);
+                     DatabaseUtils.close(updateStatement);
                   }
                }
                finally
@@ -788,7 +788,7 @@ public final class TransactionTest extends Tests
                }
                finally
                {   
-                  DatabaseUtils.closeResultSetAndStatement(rsResults, selectStatement);
+                  DatabaseUtils.close(rsResults, selectStatement);
                }
             }
             finally
@@ -813,7 +813,7 @@ public final class TransactionTest extends Tests
             }
             finally
             {   
-               DatabaseUtils.closeResultSetAndStatement(rsResults, selectStatement);
+               DatabaseUtils.close(rsResults, selectStatement);
             }
             assertEquals("No record should exists in the database but there is a record", 
                          0, iSelectedCount);
@@ -897,7 +897,7 @@ public final class TransactionTest extends Tests
                }
                finally
                {   
-                  DatabaseUtils.closeStatement(insertStatement);
+                  DatabaseUtils.close(insertStatement);
                }
             }
             finally
@@ -929,7 +929,7 @@ public final class TransactionTest extends Tests
                }
                finally
                {   
-                  DatabaseUtils.closeStatement(updateStatement);
+                  DatabaseUtils.close(updateStatement);
                   DatabaseConnectionFactoryImpl.getInstance().returnConnection(connection);
                   connection = null;
                }
@@ -967,7 +967,7 @@ public final class TransactionTest extends Tests
             }
             finally
             {   
-               DatabaseUtils.closeResultSetAndStatement(rsResults, selectStatement);
+               DatabaseUtils.close(rsResults, selectStatement);
                selectStatement = null;
                DatabaseConnectionFactoryImpl.getInstance().returnConnection(connection);
                connection = null;
@@ -994,7 +994,7 @@ public final class TransactionTest extends Tests
             }
             finally
             {   
-               DatabaseUtils.closeStatement(updateStatement);
+               DatabaseUtils.close(updateStatement);
             }
             
             // Now try to verify if the result is in there using different connection
@@ -1021,7 +1021,7 @@ public final class TransactionTest extends Tests
             }
             finally
             {   
-               DatabaseUtils.closeResultSetAndStatement(rsResults, selectStatement);
+               DatabaseUtils.close(rsResults, selectStatement);
                selectStatement = null;
                DatabaseConnectionFactoryImpl.getInstance().returnConnection(connection);
                connection = null;
@@ -1079,7 +1079,7 @@ public final class TransactionTest extends Tests
                }
                finally
                {   
-                  DatabaseUtils.closeResultSetAndStatement(rsResults, selectStatement);
+                  DatabaseUtils.close(rsResults, selectStatement);
                   selectStatement = null;
                }
                assertEquals("No record should exists in the database but there is a record", 
@@ -1100,7 +1100,7 @@ public final class TransactionTest extends Tests
                }
                finally
                {   
-                  DatabaseUtils.closeResultSetAndStatement(rsResults, selectStatement);
+                  DatabaseUtils.close(rsResults, selectStatement);
                }
                assertEquals("No record should exists in the database but there is a record", 
                             0, iSelectedCount);

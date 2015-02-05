@@ -411,7 +411,7 @@ public class MySQLDatabaseImpl extends DatabaseImpl
          }
          finally
          {
-            DatabaseUtils.closeStatement(pstmQuery);
+            DatabaseUtils.close(pstmQuery);
             pstmQuery = null;
          }
 
@@ -441,7 +441,7 @@ public class MySQLDatabaseImpl extends DatabaseImpl
          }
          finally
          {
-            DatabaseUtils.closeStatement(pstmQuery);
+            DatabaseUtils.close(pstmQuery);
             pstmQuery = null;
          }
 
@@ -481,7 +481,7 @@ public class MySQLDatabaseImpl extends DatabaseImpl
       }
       finally
       {
-         DatabaseUtils.closeStatement(pstmQuery);
+         DatabaseUtils.close(pstmQuery);
       }                        
    }
 
@@ -565,7 +565,7 @@ public class MySQLDatabaseImpl extends DatabaseImpl
          }
          finally
          {      
-            DatabaseUtils.closeResultSet(rsResults);
+            DatabaseUtils.close(rsResults);
          }   
          
          if (lGeneratedKey != DataObject.NEW_ID)
@@ -602,7 +602,7 @@ public class MySQLDatabaseImpl extends DatabaseImpl
             }
             finally
             {      
-               DatabaseUtils.closeResultSet(rsResults);
+               DatabaseUtils.close(rsResults);
             }
          }
       }
@@ -682,8 +682,8 @@ public class MySQLDatabaseImpl extends DatabaseImpl
    {
       if (cache != null)
       {   
-         DatabaseUtils.closeStatement(cache.getSelectID());
-         DatabaseUtils.closeStatement(cache.getSelect());
+         DatabaseUtils.close(cache.getSelectID());
+         DatabaseUtils.close(cache.getSelect());
       }
    }
 
@@ -732,7 +732,7 @@ public class MySQLDatabaseImpl extends DatabaseImpl
       }
       finally
       {      
-         DatabaseUtils.closeResultSet(rsResults);
+         DatabaseUtils.close(rsResults);
       }
    }
 
@@ -791,7 +791,7 @@ public class MySQLDatabaseImpl extends DatabaseImpl
    {
       if (cache != null)
       {   
-         DatabaseUtils.closeStatement(cache.getSelect());
+         DatabaseUtils.close(cache.getSelect());
       }
    }
 }

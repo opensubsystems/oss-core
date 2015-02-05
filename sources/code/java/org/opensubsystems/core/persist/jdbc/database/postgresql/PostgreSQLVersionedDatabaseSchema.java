@@ -163,7 +163,7 @@ public class PostgreSQLVersionedDatabaseSchema extends VersionedDatabaseSchemaIm
          }
          finally
          {
-            DatabaseUtils.closeStatement(stmQuery);
+            DatabaseUtils.close(stmQuery);
             stmQuery = null;
          }
          
@@ -196,7 +196,7 @@ public class PostgreSQLVersionedDatabaseSchema extends VersionedDatabaseSchemaIm
          }
          finally
          {
-            DatabaseUtils.closeStatement(stmQuery);
+            DatabaseUtils.close(stmQuery);
          }
       }
       finally

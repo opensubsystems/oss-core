@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2015 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -41,6 +41,20 @@ import org.opensubsystems.core.error.OSSException;
  * transaction. If then the message should be rollbacked, the client needs to 
  * have ability to establish transaction, which allows rollbacking of action 
  * (of sending data) rather than action of persisting the message. 
+ * 
+ * The following sequence describes the usage pattern for the factory
+ * 
+ * // 1. Get the UserTransaction object
+ * UserTransaction userTransaction =  null;
+ * userTransaction = DatabaseTransactionFactoryImpl.getInstance().requestTransaction();
+ * 
+ * // 2. Start the transaction
+ * userTransaction.begin();         
+ *
+ * // 3a. Commit the transaction
+ * userTransaction.commit();
+ * // 3b. Or Rollback the transaction
+ * TransactionUtils.rollback(transaction.m_userTransaction);
  * 
  * @author bastafidli
  */

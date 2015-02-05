@@ -179,7 +179,7 @@ public final class DeleteWithSubqueryTest extends Tests
                }
                finally
                {   
-                  DatabaseUtils.closeStatement(insertStatement);
+                  DatabaseUtils.close(insertStatement);
                }
                m_transaction.commit();
             }
@@ -253,7 +253,7 @@ public final class DeleteWithSubqueryTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeStatement(deleteStatement);
+               DatabaseUtils.close(deleteStatement);
             }
             
             m_transaction.begin();
@@ -273,7 +273,7 @@ public final class DeleteWithSubqueryTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeStatement(deleteStatement);
+               DatabaseUtils.close(deleteStatement);
             }
          }
       }   

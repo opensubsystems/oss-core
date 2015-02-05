@@ -243,7 +243,7 @@ public final class DBProcReturnInsertedRowsCountTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeStatement(deleteStatement);
+               DatabaseUtils.close(deleteStatement);
             }
          }
       }   

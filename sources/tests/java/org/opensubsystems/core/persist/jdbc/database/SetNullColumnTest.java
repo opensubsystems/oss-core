@@ -161,7 +161,7 @@ public final class SetNullColumnTest extends Tests
             }
             finally
             {   
-               DatabaseUtils.closeResultSetAndStatement(rsResults, insertStatement);
+               DatabaseUtils.close(rsResults, insertStatement);
                rsResults = null;
             }
    
@@ -184,7 +184,7 @@ public final class SetNullColumnTest extends Tests
             }
             finally
             {   
-               DatabaseUtils.closeResultSetAndStatement(rsResults, selectStatement);
+               DatabaseUtils.close(rsResults, selectStatement);
             }
          }
          finally

@@ -155,7 +155,7 @@ public final class AddBatchTest extends Tests
             }
             finally
             {   
-               DatabaseUtils.closeStatement(insertStatement);
+               DatabaseUtils.close(insertStatement);
                rsResults = null;
             }
    
@@ -175,7 +175,7 @@ public final class AddBatchTest extends Tests
             }
             finally
             {   
-               DatabaseUtils.closeResultSetAndStatement(rsResults, selectStatement);
+               DatabaseUtils.close(rsResults, selectStatement);
                rsResults = null;
             }
          }

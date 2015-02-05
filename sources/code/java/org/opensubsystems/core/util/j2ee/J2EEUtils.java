@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2005 - 2015 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -26,73 +26,114 @@ import org.opensubsystems.core.util.Log;
 import org.opensubsystems.core.util.OSSObject;
 
 /**
- * Collection of useful utilities to work with j2ee environment.
+ * Collection of useful utilities to work when running in j2ee environment.
  *
+ * TODO: Test: This class is missing test.
+ * 
  * @author OpenSubsystems
  */
 public final class J2EEUtils extends OSSObject
 {
    // Constants ////////////////////////////////////////////////////////////////
 
-   /**
-    * Constant defining j2ee server was not yet detected.
-    */
-   public static final int J2EE_SERVER_UNINITIALIZED = -1;
+   public static enum J2EEServers
+   {
+		/**
+		 * Constant defining j2ee server was not yet detected.
+		 * This has to be null so we can skip it to get to actual servers.
+		 */
+		J2EE_SERVER_UNINITIALIZED("Uninitialized", null),
+		/**
+		 * Constant defining no j2ee server.
+		 * This has to be empty string so we can skip it to get to actual servers.
+		 */
+		J2EE_SERVER_NONE("None", ""),
+		/**
+		 * Constant defining JOnAS j2ee server.
+		 * Constant identifying JOnAS j2ee server. This is parent of the classloader 
+		 * because it identifies jonas server. Using just the classloader it would 
+		 * identify particular web server identifier (jetty, tomcat, ...).
+		 * ClassLoader parent for JOnAS 4.2.3: 
+		 *    org.objectweb.jonas_lib.loader.SimpleWebappClassLoader
+		 */
+		J2EE_SERVER_JONAS("Jonas", ".objectweb.jonas"),
+		/**
+		 * Constant defining JBoss j2ee server.
+		 * Constant identifying JBoss j2ee server.  
+		 * ClassLoader parent for JBoss 3.2.6 and 4.0.1: 
+		 *    org.jboss.system.server.NoAnnotationURLClassLoader
+		 */
+		J2EE_SERVER_JBOSS("JBoss", ".jboss."),
+		/**
+		 * Constant defining WebLogic j2ee server.
+		 * Constant identifying WebLogic j2ee server.
+		 * ClassLoader parent for BEA WebLogic 7.0 and 8.1: 
+		 *    weblogic.utils.classloaders.GenericClassLoader
+		 */
+		J2EE_SERVER_WEBLOGIC("Weblogic", "weblogic."),
+		/**
+		 * Constant defining WebSphere j2ee server.
+		 * Constant identifying WebSphere j2ee server.
+		 * ClassLoader parent for IBM WebSphere 6:
+		 *    com.ibm.ws.classloader.JarClassLoader 
+		 */
+		J2EE_SERVER_WEBSPHERE("Websphere", ".ibm.ws."),
+		/**
+		 * Constant defining Apache Tomcat servlet container.
+		 * Constant identifying Apache Tomcat j2ee server.
+		 * ClassLoader parent for Apache Tomcat 8:
+		 *    org.apache.catalina.loader.WebappClassLoader 
+		 */
+		J2EE_SERVER_APACHE_TOMCAT("Tomcat", ".apache.catalina.");
 
-   /**
-    * Constant defining no j2ee server.
-    */
-   public static final int J2EE_SERVER_NO = 0;
+		// Attributes ///////////////////////////////////////////////////////////////
 
-   /**
-    * Constant defining JOnAS j2ee server.
-    */
-   public static final int J2EE_SERVER_JONAS = 1;
+		/**
+		 * Name of the server.
+		 */
+		protected String m_strName;
 
-   /**
-    * Constant defining JBoss j2ee server.
-    */
-   public static final int J2EE_SERVER_JBOSS = 2;
+		/**
+		 * Identifier used to detect given server.
+		 */
+		protected String m_strIdentifier;
 
-   /**
-    * Constant defining WebLogic j2ee server.
-    */
-   public static final int J2EE_SERVER_WEBLOGIC = 3;
+		// Logic ////////////////////////////////////////////////////////////////////
 
-   /**
-    * Constant defining WebSphere j2ee server.
-    */
-   public static final int J2EE_SERVER_WEBSPHERE = 4;
+		/**
+		 * Non public constructor as required by the enum spec.
+		 * 
+		 * @param strName - name of the server
+		 * @param strIdentifier - identifier for the server
+		 */
+		J2EEServers(
+			String strName,
+			String strIdentifier
+		)
+		{
+			m_strIdentifier = strIdentifier;
+		}
 
-   /**
-    * Constant identifying JOnAS j2ee server. There is retrieved parent of the 
-    * classloader because it identify jonas server. Using just classloader there 
-    * is retireved particular web server identifier (jetty, tomcat, ...).
-    * ClassLoader parent for JOnAS 4.2.3: 
-    *    org.objectweb.jonas_lib.loader.SimpleWebappClassLoader
-    */
-   public static final String JONAS_IDENTIFIER = ".objectweb.jonas";
-
-   /**
-    * Constant identifying JBoss j2ee server.  
-    * ClassLoader parent for JBoss 3.2.6 and 4.0.1: 
-    *    org.jboss.system.server.NoAnnotationURLClassLoader
-    */
-   public static final String JBOSS_IDENTIFIER = ".jboss.";
-
-   /**
-    * Constant identifying WebLogic j2ee server.
-    * ClassLoader parent for BEA WebLogic 7.0 and 8.1: 
-    *    weblogic.utils.classloaders.GenericClassLoader
-    */
-   public static final String WEBLOGIC_IDENTIFIER = "weblogic.";
-
-   /**
-    * Constant identifying WebSphere j2ee server.
-    * ClassLoader parent for IBM WebSphere 6:
-    *    com.ibm.ws.classloader.JarClassLoader 
-    */
-   public static final String WEBSPHERE_IDENTIFIER = ".ibm.ws.";
+		/**
+		 * Get name of the server.
+		 * 
+		 * @return String
+		 */
+		public String getName()
+		{
+			return m_strName;
+		}
+		
+		/**
+		 * Get identifier for the given server.
+		 * 
+		 * @return String
+		 */
+		public String getIdentifier()
+		{
+			return m_strIdentifier;
+		}
+	}
 
    // Cached values ////////////////////////////////////////////////////////////
 
@@ -105,7 +146,7 @@ public final class J2EEUtils extends OSSObject
     * Since J2EE server doesn't changes during execution we can cache the
     * value for detected server.
     */
-   private static int s_iDetectedServer = J2EE_SERVER_UNINITIALIZED;
+   private static J2EEServers s_detectedServer = J2EEServers.J2EE_SERVER_UNINITIALIZED;
   
    // Constructors /////////////////////////////////////////////////////////////
    
@@ -121,36 +162,35 @@ public final class J2EEUtils extends OSSObject
    // Logic ////////////////////////////////////////////////////////////////////
 
    /**
-    * Method detects and returns type of the current running j2ee server. For 
-    * detecting actual running j2ee server we will use ClassLoader because it is 
-    * server specific.
+    * Get the identifier for the current running j2ee server if any.
     * 
-    * @return int - representation of the current running j2ee server
+    * @return J2EEServers - identifier of the current running j2ee server if any.
+	 *								 Never returns null.
     */
-   public static int getJ2EEServerType(
+   public static J2EEServers getJ2EEServerType(
    )
    {
       // No need to synchronize since in the worst case we execute this 
       // multiple times
-      if (s_iDetectedServer == J2EE_SERVER_UNINITIALIZED)
+      if (s_detectedServer == J2EEServers.J2EE_SERVER_UNINITIALIZED)
       {
-         int    iRetValue;
-         String strClassLoader;
+         J2EEServers server;
+         String		strClassLoader;
    
          strClassLoader = J2EEUtils.class.getClassLoader().getClass().getName();
-         iRetValue = detectJ2EEServerType(strClassLoader);
-         if (iRetValue == J2EE_SERVER_NO)
+         server = detectJ2EEServerType(strClassLoader);
+         if (server == J2EEServers.J2EE_SERVER_NONE)
          {
-            strClassLoader = J2EEUtils.class.getClassLoader().getParent(
-                                ).getClass().getName();
-            iRetValue = detectJ2EEServerType(strClassLoader);
+            strClassLoader = J2EEUtils.class.getClassLoader().getParent()
+										  .getClass().getName();
+            server = detectJ2EEServerType(strClassLoader);
          }
          
-         s_iDetectedServer = iRetValue;
+         s_detectedServer = server;
       }
       
 
-      return s_iDetectedServer;
+      return s_detectedServer;
    }
    
    // Helper methods ///////////////////////////////////////////////////////////
@@ -160,45 +200,44 @@ public final class J2EEUtils extends OSSObject
     * because it is server specific.
     * 
     * @param strIdentifier - string which should uniquely identify the AS
-    * @return int - representation of the current running j2ee server
+    * @return J2EEServers - representation of the current running j2ee server
     */
-   private static int detectJ2EEServerType(
+   private static J2EEServers detectJ2EEServerType(
       String strIdentifier
    )
    {
-      int iRetValue = J2EE_SERVER_NO;
+      J2EEServers server = J2EEServers.J2EE_SERVER_NONE;
 
       if (strIdentifier != null)
       {
          s_logger.log(Level.FINEST, "Trying to detect J2EE application server"
                       + " using identifier {0}", strIdentifier);
-         if (strIdentifier.indexOf(JONAS_IDENTIFIER) > -1)
-         {
-            s_logger.fine("JOnAS application server detected.");
-            iRetValue = J2EE_SERVER_JONAS;
-         }
-         else if (strIdentifier.indexOf(JBOSS_IDENTIFIER) > -1)
-         {
-            s_logger.fine("JBoss application server detected.");
-            iRetValue = J2EE_SERVER_JBOSS;
-         }
-         else if (strIdentifier.indexOf(WEBLOGIC_IDENTIFIER) > -1)
-         {
-            s_logger.fine("Weblogic application server detected.");
-            iRetValue = J2EE_SERVER_WEBLOGIC;
-         }
-         else if (strIdentifier.indexOf(WEBSPHERE_IDENTIFIER) > -1)
-         {
-            s_logger.fine("Websphere application server detected.");
-            iRetValue = J2EE_SERVER_WEBSPHERE;
-         }
+
+			String strTempIdentifier;
+			
+			for (J2EEServers tempServer : J2EEServers.values())
+			{
+				strTempIdentifier = tempServer.getIdentifier();
+				// This condition will skip Uninitialized and None values
+				if ((strTempIdentifier != null) && (!strTempIdentifier.isEmpty()))
+				{
+					if (strIdentifier.contains(strTempIdentifier))
+					{
+						s_logger.log(Level.FINE, "{0} application server detected.", 
+										 tempServer.getName());
+						server = tempServer;
+						break;
+					}
+					
+				}
+			}
       }
       else
       {
-         s_logger.finest("No J2EE application server detected since identifier" +
-                         " is null.");
+         s_logger.warning("J2EE application server detectionis not possible" +
+								  " since the specified identifier is null.");
       }
 
-      return iRetValue;
+      return server;
    }
 }

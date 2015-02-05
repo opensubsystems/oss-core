@@ -246,7 +246,7 @@ public final class DateTest extends Tests
          }
          finally
          {
-            DatabaseUtils.closeResultSetAndStatement(results, selectStatement);
+            DatabaseUtils.close(results, selectStatement);
             
             m_transaction.begin();
             try
@@ -263,7 +263,7 @@ public final class DateTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeStatement(deleteStatement);
+               DatabaseUtils.close(deleteStatement);
             }      
          }
          

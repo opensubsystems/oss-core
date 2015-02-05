@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2005 - 2015 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -34,6 +34,7 @@ import org.opensubsystems.core.persist.jdbc.Database;
 import org.opensubsystems.core.persist.jdbc.connectionpool.impl.PooledDatabaseConnectionFactoryImpl;
 import org.opensubsystems.core.util.Log;
 import org.opensubsystems.core.util.j2ee.J2EEUtils;
+import org.opensubsystems.core.util.j2ee.J2EEUtils.J2EEServers;
 
 /**
  * Base class for implementation of j2ee factories for retrieving and returning 
@@ -83,9 +84,9 @@ public class J2EEDatabaseConnectionFactoryImpl extends PooledDatabaseConnectionF
       boolean    bAutoCommit 
    ) throws SQLException
    {
-      int iActiveServerType = J2EEUtils.getJ2EEServerType();
+      J2EEServers activeServerType = J2EEUtils.getJ2EEServerType();
 
-      if (iActiveServerType == J2EEUtils.J2EE_SERVER_JBOSS) 
+      if (activeServerType == J2EEServers.J2EE_SERVER_JBOSS) 
       {
          try
          {
@@ -215,17 +216,17 @@ public class J2EEDatabaseConnectionFactoryImpl extends PooledDatabaseConnectionF
       try
       {
          
-         int iActualServerType = J2EEUtils.getJ2EEServerType();
+         J2EEServers actualServerType = J2EEUtils.getJ2EEServerType();
          
-         switch (iActualServerType)
+         switch (actualServerType)
          {
-            case J2EEUtils.J2EE_SERVER_JBOSS:
+            case J2EE_SERVER_JBOSS:
             {
                // Add prefix for JBoss server.
                dataSourceName.append(DATASOURCE_NAME_PREFIX_JBOSS);
                break;
             }
-            case J2EEUtils.J2EE_SERVER_WEBSPHERE:
+            case J2EE_SERVER_WEBSPHERE:
             {
                // Add prefix for IBM WebSphere server.
                dataSourceName.append(DATASOURCE_NAME_PREFIX_WEBSPHERE);

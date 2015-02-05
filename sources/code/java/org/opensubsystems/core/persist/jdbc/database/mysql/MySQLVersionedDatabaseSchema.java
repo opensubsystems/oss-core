@@ -141,7 +141,7 @@ public class MySQLVersionedDatabaseSchema extends VersionedDatabaseSchemaImpl
          }
          finally
          {
-            DatabaseUtils.closeStatement(stmQuery);
+            DatabaseUtils.close(stmQuery);
          }
       }
       finally

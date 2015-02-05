@@ -24,12 +24,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
@@ -58,6 +61,25 @@ public final class DatabaseUtils extends OSSObject
     * Hashed tables-columns existence information for dependency checking. 
     */
    private static Map s_mpDependencyCache = new HashMap();
+
+   /**
+    * Close the given resource.
+    *
+    * @param strLogPrefix - log prefix used for all log output to tie together
+    *                       the same invocations
+    * @param resource - The resource to be closed.
+    */
+	// TODO: Review this since this should not be here and rather go through connection pool
+   public static void close(String strLogPrefix, Connection resource) {
+      if (resource != null) {
+         try {
+            s_logger.finest(strLogPrefix + "Closing database connection.");
+            resource.close();
+         } catch (SQLException exc) {
+            s_logger.log(Level.WARNING, strLogPrefix + "Exception while closing resource.", exc);
+         }
+      }
+   }
 
    // Constructors /////////////////////////////////////////////////////////////
    
@@ -91,7 +113,7 @@ public final class DatabaseUtils extends OSSObject
       }
       finally
       {
-         closeStatement(jdbcstatement);
+         close(jdbcstatement);
       }
       
       return iUpdateCount;
@@ -104,7 +126,7 @@ public final class DatabaseUtils extends OSSObject
     * 
     * @param results - result set to close, if null it is ignored
     */
-   public static void closeResultSet(
+   public static void close(
       ResultSet results
    )
    {
@@ -124,6 +146,37 @@ public final class DatabaseUtils extends OSSObject
       }
    }
 
+	/**
+    * Gracefully close result set so that no error is generated. 
+    * This method NEVER throws any exception therefore it is safe to call it
+    * in finally before returning connection.  
+	 *
+	 * @param strLogPrefix - log prefix used for all log output to tie together
+	 *                     the same invocations
+    * @param results - result set to close, if null it is ignored
+	 */
+	public static void close(
+		String strLogPrefix,
+		ResultSet results
+	)
+	{
+		if (results != null)
+		{
+			try
+			{
+				s_logger.log(Level.FINEST, "{0}Closing database result set.", 
+								 strLogPrefix);
+				results.close();
+			}
+			catch (SQLException exc)
+			{
+				s_logger.log(Level.WARNING, strLogPrefix +
+								"Exception while closing resource.", exc);
+			}
+		}
+	}
+
+
    /**
     * Gracefully close result set and statement so that no error is generated. 
     * This method NEVER throws any exception therefore it is safe to call it
@@ -132,18 +185,18 @@ public final class DatabaseUtils extends OSSObject
     * @param results - result set to close, if null it is ignored
     * @param jdbcstatement - jdbc statement to close, if null it is ignored
     */
-   public static void closeResultSetAndStatement(
+   public static void close(
       ResultSet results,
       Statement jdbcstatement
    )
    {
       try
       {
-         closeResultSet(results);
+         DatabaseUtils.close(results);
       }
       finally
       {
-         closeStatement(jdbcstatement);
+         close(jdbcstatement);
       }
    }
 
@@ -152,17 +205,17 @@ public final class DatabaseUtils extends OSSObject
     * This method NEVER throws any exception therefore it is safe to call it
     * in finally before returning connection.  
     * 
-    * @param jdbcstatement - jdbc statement to close, if null it is ignored
+    * @param statement - jdbc statement to close, if null it is ignored
     */
-   public static void closeStatement(
-      Statement jdbcstatement
+   public static void close(
+      Statement statement
    )
    {
-      if (jdbcstatement != null)
+      if (statement != null)
       {
          try
          {
-            jdbcstatement.close();
+            statement.close();
          }
          catch (SQLException sqleExc)
          {
@@ -173,7 +226,56 @@ public final class DatabaseUtils extends OSSObject
       }
    }
    
-   /**
+	/**
+    * Gracefully close statement so that no error is generated.
+    * This method NEVER throws any exception therefore it is safe to call it
+    * in finally before returning connection.  
+	 *
+	 * @param strLogPrefix - log prefix used for all log output to tie together
+	 *                       the same invocations
+    * @param statement - jdbc statement to close, if null it is ignored
+	 */
+	public static void close(
+		String	 strLogPrefix,
+      Statement statement
+	)
+	{
+		if (statement != null)
+		{
+			try
+			{
+				s_logger.log(Level.FINEST, "{0}Closing database prepared statement.", 
+								 strLogPrefix);
+				statement.close();
+			}
+			catch (SQLException exc)
+			{
+				s_logger.log(Level.WARNING, "Exception while closing resource.", exc);
+			}
+		}
+	}
+
+	/**
+    * Close the given resources.
+    * This method NEVER throws any exception therefore it is safe to call it
+    * in finally before returning connection.  
+    *
+    * @param strLogPrefix - log prefix used for all log output to tie together
+    *                       the same invocations
+    * @param results - the result set to close
+    * @param statement - the statement to close
+    */
+   public static void close(
+	   String	 strLogPrefix, 
+		ResultSet results, 
+		Statement statement
+	) 
+	{
+      DatabaseUtils.close(strLogPrefix, results);
+      DatabaseUtils.close(strLogPrefix, statement);
+   }
+
+	/**
     * Execute statement and load at most one data object from the result set and 
     * if the result set contains more than one item announce error.
     * 
@@ -213,7 +315,7 @@ public final class DatabaseUtils extends OSSObject
       }
       finally
       {
-         closeResultSet(rsQueryResults);
+         DatabaseUtils.close(rsQueryResults);
       }
       
       return iData;
@@ -259,7 +361,7 @@ public final class DatabaseUtils extends OSSObject
       }
       finally
       {
-         closeResultSet(rsQueryResults);
+         DatabaseUtils.close(rsQueryResults);
       }
       
       return strData;
@@ -310,7 +412,7 @@ public final class DatabaseUtils extends OSSObject
       }
       finally
       {
-         DatabaseUtils.closeResultSet(rsQueryResults);
+         DatabaseUtils.close(rsQueryResults);
       }
        
       return lstData;
@@ -361,7 +463,7 @@ public final class DatabaseUtils extends OSSObject
       }
       finally
       {
-         DatabaseUtils.closeResultSet(rsQueryResults);
+         DatabaseUtils.close(rsQueryResults);
       }
        
       return arrData;
@@ -413,7 +515,7 @@ public final class DatabaseUtils extends OSSObject
       }
       finally
       {
-         DatabaseUtils.closeResultSet(rsQueryResults);
+         DatabaseUtils.close(rsQueryResults);
       }
        
       return arrData;
@@ -479,8 +581,34 @@ public final class DatabaseUtils extends OSSObject
       return arrReturn;
    }
 
+	/**
+	 * Generate question mark  placeholders for specified number of parameters in 
+	 * the prepared statement. 
+	 *
+	 * @param iCount - how many placeholders to generate
+	 * @return String - string containing appropriate number of placeholders
+	 */
+	public static String generatePreparedStatementPlaceholders(
+		int iCount
+	)
+	{
+		StringBuilder builder = new StringBuilder();
+		for (int iIndex = 0; iIndex < iCount; iIndex++)
+		{
+			if (builder.length() > 0)
+			{
+				builder.append(",?");
+			}
+			else
+			{
+				builder.append("?");
+			}
+		}
+		return builder.toString();
+	}
+
    /**
-    * Generated question mark placeholders into a buffer that will be used as a 
+    * Generate question mark placeholders into a buffer that will be used as a 
     * query to construct prepared statement. 
     * 
     * @param sbBuffer - buffer into which this method will be append one "?" for 
@@ -581,32 +709,81 @@ public final class DatabaseUtils extends OSSObject
       }
    }
    
-   /**
-    * Populate the question mark placeholders in a prepared statement with the 
-    * supplied values. 
-    * 
-    * @param psQuery - prepared statement to populate with values
-    * @param lstPrepStmtArguments - arguments that should be used to populate 
-    *                               specified prepared statement
-    * @throws SQLException - an error has occurred
-    */
-   public static void populatePreparedStatementPlaceholders(
-      PreparedStatement psQuery, 
-      List              lstPrepStmtArguments
-   ) throws SQLException
-   {
-      Iterator values;
-      Object   value;
-      int      iIndex;
-      
-      for (values = lstPrepStmtArguments.iterator(), iIndex = 1; 
-           values.hasNext(); iIndex++)
-      {
-         value = values.next();
-         psQuery.setObject(iIndex, value);
-      }
-   }
-   
+	/**
+	 * Populate the prepared statement placeholders from the supplied list based
+	 * on the data type of each parameter.
+	 *
+	 * @param statement - statement to populate with query parameters
+	 * @param colPrepStmtArguments - collection of parameters to populate
+	 * @param bVerbose - if true the print the parameters to the debug output
+	 * @throws SQLException - an error has occurred
+	 */
+	public static void populatePreparedStatementPlaceholders(
+		PreparedStatement statement,
+		Collection			colPrepStmtArguments,
+		boolean				bVerbose
+	) throws SQLException
+	{
+		if ((colPrepStmtArguments != null) && (colPrepStmtArguments.size() > 0))
+		{
+			Object objParam;
+			int iParam = 1;
+			StringBuilder sbDebug = null;
+			if (bVerbose)
+			{
+				sbDebug = new StringBuilder("With parameters ");
+			}
+			for (Iterator<Object> iterParams = colPrepStmtArguments.iterator();
+				  iterParams.hasNext();)
+			{
+				objParam = iterParams.next();
+				if (objParam != null)
+				{
+					if (sbDebug != null)
+					{
+						sbDebug.append(objParam.toString());
+						if (iterParams.hasNext())
+						{
+							sbDebug.append(", ");
+						}
+						else
+						{
+							sbDebug.append("");
+						}
+					}
+					if (objParam instanceof String)
+					{
+						statement.setString(iParam, (String) objParam);
+					}
+					else if (objParam instanceof Timestamp)
+					{
+						Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+						statement.setTimestamp(iParam, (Timestamp) objParam, cal);
+					}
+					else if (objParam instanceof Integer)
+					{
+						statement.setInt(iParam, (Integer) objParam);
+					}
+					else if (objParam instanceof Long)
+					{
+						statement.setLong(iParam, (Long) objParam);
+					}
+					else
+					{
+			         statement.setObject(iParam, objParam);
+					}
+					iParam++;
+				}
+			}
+			if ((s_logger.isLoggable(Level.FINE)) && (bVerbose))
+			{
+				s_logger.fine(sbDebug.toString());
+			}
+		}
+	}
+
+	// Transaction isolation related methods ////////////////////////////////////
+	
    /**
     * Translate transaction isolation setting to a Connection.TRANSACTION_XXX 
     * constant.
@@ -694,6 +871,8 @@ public final class DatabaseUtils extends OSSObject
       return strTransactionIsolation;
    }
 
+	// Database schema related methods //////////////////////////////////////////
+	
    /**
     * This method is for relation checking and for hashing table-column existence
     * for optimization. Basically what it can do for you is if you pass it a
@@ -762,7 +941,7 @@ public final class DatabaseUtils extends OSSObject
                }
                finally
                {
-                  DatabaseUtils.closeResultSetAndStatement(rsResult, pstmQuery);
+                  DatabaseUtils.close(rsResult, pstmQuery);
                }
             }
             else
@@ -816,11 +995,94 @@ public final class DatabaseUtils extends OSSObject
             }
             finally
             {
-               DatabaseUtils.closeResultSetAndStatement(rsResult, pstmQuery);
+               DatabaseUtils.close(rsResult, pstmQuery);
             }               
          }
       }
       
       return bReturn;
+   }
+	
+	// Batch operations /////////////////////////////////////////////////////////
+	
+   /**
+    * Get the parameter specifying how many commands should be batched together.
+    * 
+    * @return int - positive number
+    */
+   public static int getBatchSize()
+   {
+      // TODO: Config: Make this value configurable
+      return 50;
+   }
+
+	/**
+    * Start a new batch statement sequence.
+    * 
+    * @param statement - statement to add
+    * @param iCurrentBatch - batch counter
+    * @return int - new value of batch counter
+    * @throws SQLException - an error has occurred
+    */
+   public static int startBatch(
+      PreparedStatement statement, 
+      int               iCurrentBatch
+   ) throws SQLException
+   {
+      return 0;
+   }
+
+   /**
+    * Add statement and execute it if the batch is full.
+    * 
+    * @param statement - statement to add
+    * @param iCurrentBatch - batch counter
+    * @return int - new value of batch counter
+    * @throws SQLException - an error has occurred
+    */
+   public static int addStatementToBatch(
+      PreparedStatement statement, 
+      int               iCurrentBatch
+   ) throws SQLException
+   {
+      int[] iInsertedRows = null;
+
+      // Now we have complete statement so either we add it to batch or 
+      // we execute it if the batch size is full
+      iCurrentBatch++;
+      if (iCurrentBatch < DatabaseUtils.getBatchSize())
+      {
+         statement.addBatch();
+      }
+      else
+      {
+         // We have to add first before we execute
+         statement.addBatch();
+         iInsertedRows = statement.executeBatch();
+         iCurrentBatch = 0;
+      }
+    
+      return iCurrentBatch;
+   }
+   
+   /**
+    * Complete the previously started batch.
+    * 
+    * @param statement - statement to add
+    * @param iCurrentBatch - batch counter
+    * @throws SQLException - an error has occurred
+    */
+   public static void completeBatch(
+      PreparedStatement statement, 
+      int               iCurrentBatch
+   ) throws SQLException
+   {
+      if (iCurrentBatch > 0)
+      {
+         @SuppressWarnings( "unused" )
+         int[] iInsertedRows = null;
+
+         iInsertedRows = statement.executeBatch();
+      }
    }
 }

@@ -296,7 +296,7 @@ public abstract class DatabaseSchemaImpl extends OSSObject
       }
       finally
       {
-         DatabaseUtils.closeStatement(stmQuery);
+         DatabaseUtils.close(stmQuery);
       }
    }
 }

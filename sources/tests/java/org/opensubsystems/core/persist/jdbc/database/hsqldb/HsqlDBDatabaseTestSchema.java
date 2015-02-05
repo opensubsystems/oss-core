@@ -124,7 +124,7 @@ public class HsqlDBDatabaseTestSchema extends DatabaseTestSchema
       }
       finally
       {
-         DatabaseUtils.closeStatement(stmQuery);
+         DatabaseUtils.close(stmQuery);
       }
    }
 
@@ -200,8 +200,8 @@ public class HsqlDBDatabaseTestSchema extends DatabaseTestSchema
       }
       finally
       {
-         DatabaseUtils.closeStatement(insertStatement);
-         DatabaseUtils.closeResultSetAndStatement(rsResults, callStatement);
+         DatabaseUtils.close(insertStatement);
+         DatabaseUtils.close(rsResults, callStatement);
       }
       
       return returnValues;
@@ -234,7 +234,7 @@ public class HsqlDBDatabaseTestSchema extends DatabaseTestSchema
       }
       finally
       {
-         DatabaseUtils.closeStatement(updateStatement);
+         DatabaseUtils.close(updateStatement);
       }
       
       return iUpdateCount;
@@ -274,7 +274,7 @@ public class HsqlDBDatabaseTestSchema extends DatabaseTestSchema
       }
       finally
       {
-         DatabaseUtils.closeStatement(insertStatement);
+         DatabaseUtils.close(insertStatement);
       }
       // HsqlDB doesn't support stored procedures 
       return returnValues;
@@ -307,7 +307,7 @@ public class HsqlDBDatabaseTestSchema extends DatabaseTestSchema
       }
       finally
       {
-         DatabaseUtils.closeStatement(stmQuery);
+         DatabaseUtils.close(stmQuery);
       }                        
    }
 
@@ -336,7 +336,7 @@ public class HsqlDBDatabaseTestSchema extends DatabaseTestSchema
       }
       finally
       {
-         DatabaseUtils.closeStatement(stmQuery);
+         DatabaseUtils.close(stmQuery);
       }                        
    }
 }

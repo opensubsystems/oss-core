@@ -481,7 +481,7 @@ public class HsqlDBDatabaseImpl extends DatabaseImpl
       }
       finally
       {
-         DatabaseUtils.closeStatement(pstmQuery);
+         DatabaseUtils.close(pstmQuery);
       }                        
    }
 
@@ -570,8 +570,8 @@ public class HsqlDBDatabaseImpl extends DatabaseImpl
    {
       if (cache != null)
       {   
-         DatabaseUtils.closeStatement(cache.getCall());
-         DatabaseUtils.closeStatement(cache.getSelect());
+         DatabaseUtils.close(cache.getCall());
+         DatabaseUtils.close(cache.getSelect());
       }
    }
    
@@ -619,7 +619,7 @@ public class HsqlDBDatabaseImpl extends DatabaseImpl
          }
          finally
          {      
-            DatabaseUtils.closeResultSet(rsResults);
+            DatabaseUtils.close(rsResults);
          }   
          
          if (lGeneratedKey != DataObject.NEW_ID)
@@ -656,7 +656,7 @@ public class HsqlDBDatabaseImpl extends DatabaseImpl
             }
             finally
             {      
-               DatabaseUtils.closeResultSet(rsResults);
+               DatabaseUtils.close(rsResults);
             }
          }
       }
@@ -713,7 +713,7 @@ public class HsqlDBDatabaseImpl extends DatabaseImpl
       }
       finally
       {      
-         DatabaseUtils.closeResultSet(rsResults);
+         DatabaseUtils.close(rsResults);
       }
    }
 
@@ -772,7 +772,7 @@ public class HsqlDBDatabaseImpl extends DatabaseImpl
    {
       if (cache != null)
       {   
-         DatabaseUtils.closeStatement(cache.getSelect());
+         DatabaseUtils.close(cache.getSelect());
       }
    }
 }

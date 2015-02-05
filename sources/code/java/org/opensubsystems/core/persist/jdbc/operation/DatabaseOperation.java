@@ -34,6 +34,7 @@ import org.opensubsystems.core.persist.jdbc.Database;
 import org.opensubsystems.core.persist.jdbc.DatabaseFactory;
 import org.opensubsystems.core.persist.jdbc.DatabaseSchema;
 import org.opensubsystems.core.util.GlobalConstants;
+import org.opensubsystems.core.util.OSSObject;
 import org.opensubsystems.core.util.TwoIntStruct;
 import org.opensubsystems.core.util.jdbc.DatabaseUtils;
 
@@ -44,7 +45,7 @@ import org.opensubsystems.core.util.jdbc.DatabaseUtils;
  * 
  * @author bastafidli
  */
-public abstract class DatabaseOperation
+public abstract class DatabaseOperation extends OSSObject
 {
    // Attributes ///////////////////////////////////////////////////////////////
    
@@ -236,7 +237,7 @@ public abstract class DatabaseOperation
       }
       finally
       {
-         DatabaseUtils.closeResultSet(rsQueryResults);
+         DatabaseUtils.close(rsQueryResults);
       }
        
       return lstData;
@@ -309,7 +310,7 @@ public abstract class DatabaseOperation
       }
       finally
       {
-         DatabaseUtils.closeResultSet(rsQueryResults);
+         DatabaseUtils.close(rsQueryResults);
       }
        
       return arrData;
@@ -388,7 +389,7 @@ public abstract class DatabaseOperation
       }
       finally
       {
-         DatabaseUtils.closeResultSet(rsQueryResults);
+         DatabaseUtils.close(rsQueryResults);
       }
        
       return arrData;
@@ -434,7 +435,7 @@ public abstract class DatabaseOperation
       }
       finally
       {
-         DatabaseUtils.closeResultSet(rsQueryResults);
+         DatabaseUtils.close(rsQueryResults);
       }
       
       return data;
@@ -510,7 +511,7 @@ public abstract class DatabaseOperation
       }
       finally
       {
-         DatabaseUtils.closeResultSet(rsQueryResults);
+         DatabaseUtils.close(rsQueryResults);
       }
        
       return lstData;
@@ -588,7 +589,7 @@ public abstract class DatabaseOperation
       }
       finally
       {
-         DatabaseUtils.closeResultSet(rsQueryResults);
+         DatabaseUtils.close(rsQueryResults);
       }
        
       return returnSet;
@@ -666,7 +667,7 @@ public abstract class DatabaseOperation
       }
       finally
       {
-         DatabaseUtils.closeResultSet(rsQueryResults);
+         DatabaseUtils.close(rsQueryResults);
       }
        
       return returnSet;

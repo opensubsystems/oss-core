@@ -315,7 +315,7 @@ public abstract class ModifiableDatabaseSchemaImpl extends    DatabaseSchemaImpl
       }
       finally
       {
-         DatabaseUtils.closeResultSetAndStatement(rsCheck, psCheck);
+         DatabaseUtils.close(rsCheck, psCheck);
       }
    }
 }

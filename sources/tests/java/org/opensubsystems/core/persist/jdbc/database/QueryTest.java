@@ -183,7 +183,7 @@ public final class QueryTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeStatement(insertStatement);
+               DatabaseUtils.close(insertStatement);
             }
             
             try
@@ -197,7 +197,7 @@ public final class QueryTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeResultSetAndStatement(rsResults, selectStatement);
+               DatabaseUtils.close(rsResults, selectStatement);
             }
             
          }
@@ -219,7 +219,7 @@ public final class QueryTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeStatement(deleteStatement);
+               DatabaseUtils.close(deleteStatement);
             }
          }
       }   
@@ -276,7 +276,7 @@ public final class QueryTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeStatement(insertStatement);
+               DatabaseUtils.close(insertStatement);
             }
             
             try
@@ -289,7 +289,7 @@ public final class QueryTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeResultSetAndStatement(rsResults, selectStatement);
+               DatabaseUtils.close(rsResults, selectStatement);
             }
             
          }
@@ -311,7 +311,7 @@ public final class QueryTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeStatement(deleteStatement);
+               DatabaseUtils.close(deleteStatement);
             }
          }
       }   
@@ -359,7 +359,7 @@ public final class QueryTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeStatement(insertStatement);
+               DatabaseUtils.close(insertStatement);
             }
             
             try
@@ -380,7 +380,7 @@ public final class QueryTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeResultSetAndStatement(rsResults, selectStatement);
+               DatabaseUtils.close(rsResults, selectStatement);
             }
          }
          finally
@@ -399,7 +399,7 @@ public final class QueryTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeStatement(deleteStatement);
+               DatabaseUtils.close(deleteStatement);
             }
          }
       }
@@ -447,7 +447,7 @@ public final class QueryTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeStatement(insertStatement);
+               DatabaseUtils.close(insertStatement);
             }
             
             try
@@ -483,7 +483,7 @@ public final class QueryTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeResultSetAndStatement(rsResults, selectStatement);
+               DatabaseUtils.close(rsResults, selectStatement);
             }
          }
          finally
@@ -502,7 +502,7 @@ public final class QueryTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeStatement(deleteStatement);
+               DatabaseUtils.close(deleteStatement);
             }
          }
       }      
@@ -553,7 +553,7 @@ public final class QueryTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeStatement(insertStatement);
+               DatabaseUtils.close(insertStatement);
             }
             
             m_transaction.begin();
@@ -572,7 +572,7 @@ public final class QueryTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeResultSetAndStatement(rsResults, insertSelectStatement);
+               DatabaseUtils.close(rsResults, insertSelectStatement);
             }
             
             selectStatement = m_connection.prepareStatement(SELECT);
@@ -598,7 +598,7 @@ public final class QueryTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeStatement(deleteStatement);
+               DatabaseUtils.close(deleteStatement);
             }
          }
       }
@@ -647,7 +647,7 @@ public final class QueryTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeStatement(insertStatement);
+               DatabaseUtils.close(insertStatement);
             }
             
             // Here we are doing 1,2,3 except 1,2 except 2,3
@@ -710,7 +710,7 @@ public final class QueryTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeStatement(deleteStatement);
+               DatabaseUtils.close(deleteStatement);
             }
          }
       }
@@ -759,7 +759,7 @@ public final class QueryTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeStatement(insertStatement);
+               DatabaseUtils.close(insertStatement);
             }
             
             // Here we are doing 1,2,3 except 1,2 union 2,3
@@ -824,7 +824,7 @@ public final class QueryTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeStatement(deleteStatement);
+               DatabaseUtils.close(deleteStatement);
             }
          }
       }
@@ -872,7 +872,7 @@ public final class QueryTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeStatement(insertStatement);
+               DatabaseUtils.close(insertStatement);
             }
             
             try
@@ -889,7 +889,7 @@ public final class QueryTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeResultSetAndStatement(rsResults, selectStatement);
+               DatabaseUtils.close(rsResults, selectStatement);
             }
          }
          finally
@@ -908,7 +908,7 @@ public final class QueryTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeStatement(deleteStatement);
+               DatabaseUtils.close(deleteStatement);
             }
          }
       }         

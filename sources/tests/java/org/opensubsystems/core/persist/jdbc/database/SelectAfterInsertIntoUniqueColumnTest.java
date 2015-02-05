@@ -154,7 +154,7 @@ public final class SelectAfterInsertIntoUniqueColumnTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeStatement(deleteStatement);
+               DatabaseUtils.close(deleteStatement);
                deleteStatement = null;
             }
             
@@ -193,7 +193,7 @@ public final class SelectAfterInsertIntoUniqueColumnTest extends Tests
                }
                finally
                {
-                  DatabaseUtils.closeResultSetAndStatement(rsResults, 
+                  DatabaseUtils.close(rsResults, 
                                                            selectStatement);
                }
                
@@ -223,7 +223,7 @@ public final class SelectAfterInsertIntoUniqueColumnTest extends Tests
             }
             finally
             {
-               DatabaseUtils.closeStatement(deleteStatement);
+               DatabaseUtils.close(deleteStatement);
             }
          }
       }   

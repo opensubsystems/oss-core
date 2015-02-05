@@ -160,7 +160,7 @@ public abstract class DatabaseReadOperation extends    DatabaseOperation
       }      
       finally
       {
-         DatabaseUtils.closeStatement(pstmQuery);
+         DatabaseUtils.close(pstmQuery);
          DatabaseConnectionFactoryImpl.getInstance().returnConnection(
                                                         cntConnection);
       }  

@@ -705,7 +705,7 @@ public abstract class DatabaseTestSchema extends ModifiableDatabaseSchemaImpl
       }
       finally
       {
-         DatabaseUtils.closeStatement(stmQuery);
+         DatabaseUtils.close(stmQuery);
       }
    }
 
@@ -858,7 +858,7 @@ public abstract class DatabaseTestSchema extends ModifiableDatabaseSchemaImpl
      }
      finally
      {   
-        DatabaseUtils.closeStatement(insertStatement);
+        DatabaseUtils.close(insertStatement);
      }
      
      return bReturn;

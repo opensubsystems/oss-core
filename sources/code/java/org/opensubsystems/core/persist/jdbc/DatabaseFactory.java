@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2012 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2015 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -36,6 +36,7 @@ public interface DatabaseFactory extends DataFactory
    /**
     * Get database on which the operation should operate. 
     * 
+	 * @return Database - database associated with the database factory
     * @throws OSSException - problem accessing the database
     */
    public Database getDatabase(
