@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2014 - 2015 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -18,6 +18,8 @@
  */
 
 package org.opensubsystems.core.data.impl;
+
+import java.util.EnumSet;
 
 /**
  * Data descriptor that can be used when no more specific data descriptor exists.
@@ -57,7 +59,25 @@ public class UndefinedDataDescriptor extends DataDescriptorImpl
     */
    protected static final String UNDEFINED_TYPE_VIEW = "undefineddatatype";
 
-   // Attributes ////////////////////////////////////////////////////////////
+	/**
+	 * Definition of all fields that represent meaningful data for users.
+	 * The order is important since it is used to retrieve all data from the
+	 * persistence store efficiently so do not modify it unless you make
+	 * changes to other places as well.
+	 * Protected since derived classes can add more attributes and therefore code
+	 * should use method exposing it rather than the constants.
+	 */
+	public enum UndefinedFields {
+		// Every object has at least ID
+		UNDEFINED_DATA_TYPE_DESIRED_VALUE_DATA_ID(UNDEFINED_DATA_TYPE_DESIRED_VALUE + 1),
+		;
+
+		private final int iValue;
+		UndefinedFields(int id) { this.iValue = id; }
+		public int getValue() { return iValue; }
+	}
+
+	// Attributes ////////////////////////////////////////////////////////////
 
    // Constructors //////////////////////////////////////////////////////////
 
@@ -68,7 +88,8 @@ public class UndefinedDataDescriptor extends DataDescriptorImpl
    {
       super(UNDEFINED_DATA_TYPE_DESIRED_VALUE, 
             UNDEFINED_DATA_TYPE_NAME, 
-            UNDEFINED_TYPE_VIEW);
+            UNDEFINED_TYPE_VIEW,
+				EnumSet.allOf(UndefinedFields.class));
    }
 
    // Logic /////////////////////////////////////////////////////////////////
