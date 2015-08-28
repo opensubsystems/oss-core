@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2015 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 
 /**
  * Class responsible for instantiating of the system logger. This way anybody
@@ -46,11 +47,6 @@ public class Log extends OSSObject
    // Attributes ///////////////////////////////////////////////////////////////
 
    /**
-    * Default Java logger to log messages to the application.
-    */
-   protected static transient Logger s_lgLogger = null;
-   
-   /**
     * Helper mutex to synchronize some methods.
     */
    protected static transient String s_strMutex = "log.mutex";
@@ -64,7 +60,7 @@ public class Log extends OSSObject
     * Logger for this class. It will be initialized only after the log 
     * configuration is initialized.
     */
-   protected static Logger s_logger;
+   protected static final Logger s_logger;
    
    // Constructors /////////////////////////////////////////////////////////////
 
@@ -129,8 +125,7 @@ public class Log extends OSSObject
          }
          if (isConfigFile != null)
          {
-// TODO: Fix bug: For now disable this since when running application under Tomcat it breaks the logging            
-//            LogManager.getLogManager().readConfiguration(isConfigFile);
+            LogManager.getLogManager().readConfiguration(isConfigFile);
             System.out.println("Logging subsystem initialized.");
          }
       }
@@ -138,7 +133,7 @@ public class Log extends OSSObject
       {
          // Logger is not initialized yet, use System.out.
          System.out.println("Cannot initialize logging subsystem.");
-         ioeExc.printStackTrace();
+			System.out.println(ThrowableUtils.toString(ioeExc));
       }
       finally
       {
@@ -161,6 +156,15 @@ public class Log extends OSSObject
             System.out.println("Using log configuration file " + s_strConfigFile);
             s_logger.log(Level.CONFIG, "Using log configuration file {0}", 
                         s_strConfigFile);
+				System.out.println("Log level ALL = " + s_logger.isLoggable(Level.ALL));
+				System.out.println("Log level CONFIG = " + s_logger.isLoggable(Level.CONFIG));
+				System.out.println("Log level FINEST = " + s_logger.isLoggable(Level.FINEST));
+				System.out.println("Log level FINER = " + s_logger.isLoggable(Level.FINER));
+				System.out.println("Log level FINE = " + s_logger.isLoggable(Level.FINE));
+				System.out.println("Log level INFO = " + s_logger.isLoggable(Level.INFO));
+				System.out.println("Log level WARNING = " + s_logger.isLoggable(Level.WARNING));
+				System.out.println("Log level SEVERE = " + s_logger.isLoggable(Level.SEVERE));
+				System.out.println("Log level OFF = " + s_logger.isLoggable(Level.OFF));
          }
       }
    }
@@ -222,7 +226,7 @@ public class Log extends OSSObject
    ) throws IOException,
             FileNotFoundException
    {
-      InputStream isConfigFile = null;
+      InputStream isConfigFile;
       URL         urlDefaultPropertyFile;
 
       urlDefaultPropertyFile = FileUtils.findFileOnClassPath(strConfigFileName);
