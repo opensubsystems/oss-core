@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2015 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -32,10 +32,10 @@ import org.opensubsystems.core.data.impl.UndefinedDataDescriptor;
  *   filterable attributes, attributes to display in list
  * - constants identifying default values of attributes 
  *
+ * @param <E> - enumeration representing fields of the described data
  * @author bastafidli
  */
-// TODO: JDK 1.4: Annotation should be able to replace this interface.
-public interface DataDescriptor
+public interface DataDescriptor<E extends Enum<E>>
 {
    /**
     * Constant that can be used at times when no data descriptor was defined
@@ -123,5 +123,26 @@ public interface DataDescriptor
     * @return String
     */
    String getViewName(
+   );
+
+	/**
+	 * Get maximal length of data that can be stored in a specified field.
+	 * 
+	 * @param field - field to get a maximal length of data for
+	 * @return Integer - maximal length of data for the specified field
+	 */
+	Integer getFieldMaxLength(
+	   E field
+	);
+	
+	/**
+	 * Set maximal length of data that can be stored in a specified field.
+	 * 
+	 * @param field - field to get a maximal length of data for
+	 * @param iMaxLength - maximal length of data for the specified field
+	 */
+	void setFieldMaxLength(
+	   E		  field, 
+		Integer iMaxLength
    );
 }

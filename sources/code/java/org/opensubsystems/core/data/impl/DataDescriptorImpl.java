@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2008 - 2015 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -19,8 +19,12 @@
 
 package org.opensubsystems.core.data.impl;
 
+import java.util.EnumMap;
+import java.util.EnumSet;
 import org.opensubsystems.core.data.DataDescriptor;
 import org.opensubsystems.core.data.DataObject;
+import org.opensubsystems.core.error.OSSException;
+import org.opensubsystems.core.error.OSSInvalidDataException;
 import org.opensubsystems.core.util.GlobalConstants;
 import org.opensubsystems.core.util.OSSObject;
 
@@ -35,10 +39,14 @@ import org.opensubsystems.core.util.OSSObject;
  *   filterable attributes, attributes to display in list
  * - constants identifying default values of attributes 
  *
+ * The use of enumeration for fields is inspired by
+ * http://stackoverflow.com/questions/19155405/java-enum-extends-workaround
+ * 
+ * @param <E> - enumeration representing fields of the described data
  * @author bastafidli
  */
-public class DataDescriptorImpl extends OSSObject
-                                implements DataDescriptor
+public class DataDescriptorImpl<E extends Enum<E>> extends OSSObject
+															      implements DataDescriptor<E>
 {
    // Attributes ///////////////////////////////////////////////////////////////
 
@@ -81,7 +89,19 @@ public class DataDescriptorImpl extends OSSObject
     */
    protected String m_strDisplayableViewName;
    
-   // Cached values ////////////////////////////////////////////////////////////
+	/**
+	 * Enumeration representing data fields for the class
+	 */
+	protected EnumSet<E>	m_setDataFields;
+	
+	/**
+	 * Maximal length of the folder field.
+	 * The value depends on the underlying persistence mechanism and it is set
+	 * once the persistence layer is initialized.
+	 */
+	protected EnumMap<E, Integer> m_mpDataFieldLengths;
+
+	// Cached values ////////////////////////////////////////////////////////////
    
    /**
     * This is constructed only when somebody asks for it. It is private so that
@@ -128,12 +148,15 @@ public class DataDescriptorImpl extends OSSObject
     *                      This name is independent of the language and 
     *                      therefore can be used to identify the view under any 
     *                      circumstances.
+	 * @param setDataFields - enumeration representing data fields for the class
+	 * @throws OSSException - an error has occurred
     */
    public DataDescriptorImpl(
-      int    iDesiredDataType,
-      String strDisplayableViewName,
-      String strViewName
-   )
+      int        iDesiredDataType,
+      String	  strDisplayableViewName,
+      String	  strViewName,
+		EnumSet<E> setDataFields
+   ) throws OSSException
    {
       m_clsParentDescriptor = null;
       m_iDesiredDataType = iDesiredDataType;
@@ -141,6 +164,14 @@ public class DataDescriptorImpl extends OSSObject
       m_strDisplayableViewName = strDisplayableViewName;
       m_strViewName = strViewName;
       m_iDataTypeObject = null;
+		m_setDataFields = setDataFields;
+
+		// Here we need to pass value of the element representing single field
+		if (setDataFields.isEmpty())
+		{
+			throw new OSSInvalidDataException("setDataFields must contain at least one field");
+		}
+	   m_mpDataFieldLengths = new EnumMap(setDataFields.iterator().next().getClass());
    }
    
    /**
@@ -164,11 +195,13 @@ public class DataDescriptorImpl extends OSSObject
     *                      This name is independent of the language and 
     *                      therefore can be used to identify the view under any 
     *                      circumstances.
+	 * @param setDataFields - enumeration representing data fields for the class
     */
    public DataDescriptorImpl(
       Class<DataDescriptor> clsParentDescriptor,
       String                strDisplayableViewName,
-      String                strViewName
+      String                strViewName,
+		EnumSet<E>				 setDataFields
    )
    {
       if (GlobalConstants.ERROR_CHECKING)
@@ -183,6 +216,9 @@ public class DataDescriptorImpl extends OSSObject
       m_strDisplayableViewName = strDisplayableViewName;
       m_strViewName = strViewName;
       m_iDataTypeObject = null;
+		m_setDataFields = setDataFields;
+		// TODO: Review this: Should we be pulling the data fields from the parent descriptor?
+		m_mpDataFieldLengths = new EnumMap(setDataFields.getClass());
    }
    
    // Logic ////////////////////////////////////////////////////////////////////
@@ -244,7 +280,7 @@ public class DataDescriptorImpl extends OSSObject
       // if we create two objects in case of concurrent access
       if (m_iDataTypeObject == null)
       {
-          m_iDataTypeObject = new Integer(getDataType());            
+          m_iDataTypeObject = getDataType();
       }
       
       return m_iDataTypeObject;
@@ -272,6 +308,31 @@ public class DataDescriptorImpl extends OSSObject
     * {@inheritDoc}
     */
    @Override
+	public Integer getFieldMaxLength(
+	   E field
+	)
+	{
+	   return m_mpDataFieldLengths.get(field);
+	}
+	
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+	public void setFieldMaxLength(
+	   E		  field, 
+		Integer iMaxLength)
+	{
+	   m_mpDataFieldLengths.put(field, iMaxLength);
+	}
+
+	/**
+    * {@inheritDoc}
+	 * 
+	 * @param sb {@inheritDoc}
+	 * @param ind {@inheritDoc}
+    */
+   @Override
    public void toString(
       StringBuilder sb,
       int           ind
@@ -284,6 +345,7 @@ public class DataDescriptorImpl extends OSSObject
       append(sb, ind + 1, "m_strViewName = ", m_strViewName);
       append(sb, ind + 1, "m_strDisplayableViewName = ", m_strDisplayableViewName);
       append(sb, ind + 1, "m_iDataTypeObject = ", m_iDataTypeObject);
+      append(sb, ind + 1, "m_enumDataFields = ", m_setDataFields);
       super.toString(sb, ind + 1);
       append(sb, ind + 0, "]", true);
    }
