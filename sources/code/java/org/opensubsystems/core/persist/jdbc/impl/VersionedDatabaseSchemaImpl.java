@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2014 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2015 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -25,6 +25,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -54,7 +55,8 @@ public abstract class VersionedDatabaseSchemaImpl extends    ModifiableDatabaseS
 {
    // Inner classes ////////////////////////////////////////////////////////////
    
-   public static class VersionedDatabaseSchemaDataDescriptor extends DataDescriptorImpl
+   public static class VersionedDatabaseSchemaDataDescriptor 
+	   extends DataDescriptorImpl<VersionedDatabaseSchemaDataDescriptor.VersionedDatabaseSchemaFields>
    {
       // Constants ////////////////////////////////////////////////////////////////
       
@@ -89,61 +91,27 @@ public abstract class VersionedDatabaseSchemaImpl extends    ModifiableDatabaseS
       protected static final String VERSIONED_DATABASE_SCHEMA_TYPE_VIEW 
                                        = "versionedbschema";
 
-      /**
-       * Code for table column.
-       */
-      public static final int COL_VERSIONED_DATABASE_SCHEMA_DATA_ID 
-         = VERSIONED_DATABASE_SCHEMA_DATA_TYPE_DESIRED_VALUE + 1;
+		/**
+		 * Definition of all fields that represent meaningful data for users.
+		 * The order is important since it is used to retrieve all data from the
+		 * persistence store efficiently so do not modify it unless you make
+		 * changes to other places as well.
+		 * Protected since derived classes can add more attributes and therefore code
+		 * should use method exposing it rather than the constants.
+		 */
+		public enum VersionedDatabaseSchemaFields {
+         VERSIONED_DATABASE_SCHEMA_DATA_ID(VERSIONED_DATABASE_SCHEMA_DATA_TYPE_DESIRED_VALUE + 1),
+         VERSIONED_DATABASE_SCHEMA_DATA_NAME(VERSIONED_DATABASE_SCHEMA_DATA_TYPE_DESIRED_VALUE + 2),
+         VERSIONED_DATABASE_SCHEMA_DATA_VERSION(VERSIONED_DATABASE_SCHEMA_DATA_TYPE_DESIRED_VALUE + 3),
+         VERSIONED_DATABASE_SCHEMA_DATA_CREATION_DATE(VERSIONED_DATABASE_SCHEMA_DATA_TYPE_DESIRED_VALUE + 4),
+         VERSIONED_DATABASE_SCHEMA_DATA_MODIFICATION_DATE(VERSIONED_DATABASE_SCHEMA_DATA_TYPE_DESIRED_VALUE + 5),
+			;
 
-      /**
-       * Code for table column.
-       */
-      public static final int COL_VERSIONED_DATABASE_SCHEMA_DATA_NAME 
-         = VERSIONED_DATABASE_SCHEMA_DATA_TYPE_DESIRED_VALUE + 2;
-
-      /**
-       * Code for table column.
-       */
-      public static final int COL_VERSIONED_DATABASE_SCHEMA_DATA_VERSION 
-         = VERSIONED_DATABASE_SCHEMA_DATA_TYPE_DESIRED_VALUE + 3;
-
-      /**
-       * Code for table column.
-       */
-      public static final int COL_VERSIONED_DATABASE_SCHEMA_DATA_CREATION_DATE 
-         = VERSIONED_DATABASE_SCHEMA_DATA_TYPE_DESIRED_VALUE + 4;
-
-      /**
-       * Code for table column.
-       */
-      public static final int COL_VERSIONED_DATABASE_SCHEMA_DATA_MODIFICATION_DATE 
-         = VERSIONED_DATABASE_SCHEMA_DATA_TYPE_DESIRED_VALUE + 5;
-
-      /**
-       * Static variable for array of all columns codes.
-       * The order is important since it is used to retrieve all data from the
-       * persistence store efficiently so do not modify it unless you make
-       * changes to other places as well.
-       * Protected since derived classes can add more attributes and therefore code 
-       * should use method exposing it rather than the constants.
-       */
-      protected static final int[] VERSIONED_DATABASE_SCHEMA_ALL_COLUMNS 
-         = {COL_VERSIONED_DATABASE_SCHEMA_DATA_ID,
-            COL_VERSIONED_DATABASE_SCHEMA_DATA_NAME,
-            COL_VERSIONED_DATABASE_SCHEMA_DATA_VERSION,
-            COL_VERSIONED_DATABASE_SCHEMA_DATA_CREATION_DATE,
-            COL_VERSIONED_DATABASE_SCHEMA_DATA_MODIFICATION_DATE,
-           };
-
-      // Attributes ////////////////////////////////////////////////////////////
-      
-      /**
-       * Maximal length of the name field. 
-       * The value depends on the underlying persistence mechanism and it is set 
-       * once the persistence layer is initialized.
-       */
-      protected int m_iNameMaxLength;
-      
+			private final int iValue;
+			VersionedDatabaseSchemaFields(int id) { this.iValue = id; }
+			public int getValue() { return iValue; }
+		}
+		
       // Constructors //////////////////////////////////////////////////////////
       
       /**
@@ -153,30 +121,8 @@ public abstract class VersionedDatabaseSchemaImpl extends    ModifiableDatabaseS
       {
          super(VERSIONED_DATABASE_SCHEMA_DATA_TYPE_DESIRED_VALUE, 
                VERSIONED_DATABASE_SCHEMA_DATA_TYPE_NAME, 
-               VERSIONED_DATABASE_SCHEMA_TYPE_VIEW);
-      }
-      
-      // Logic /////////////////////////////////////////////////////////////////
-
-      /**
-       * @return int
-       */
-      public int getNameMaxLength(
-      )
-      {
-         return m_iNameMaxLength;
-      }
-
-      /**
-       * Maximal length for the name.
-       *
-       * @param iName - maximal length of the name field in the persistence store
-       */
-      public void setNameMaxLength(
-         int iName
-      )
-      {
-         m_iNameMaxLength = iName;
+               VERSIONED_DATABASE_SCHEMA_TYPE_VIEW,
+					EnumSet.allOf(VersionedDatabaseSchemaFields.class));
       }
    }
 
@@ -190,7 +136,7 @@ public abstract class VersionedDatabaseSchemaImpl extends    ModifiableDatabaseS
    /**
     * Version of this schema in the database.
     * Version 1 - original
-    * Version 2 - PostgreSQL added user defined type
+    * Version 2 - e.g. PostgreSQL added user defined type
     */
    public static final int VERSIONED_SCHEMA_VERSION = 1;
 
@@ -255,6 +201,8 @@ public abstract class VersionedDatabaseSchemaImpl extends    ModifiableDatabaseS
 
    /**
     * {@inheritDoc}
+	 * 
+	 * @throws OSSException {@inheritDoc}
     */
    @Override
    public void add(
@@ -287,10 +235,10 @@ public abstract class VersionedDatabaseSchemaImpl extends    ModifiableDatabaseS
          // TODO: Feature: Add schemas circular dependency check here
          if (arSchemas != null)
          {
-            for (int iIndex = 0; iIndex < arSchemas.length; iIndex++)
-            {
-               add(arSchemas[iIndex]);
-            }
+				for (DatabaseSchema arSchema : arSchemas)
+				{
+					add(arSchema);
+				}
          }
          m_mpSchemas.put(dsSchema.getName(), dsSchema);
          s_logger.log(Level.FINEST, "Database schema {0} version {1} is now"
@@ -301,6 +249,9 @@ public abstract class VersionedDatabaseSchemaImpl extends    ModifiableDatabaseS
 
    /**
     * {@inheritDoc}
+	 * 
+	 * @throws OSSException {@inheritDoc}
+	 * @throws SQLException {@inheritDoc}
     */
    @Override
    public void init(
@@ -569,8 +520,7 @@ public abstract class VersionedDatabaseSchemaImpl extends    ModifiableDatabaseS
                                new Object[]{strSchemaName, iLastVersion, 
                                             dsSchema.getVersion()});
                   // Remember the last version
-                  mpSchemasToUpgrade.put(dsSchema.getName(),
-                                         new Integer(iLastVersion));
+                  mpSchemasToUpgrade.put(dsSchema.getName(), iLastVersion);
                }
                else if (iLastVersion > dsSchema.getVersion())
                {
@@ -675,11 +625,11 @@ public abstract class VersionedDatabaseSchemaImpl extends    ModifiableDatabaseS
             }
             else
             {
-               intLastVersion = (Integer)mpSchemasToUpgrade.get(getName());
+               intLastVersion = mpSchemasToUpgrade.get(getName());
                if (intLastVersion != null)
                {
                   pstmUpdate = upgradeSchema(cntDBConnection, strUserName, 
-                                            this, intLastVersion.intValue(),
+                                            this, intLastVersion,
                                             pstmUpdate);
                }               
             }
@@ -698,13 +648,12 @@ public abstract class VersionedDatabaseSchemaImpl extends    ModifiableDatabaseS
                   }
                   else
                   {
-                     intLastVersion = (Integer)mpSchemasToUpgrade.get(
-                                                  dsSchema.getName());
+                     intLastVersion = mpSchemasToUpgrade.get(
+									  dsSchema.getName());
                      if (intLastVersion != null)
                      {
                         pstmUpdate = upgradeSchema(cntDBConnection, strUserName, 
-                                                  dsSchema, 
-                                                  intLastVersion.intValue(),
+                                                  dsSchema, intLastVersion,
                                                   pstmUpdate);
                      }               
                   }
