@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2014 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2015 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -38,6 +38,7 @@ import org.opensubsystems.core.error.OSSException;
  * be created from the name that is specified based on some rules encapsulated 
  * in the overwritten methods createDefaultClassNames(). 
  *
+ * @param <T> - Type of class this class factory will be used to instantiate
  * @author bastafidli
  */
 public class ClassFactory<T> extends OSSObject
@@ -209,6 +210,13 @@ public class ClassFactory<T> extends OSSObject
                          new Object[]{strClassIdentifier, 
                                       objInstance.getClass().getName()});
          }
+			else
+			{
+				throw new OSSDynamicClassException("Failed to create instance for " 
+															  + strClassIdentifier 
+															  + " using configured class names "
+															  + lstClassNames);
+			}
       }
       else
       {
@@ -226,18 +234,19 @@ public class ClassFactory<T> extends OSSObject
                             new Object[]{strClassIdentifier, 
                                          objInstance.getClass().getName()});
             }
+				else
+				{
+					throw new OSSDynamicClassException("Failed to create instance for " 
+																  + strClassIdentifier 
+																  + " using default class names "
+																  + lstClassNames);
+				}
          }
          else
          {
             throw new OSSDynamicClassException("No class names available for " 
                                                + strClassIdentifier);         
          }
-      }
-      
-      if (objInstance == null)
-      {
-         throw new OSSDynamicClassException("Failed to create instance for " 
-                                            + strClassIdentifier);
       }
       
       return objInstance;
@@ -301,15 +310,14 @@ public class ClassFactory<T> extends OSSObject
     * that the instantiated class must satisfy. 
     * 
     * @param objInstance - instance to verify, can be null
-    * @param T - return the instance casted to the correct value 
+    * @return T - return the instance casted to the correct value 
     * @throws OSSException - an error has occurred (e.g. verification error)
     */
    protected T verifyInstance(
       Object objInstance
    ) throws OSSException
    {
-      // Make sure that the instantiated class is of type DataFactory 
-      // and DatabaseFactory
+      // Make sure that the instantiated class is of type specified as parameter
       if ((objInstance != null) && (!(m_type.isInstance(objInstance))))
       {
          throw new OSSDynamicClassException("Instantiated class is not of type"
