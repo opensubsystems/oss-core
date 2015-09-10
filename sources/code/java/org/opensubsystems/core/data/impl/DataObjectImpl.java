@@ -133,7 +133,7 @@ public abstract class DataObjectImpl extends OSSObject
          }
          else
          {
-            m_lIdObject = new Long(m_lId);            
+            m_lIdObject = m_lId;
          }
       }
       
@@ -204,6 +204,8 @@ public abstract class DataObjectImpl extends OSSObject
 
    /**
     * {@inheritDoc}
+	 * 
+	 * @param ind {@inheritDoc}
     */
    @Override
    public void toString(
@@ -222,6 +224,8 @@ public abstract class DataObjectImpl extends OSSObject
 
    /**
     * {@inheritDoc}
+	 * 
+	 * @param oObject {@inheritDoc}
     */
    @Override
    public boolean equals(
