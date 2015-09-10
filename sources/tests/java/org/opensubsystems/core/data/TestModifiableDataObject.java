@@ -97,7 +97,8 @@ public class TestModifiableDataObject extends ModifiableDataObjectImpl
 		   int	  iDesiredDataType,
 			String  strDisplayableViewName,
 			String  strViewName,
-			EnumSet setDataFields)
+			EnumSet setDataFields
+	   ) throws OSSException
 		{
 			super(TEST_DATA_TYPE_DESIRED_VALUE, TEST_DATA_TYPE_NAME, TEST_TYPE_VIEW, 
 					EnumSet.allOf(TestDataFields.class));
