@@ -57,10 +57,10 @@ public class DataObjectTest extends OSSTestCase
    public void testIsSame(
    ) throws Exception
    {
-		TestDataObject data1 = new TestDataObject(1, "1value1", "1value2", "1value3");
-		TestDataObject data1b = new TestDataObject(1, "1bvalue1", "1bvalue2", "1bvalue3");
-		TestDataObject data2 = new TestDataObject(2, "2value1", "2value2", "2value3");
-		TestDataObject data2b = new TestDataObject(3, "2value1", "2value2", "2value3");
+		DataObject data1 = new TestDataObject(1, "1value1", "1value2", "1value3");
+		DataObject data1b = new TestDataObject(1, "1bvalue1", "1bvalue2", "1bvalue3");
+		DataObject data2 = new TestDataObject(2, "2value1", "2value2", "2value3");
+		DataObject data2b = new TestDataObject(3, "2value1", "2value2", "2value3");
 		
 		assertFalse("Same ID, different values are NOT the same",
 					   data1.isSame(data1b));
@@ -78,8 +78,8 @@ public class DataObjectTest extends OSSTestCase
    public void testGetDataDescriptorClass(
    ) throws Exception
    {
-		TestDataObject data1 = new TestDataObject(1, "1value1", "1value2", "1value3");
-		TestDataObject data2 = new TestDataObject(2, "2value1", "2value2", "2value3");
+		DataObject data1 = new TestDataObject(1, "1value1", "1value2", "1value3");
+		DataObject data2 = new TestDataObject(2, "2value1", "2value2", "2value3");
 		
 		// Multiple instances of the same class have to have the same data descriptor
 		assertEquals("Data descriptor doesnt match the expected class",
@@ -98,8 +98,8 @@ public class DataObjectTest extends OSSTestCase
    public void testGetDataDescriptor(
    ) throws Exception
    {
-		TestDataObject data1 = new TestDataObject(1, "1value1", "1value2", "1value3");
-		TestDataObject data2 = new TestDataObject(2, "2value1", "2value2", "2value3");
+		DataObject data1 = new TestDataObject(1, "1value1", "1value2", "1value3");
+		DataObject data2 = new TestDataObject(2, "2value1", "2value2", "2value3");
 		DataDescriptor descriptor1;
 		DataDescriptor descriptor2;
 		
@@ -124,8 +124,8 @@ public class DataObjectTest extends OSSTestCase
    public void testGetDataType(
    ) throws Exception
    {
-		TestDataObject data1 = new TestDataObject(1, "1value1", "1value2", "1value3");
-		TestDataObject data2 = new TestDataObject(2, "2value1", "2value2", "2value3");
+		DataObject data1 = new TestDataObject(1, "1value1", "1value2", "1value3");
+		DataObject data2 = new TestDataObject(2, "2value1", "2value2", "2value3");
 		
 		// Multiple instances of the same class have to have the same data type
 		assertEquals("Data type doesn't match",
@@ -160,8 +160,8 @@ public class DataObjectTest extends OSSTestCase
 				TestDataObject.TestDataObjectDataDescriptor.TEST_DATA_TYPE_DESIRED_VALUE + 1);
 			DataDescriptorManager.getManagerInstance().setDesiredDataTypeMap(mpRemmapedDataTypes);
 
-			TestDataObject data1 = new TestDataObject(1, "1value1", "1value2", "1value3");
-			TestDataObject data2 = new TestDataObject(2, "2value1", "2value2", "2value3");
+			DataObject data1 = new TestDataObject(1, "1value1", "1value2", "1value3");
+			DataObject data2 = new TestDataObject(2, "2value1", "2value2", "2value3");
 
 			// Multiple instances of the same class have to have the same data type
 			assertEquals("Data type doesn't match",
@@ -186,8 +186,8 @@ public class DataObjectTest extends OSSTestCase
    public void testGetDataTypeAsObject(
    ) throws Exception
    {
-		TestDataObject data1 = new TestDataObject(1, "1value1", "1value2", "1value3");
-		TestDataObject data2 = new TestDataObject(2, "2value1", "2value2", "2value3");
+		DataObject data1 = new TestDataObject(1, "1value1", "1value2", "1value3");
+		DataObject data2 = new TestDataObject(2, "2value1", "2value2", "2value3");
 		
 		// Multiple instances of the same class have to have the same data type
 		assertEquals("Data type doesn't match",
@@ -213,8 +213,8 @@ public class DataObjectTest extends OSSTestCase
    public void testGetId(
    ) throws Exception
    {
-		TestDataObject data1 = new TestDataObject(1, "1value1", "1value2", "1value3");
-		TestDataObject data2 = new TestDataObject(2, "2value1", "2value2", "2value3");
+		DataObject data1 = new TestDataObject(1, "1value1", "1value2", "1value3");
+		DataObject data2 = new TestDataObject(2, "2value1", "2value2", "2value3");
 		
 		assertEquals("Data id doesn't match", 1, data1.getId());
 		assertEquals("Data Id doesn't match", 2, data2.getId());
@@ -228,8 +228,8 @@ public class DataObjectTest extends OSSTestCase
    public void testIdAsObject(
    ) throws Exception
    {
-		TestDataObject data1 = new TestDataObject(1, "1value1", "1value2", "1value3");
-		TestDataObject data2 = new TestDataObject(2, "2value1", "2value2", "2value3");
+		DataObject data1 = new TestDataObject(1, "1value1", "1value2", "1value3");
+		DataObject data2 = new TestDataObject(2, "2value1", "2value2", "2value3");
 		
 		// Multiple instances of the same class have to have the same data type
 		// Have to use new Long otherwise the comparison fails
@@ -253,8 +253,8 @@ public class DataObjectTest extends OSSTestCase
    public void testSetId(
    ) throws Exception
    {
-		TestDataObject data1 = new TestDataObject();
-		TestDataObject data2 = new TestDataObject(1, "1value1", "1value2", "1value3");
+		DataObject data1 = new TestDataObject();
+		DataObject data2 = new TestDataObject(1, "1value1", "1value2", "1value3");
 		
       data1.setId(11);
 		assertEquals("Data id doesn't match", 11, data1.getId());
