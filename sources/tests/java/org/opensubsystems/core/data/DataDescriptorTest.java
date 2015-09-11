@@ -96,8 +96,31 @@ public class DataDescriptorTest extends OSSTestCase
       
       // This also implies that the data type is of course the same
 		assertTrue("Data descriptor instance is shared between all instances of class",
-					  descriptor1 == descriptor2);
-      
+					  descriptor1 == descriptor2);      
    }
 
+
+   /**
+    * Test getDataTypeAsObject method 
+    * 
+    * @throws Exception - and error has occurred  
+    */
+   public void testGetDataTypeAsObject(
+   ) throws Exception
+   {
+		DataDescriptor descriptor1 = DataDescriptorManager.getInstance(
+                                      TestDataObjectDataDescriptor.class);
+		
+		// Multiple instances of the same class have to have the same data type
+		assertEquals("Data type doesn't match",
+					    (Object)TestDataObject.TestDataObjectDataDescriptor.TEST_DATA_TYPE_DESIRED_VALUE,
+						 (Object)descriptor1.getDataTypeAsObject());
+
+		Integer iFirst = descriptor1.getDataTypeAsObject();
+		Integer iSecond = descriptor1.getDataTypeAsObject();
+	
+		// We actually want to test using ==
+		assertTrue("Data type object representation is shared between invocations",
+					  iFirst == iSecond);
+	}
 }
