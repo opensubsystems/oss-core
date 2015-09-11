@@ -86,4 +86,27 @@ public class OSSTestCase extends TestCase
    // Logic ////////////////////////////////////////////////////////////////////
    
    // Helper methods ///////////////////////////////////////////////////////////
+   
+   /**
+    * Set up environment for the test case.
+    * 
+    * @throws Exception - an error has occurred during setting up test
+    */
+	@Override
+   protected void setUp(
+   ) throws Exception
+   {
+      super.setUp();
+   }
+
+   /**
+    * Restore original environment after the test case.
+    * 
+    * @throws Exception - an error has occurred during tearing down up test
+    */
+	@Override
+   protected void tearDown() throws Exception
+   {
+      super.tearDown();
+   }
 }
