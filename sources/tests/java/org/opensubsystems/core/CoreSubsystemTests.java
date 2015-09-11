@@ -22,6 +22,7 @@ package org.opensubsystems.core;
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestSuite;
+import org.opensubsystems.core.data.DataDescriptorTest;
 import org.opensubsystems.core.data.DataObjectTest;
 
 import org.opensubsystems.core.persist.DataFactoryManagerTest;
@@ -102,6 +103,7 @@ public final class CoreSubsystemTests extends Tests
    ) 
    {
       suite.addTestSuite(DataObjectTest.class);
+      suite.addTestSuite(DataDescriptorTest.class);
 
       suite.addTestSuite(ClassFactoryTest.class);
       suite.addTestSuite(ClassUtilsTest.class);
