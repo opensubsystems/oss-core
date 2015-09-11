@@ -27,13 +27,13 @@ import static junit.framework.Assert.assertTrue;
 import org.opensubsystems.core.util.test.OSSTestCase;
 
 /**
- * Tests for DataObject class.
+ * Tests for DataObject and DataObjectImpl classes.
  * 
  * @author bastafidli
  */
 public class DataObjectTest extends OSSTestCase
 {
-   // Tests ////////////////////////////////////////////////////////////////////
+   // Constructors /////////////////////////////////////////////////////////////
 
    /**
     * Constructor for DataObjectTest.
@@ -47,28 +47,7 @@ public class DataObjectTest extends OSSTestCase
       super(strName);
    }
 
-   /**
-    * Set up environment for the test case.
-    * 
-    * @throws Exception - an error has occurred during setting up test
-    */
-	@Override
-   protected void setUp(
-   ) throws Exception
-   {
-      super.setUp();
-   }
-
-   /**
-    * Restore original environment after the test case.
-    * 
-    * @throws Exception - an error has occurred during tearing down up test
-    */
-	@Override
-   protected void tearDown() throws Exception
-   {
-      super.tearDown();
-   }
+   // Tests ////////////////////////////////////////////////////////////////////
 
    /**
     * Test isSame method 
@@ -134,7 +113,7 @@ public class DataObjectTest extends OSSTestCase
 					    TestDataObject.TestDataObjectDataDescriptor.class,
 						 descriptor2.getClass());
 		assertTrue("Data descriptor instance is shared between all instances of class",
-					  descriptor1.getClass() == descriptor2.getClass());
+					  descriptor1 == descriptor2);
    }
 
    /**
