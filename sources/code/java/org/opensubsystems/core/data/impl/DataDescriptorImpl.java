@@ -308,11 +308,28 @@ public class DataDescriptorImpl<E extends Enum<E>> extends OSSObject
     * {@inheritDoc}
     */
    @Override
+   public EnumSet<E> getFields()
+   {
+      return m_setDataFields;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
 	public Integer getFieldMaxLength(
 	   E field
 	)
 	{
-	   return m_mpDataFieldLengths.get(field);
+      Integer iMaxLength;
+      
+      iMaxLength = m_mpDataFieldLengths.get(field);
+      if (iMaxLength == null)
+      {
+         iMaxLength = 0;
+      }
+      
+      return iMaxLength;
 	}
 	
    /**
@@ -321,8 +338,13 @@ public class DataDescriptorImpl<E extends Enum<E>> extends OSSObject
    @Override
 	public void setFieldMaxLength(
 	   E		  field, 
-		Integer iMaxLength)
+		Integer iMaxLength
+   )
 	{
+      if (iMaxLength == null)
+      {
+         iMaxLength = 0;
+      }
 	   m_mpDataFieldLengths.put(field, iMaxLength);
 	}
 

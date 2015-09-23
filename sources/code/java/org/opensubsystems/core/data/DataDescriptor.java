@@ -19,6 +19,7 @@
  
 package org.opensubsystems.core.data;
 
+import java.util.EnumSet;
 import org.opensubsystems.core.data.impl.UndefinedDataDescriptor;
 
 /**
@@ -42,7 +43,7 @@ public interface DataDescriptor<E extends Enum<E>>
     * but yet one is required to be specified. This will allow us to identify
     * all such places at later time and define the data descriptors if needed.
     */
-   DataDescriptor NO_DATA_DESCRIPTOR = new UndefinedDataDescriptor();
+   DataDescriptor NO_DATA_DESCRIPTOR = UndefinedDataDescriptor.getInstance();
    
    /**
     * Constant that can be used at times when no data descriptor was defined
@@ -124,12 +125,20 @@ public interface DataDescriptor<E extends Enum<E>>
     */
    String getViewName(
    );
-
+   
+   /**
+    * Get fields of the described data.
+    * 
+    * @return EnumSet<E> - set of fields of the described data
+    */
+   EnumSet<E> getFields();
+   
 	/**
 	 * Get maximal length of data that can be stored in a specified field.
 	 * 
 	 * @param field - field to get a maximal length of data for
-	 * @return Integer - maximal length of data for the specified field
+	 * @return Integer - maximal length of data for the specified field. This will
+    *                   never be null.
 	 */
 	Integer getFieldMaxLength(
 	   E field
@@ -139,7 +148,8 @@ public interface DataDescriptor<E extends Enum<E>>
 	 * Set maximal length of data that can be stored in a specified field.
 	 * 
 	 * @param field - field to get a maximal length of data for
-	 * @param iMaxLength - maximal length of data for the specified field
+	 * @param iMaxLength - maximal length of data for the specified field. If this
+    *                     is null, it will be saved as 0.
 	 */
 	void setFieldMaxLength(
 	   E		  field, 
