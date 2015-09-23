@@ -116,8 +116,11 @@ public abstract class VersionedDatabaseSchemaImpl extends    ModifiableDatabaseS
       
       /**
        * Default constructor.
+       * 
+       * @throws OSSException - an error has occurred
        */
-      public VersionedDatabaseSchemaDataDescriptor()
+      public VersionedDatabaseSchemaDataDescriptor(
+      ) throws OSSException
       {
          super(VERSIONED_DATABASE_SCHEMA_DATA_TYPE_DESIRED_VALUE, 
                VERSIONED_DATABASE_SCHEMA_DATA_TYPE_NAME, 

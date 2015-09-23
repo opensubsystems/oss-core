@@ -20,6 +20,10 @@
 package org.opensubsystems.core.data.impl;
 
 import java.util.EnumSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.opensubsystems.core.error.OSSException;
+import org.opensubsystems.core.util.Log;
 
 /**
  * Data descriptor that can be used when no more specific data descriptor exists.
@@ -79,12 +83,22 @@ public class UndefinedDataDescriptor extends DataDescriptorImpl
 
 	// Attributes ////////////////////////////////////////////////////////////
 
+   // Cached values ////////////////////////////////////////////////////////////
+
+   /**
+    * Logger for this class
+    */
+   private static Logger s_logger = Log.getInstance(UndefinedDataDescriptor.class);
+  
    // Constructors //////////////////////////////////////////////////////////
 
    /**
     * Default constructor.
+    * 
+    * @throws OSSException - an error has occurred
     */
-   public UndefinedDataDescriptor()
+   public UndefinedDataDescriptor(
+   ) throws OSSException
    {
       super(UNDEFINED_DATA_TYPE_DESIRED_VALUE, 
             UNDEFINED_DATA_TYPE_NAME, 
@@ -94,4 +108,21 @@ public class UndefinedDataDescriptor extends DataDescriptorImpl
 
    // Logic /////////////////////////////////////////////////////////////////
 
+   /**
+    * Factory method to hide the exception which should never occur.
+    * 
+    * @return UndefinedDataDescriptor
+    */
+   public static UndefinedDataDescriptor getInstance()
+   {
+      try
+      {
+         return new UndefinedDataDescriptor();
+      }
+      catch (OSSException ex)
+      {
+         s_logger.log(Level.SEVERE, "Unexpected exception has occurred.", ex);
+         throw new RuntimeException("Unexpected exception has occurred.", ex);
+      }
+   }
 }

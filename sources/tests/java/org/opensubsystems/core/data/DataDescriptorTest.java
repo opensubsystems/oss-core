@@ -19,8 +19,10 @@
 
 package org.opensubsystems.core.data;
 
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.commons.collections.CollectionUtils;
 import org.opensubsystems.core.data.TestDataObject.TestDataObjectDataDescriptor;
 import org.opensubsystems.core.util.test.OSSTestCase;
 
@@ -393,26 +395,87 @@ public class DataDescriptorTest extends OSSTestCase
    }
 
    /**
-    * Test getFieldMaxLength method 
+    * Test getFields method 
     * 
     * @throws Exception - and error has occurred  
     */
-   public void testGetFieldMaxLength(
+   public void testGetFields(
    ) throws Exception
    {
 		DataDescriptor descriptor1;
+      EnumSet        fields;
+
+      // First create simple instance of the data descriptor, since we should
+      // be able to get displayable view name this way just fine
+      descriptor1 = new TestDataObjectDataDescriptor();
+
+      fields = descriptor1.getFields();
+      
+      assertNotNull("Data Descriptor has to have come fields defined", fields);
+      assertFalse("Data Descriptor has to have come fields defined", fields.isEmpty());
+      assertEquals("Test data object has to have expected set of fields", 4,
+                   fields.size());
+      assertTrue("Data Descriptor has to have the specified set of fiels", 
+                 fields.equals(EnumSet.allOf(
+                    TestDataObjectDataDescriptor.TestDataFields.class)));
+      
+      // Data descriptors should be really accessed using DataDescriptorManager
+      // which properly initializes them, it should not change though the 
+      // fields the data descriptor exposes
+      descriptor1 = DataDescriptorManager.getInstance(TestDataObjectDataDescriptor.class);
+      
+      assertNotNull("DataDescriptorManager must always be able to create instance"
+                    + " of data descriptor", descriptor1);
+      
+      assertNotNull("Data Descriptor has to have come fields defined", fields);
+      assertFalse("Data Descriptor has to have come fields defined", fields.isEmpty());
+      assertEquals("Test data object has to have expected set of fields", 4,
+                   fields.size());
+      assertTrue("Data Descriptor has to have the specified set of fiels", 
+                 fields.equals(EnumSet.allOf(
+                    TestDataObjectDataDescriptor.TestDataFields.class)));
+      
+      // Another way how to register the descriptor with DataDescriptorManager
+      // is to create data type that uses this descriptor,  we should be able 
+      // to get the data type
+		TestDataObject data = new TestDataObject();
+		DataDescriptor descriptor2;
+
+		assertEquals("Data descriptor doesnt match the expected class",
+					    TestDataObject.TestDataObjectDataDescriptor.class,
+						 data.getDataDescriptorClass());
+      
+		descriptor2 = data.getDataDescriptor();
+      
+      // This also implies that the data type is of course the same
+		assertTrue("Data descriptor instance is shared between all instances of class",
+					  descriptor1 == descriptor2);      
+   }
+
+   /**
+    * Test getFieldMaxLength method by testing the default (0) value returned.
+    * 
+    * @throws Exception - and error has occurred  
+    */
+   public void testGetFieldMaxLengthWithDefaultValue(
+   ) throws Exception
+   {
+		DataDescriptor descriptor1;
+      EnumSet        fields;
 		
       // First create simple instance of the data descriptor, since we should
       // be able to get displayable view name this way just fine
       descriptor1 = new TestDataObjectDataDescriptor();
 
-// TODO: We really need method descriptor1.getFields() 
+      fields = descriptor1.getFields();
       
-      assertNotNull("Test data object has to have come fields defined",
-                    TestDataObjectDataDescriptor.TestDataFields.values());
-      
+      assertNotNull("Data Descriptor has to have come fields defined", fields);
+      assertFalse("Data Descriptor has to have come fields defined", fields.isEmpty());
       assertEquals("Test data object has to have expected set of fields", 4,
-                    TestDataObjectDataDescriptor.TestDataFields.values().length);
+                   fields.size());
+      assertTrue("Data Descriptor has to have the specified set of fiels", 
+                 fields.equals(EnumSet.allOf(
+                    TestDataObjectDataDescriptor.TestDataFields.class)));
       
       for (Enum field : TestDataObjectDataDescriptor.TestDataFields.values())
       {
@@ -421,20 +484,25 @@ public class DataDescriptorTest extends OSSTestCase
       }
       
       // Data descriptors should be really accessed using DataDescriptorManager
-      // which properly initializes them, we shouldbe able to still get desired 
-      // data type this way just fine
+      // which properly initializes them, but that should not influence the data 
+      // field lengths
       descriptor1 = DataDescriptorManager.getInstance(TestDataObjectDataDescriptor.class);
       
       assertNotNull("DataDescriptorManager must always be able to create instance"
                     + " of data descriptor", descriptor1);
+      assertNotNull("Data Descriptor has to have come fields defined", fields);
+      assertFalse("Data Descriptor has to have come fields defined", fields.isEmpty());
+      assertEquals("Test data object has to have expected set of fields", 4,
+                   fields.size());
+      assertTrue("Data Descriptor has to have the specified set of fiels", 
+                 fields.equals(EnumSet.allOf(
+                    TestDataObjectDataDescriptor.TestDataFields.class)));
       
-      
-      
-      // When properly initialized by DataDescriptorManager we should be able 
-      // to get the data type
-		assertEquals("Data type doesn't match",
-					    TestDataObject.TestDataObjectDataDescriptor.TEST_TYPE_VIEW,
-						 descriptor1.getViewName());
+      for (Enum field : TestDataObjectDataDescriptor.TestDataFields.values())
+      {
+         assertEquals("When created directly all fields have 0 max length",
+                      (Integer)0, descriptor1.getFieldMaxLength(field));
+      }
       
       // Another way how to register the descriptor with DataDescriptorManager
       // is to create data type that uses this descriptor,  we should be able 
