@@ -164,6 +164,77 @@ public class DataDescriptorTest extends OSSTestCase
    }
    
    /**
+    * Test setDataType method 
+    * 
+    * @throws Exception - and error has occurred  
+    */
+   public void testSetDataType(
+   ) throws Exception
+   {
+		DataDescriptor descriptor1;
+		
+      // First create simple instance of the data descriptor
+      descriptor1 = new TestDataObjectDataDescriptor();
+      
+      try
+      {
+         descriptor1.getDataType();
+         fail("It should not be possible to get the data type since data descriptor"
+              + " has to be first registered with DataDescriptorManager to get"
+              + " assigned real data type value based on the desired data type value.");
+      }
+      catch (Throwable thr)
+      {
+			// Do nothing since this is expected java.lag.AssertionError
+      }
+
+      // Now set the data type to something different that what would it be
+      // by default
+      descriptor1.setDataType(
+         TestDataObject.TestDataObjectDataDescriptor.TEST_DATA_TYPE_DESIRED_VALUE + 33);
+		assertEquals("Data type doesn't match", 
+         TestDataObject.TestDataObjectDataDescriptor.TEST_DATA_TYPE_DESIRED_VALUE + 33, 
+         descriptor1.getDataType());
+
+      // Now if we try to set the data type it should fail since it is already set
+      try
+      {
+         descriptor1.setDataType(33);
+         fail("It should not be possible to set the data type once it was already" 
+              + " set.");
+      }
+      catch (Throwable thr)
+      {
+			// Do nothing since this is expected java.lag.AssertionError
+      }
+      
+      // Data descriptors should be really accessed using DataDescriptorManager
+      // which properly initializes them
+      descriptor1 = DataDescriptorManager.getInstance(TestDataObjectDataDescriptor.class);
+      
+      assertNotNull("DataDescriptorManager must always be able to create instance"
+                    + " of data descriptor", descriptor1);
+      
+      // When properly initialized by DataDescriptorManager we should be able 
+      // to get the data type
+		assertEquals("Data type doesn't match",
+					    TestDataObject.TestDataObjectDataDescriptor.TEST_DATA_TYPE_DESIRED_VALUE,
+						 descriptor1.getDataType());
+
+      // Now if we try to set the data type it should fail since it is already set
+      try
+      {
+         descriptor1.setDataType(33);
+         fail("It should not be possible to set the data type once it was already" 
+              + " set.");
+      }
+      catch (Throwable thr)
+      {
+			// Do nothing since this is expected java.lag.AssertionError
+      }
+   }
+
+   /**
     * Test getDataTypeAsObject method 
     * 
     * @throws Exception - and error has occurred  
@@ -519,5 +590,136 @@ public class DataDescriptorTest extends OSSTestCase
       // This also implies that the data type is of course the same
 		assertTrue("Data descriptor instance is shared between all instances of class",
 					  descriptor1 == descriptor2);      
+   }
+
+   /**
+    * Test setFieldMaxLength method.
+    * 
+    * @throws Exception - and error has occurred  
+    */
+   public void testSetFieldMaxLength(
+   ) throws Exception
+   {
+		DataDescriptor descriptor1;
+      EnumSet        fields;
+		
+      // First create simple instance of the data descriptor, since we should
+      // be able to get displayable view name this way just fine
+      descriptor1 = new TestDataObjectDataDescriptor();
+
+      fields = descriptor1.getFields();
+      
+      assertNotNull("Data Descriptor has to have come fields defined", fields);
+      assertFalse("Data Descriptor has to have come fields defined", fields.isEmpty());
+      assertEquals("Test data object has to have expected set of fields", 4,
+                   fields.size());
+      assertTrue("Data Descriptor has to have the specified set of fiels", 
+                 fields.equals(EnumSet.allOf(
+                    TestDataObjectDataDescriptor.TestDataFields.class)));
+      
+      // Now go ahead and redefine the values
+      int iValue = 100;
+      for (Enum field : TestDataObjectDataDescriptor.TestDataFields.values())
+      {
+         assertEquals("When created directly all fields have 0 max length",
+                      (Integer)0, descriptor1.getFieldMaxLength(field));
+         descriptor1.setFieldMaxLength(field, iValue);
+         iValue += 100;
+      }
+      
+      // Now go ahead and test the values
+      iValue = 100;
+      for (Enum field : TestDataObjectDataDescriptor.TestDataFields.values())
+      {
+         assertEquals("Field max length doesn't match for field " + field,
+                      (int)iValue, (int)descriptor1.getFieldMaxLength(field));
+         iValue += 100;
+      }
+      
+      // Data descriptors should be really accessed using DataDescriptorManager
+      // which properly initializes them, but that should not influence the data 
+      // field lengths
+      descriptor1 = DataDescriptorManager.getInstance(TestDataObjectDataDescriptor.class);
+      
+      assertNotNull("DataDescriptorManager must always be able to create instance"
+                    + " of data descriptor", descriptor1);
+      assertNotNull("Data Descriptor has to have come fields defined", fields);
+      assertFalse("Data Descriptor has to have come fields defined", fields.isEmpty());
+      assertEquals("Test data object has to have expected set of fields", 4,
+                   fields.size());
+      assertTrue("Data Descriptor has to have the specified set of fiels", 
+                 fields.equals(EnumSet.allOf(
+                    TestDataObjectDataDescriptor.TestDataFields.class)));
+
+      // We need to redefine the values again since data descriptor manager 
+      // creates new instance
+      iValue = 33;
+      for (Enum field : TestDataObjectDataDescriptor.TestDataFields.values())
+      {
+         assertEquals("When created directly all fields have 0 max length",
+                      (Integer)0, descriptor1.getFieldMaxLength(field));
+         descriptor1.setFieldMaxLength(field, iValue);
+         iValue += 33;
+      }
+      
+      // Now go ahead and test the values
+      iValue = 33;
+      for (Enum field : TestDataObjectDataDescriptor.TestDataFields.values())
+      {
+         assertEquals("Field max length doesn't match for field " + field,
+                      (int)iValue, (int)descriptor1.getFieldMaxLength(field));
+         iValue += 33;
+      }
+      
+      // Now retrieve the instance again and test again, this time we should
+      // not need to redefine the values
+      
+      descriptor1 = DataDescriptorManager.getInstance(TestDataObjectDataDescriptor.class);
+      
+      assertNotNull("DataDescriptorManager must always be able to create instance"
+                    + " of data descriptor", descriptor1);
+      assertNotNull("Data Descriptor has to have come fields defined", fields);
+      assertFalse("Data Descriptor has to have come fields defined", fields.isEmpty());
+      assertEquals("Test data object has to have expected set of fields", 4,
+                   fields.size());
+      assertTrue("Data Descriptor has to have the specified set of fiels", 
+                 fields.equals(EnumSet.allOf(
+                    TestDataObjectDataDescriptor.TestDataFields.class)));
+
+      // Now go ahead and test the values
+      iValue = 33;
+      for (Enum field : TestDataObjectDataDescriptor.TestDataFields.values())
+      {
+         assertEquals("Field max length doesn't match for field " + field,
+                      (int)iValue, (int)descriptor1.getFieldMaxLength(field));
+         iValue += 33;
+      }
+      
+      // Another way how to register the descriptor with DataDescriptorManager
+      // is to create data type that uses this descriptor,  we should be able 
+      // to get the data type
+		TestDataObject data = new TestDataObject();
+		DataDescriptor descriptor2;
+
+		assertEquals("Data descriptor doesnt match the expected class",
+					    TestDataObject.TestDataObjectDataDescriptor.class,
+						 data.getDataDescriptorClass());
+      
+		descriptor2 = data.getDataDescriptor();
+      
+      // This also implies that the data field lengths are of course the same
+		assertTrue("Data descriptor instance is shared between all instances of class",
+					  descriptor1 == descriptor2);      
+   }
+   
+   /**
+    * Test getParentDescriptorClass method.
+    * 
+    * @throws Exception - and error has occurred  
+    */
+   public void testGetParentDescriptorClass(
+   ) throws Exception
+   {
+      // TODO: Add this test
    }
 }
