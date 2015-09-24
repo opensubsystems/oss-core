@@ -109,7 +109,7 @@ public class DataDescriptorManager extends OSSObject
    /**
     * Reference to the instance actually in use.
     */
-   private static DataDescriptorManager s_defaultInstance;
+   private static volatile DataDescriptorManager s_defaultInstance;
 
    // Constructors /////////////////////////////////////////////////////////////
 
@@ -151,28 +151,30 @@ public class DataDescriptorManager extends OSSObject
     * @return DataDescriptorManager
     * @throws OSSException - an error has occurred
     */
+   // Supressing since this has been fixed using volatile pattern for Java 1.5+
+   @SuppressWarnings("DoubleCheckedLocking")
    public static DataDescriptorManager getManagerInstance(
    ) throws OSSException
    {
-      if (s_defaultInstance == null)
+      DataDescriptorManager result = s_defaultInstance;
+      if (result == null) 
       {
-         // Only if the default instance wasn't set by other means create a new one
-         // Synchronize just for the creation
-         synchronized (IMPL_LOCK)
+         synchronized(IMPL_LOCK) 
          {
-            if (s_defaultInstance == null)
+            result = s_defaultInstance;
+            if (result == null) 
             {
                Class<DataDescriptorManager> defaultManager = DataDescriptorManager.class;
                ClassFactory<DataDescriptorManager> cf;
-               
+
                cf = new ClassFactory<>(DataDescriptorManager.class);
                setManagerInstance(cf.createInstance(defaultManager, 
-                                                    defaultManager));
+                                                    defaultManager));                
+               result = s_defaultInstance;
             }
-         }   
-      }
-      
-      return s_defaultInstance;
+         }
+     }
+     return result;      
    }
    
    /**
@@ -228,6 +230,7 @@ public class DataDescriptorManager extends OSSObject
     *                               desired value specified in thats module data 
     *                               descriptor the module will use the value 
     *                               specified in this map. 
+    * @throws OSSException - an error has occurred
     */
    public void setDesiredDataTypeMap(
       Map<Integer, Integer> mpDesiredDataTypeMap
@@ -428,8 +431,7 @@ public class DataDescriptorManager extends OSSObject
          
          if (m_mpDesiredDataTypeMap != null)
          {
-            iRealDataType = m_mpDesiredDataTypeMap.get(
-                               new Integer(iDesiredDataType));
+            iRealDataType = m_mpDesiredDataTypeMap.get(iDesiredDataType);
          }
          if (iRealDataType == null)
          {
@@ -441,7 +443,7 @@ public class DataDescriptorManager extends OSSObject
          {
             // The application has setup mapping to change the desired data type
             // to a different one so use the mapped one
-            descriptor.setDataType(iRealDataType.intValue());
+            descriptor.setDataType(iRealDataType);
          }
          
          // Add this descriptor to a map of data types to data descriptors so we 
