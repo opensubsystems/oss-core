@@ -265,6 +265,11 @@ public class DataDescriptorImpl<E extends Enum<E>> extends OSSObject
       int iDataType
    )
    {
+      if (GlobalConstants.ERROR_CHECKING)
+      {
+         assert m_iDataType == 0
+                : "Real value of data type can be set only once";
+      }
       m_iDataType = iDataType;
       m_iDataTypeObject = null;
    }
