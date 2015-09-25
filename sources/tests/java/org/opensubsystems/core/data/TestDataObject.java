@@ -26,7 +26,7 @@ import org.opensubsystems.core.data.impl.DataObjectImpl;
 import org.opensubsystems.core.error.OSSException;
 
 /**
- * Data object to test DataObjectImpl
+ * Data object to test DataObject and DataObjectImpl
  *
  * @author bastafidli
  */
@@ -77,7 +77,9 @@ public class TestDataObject extends DataObjectImpl
 		 * should use method exposing it rather than the constants.
 		 */
 		public enum TestDataFields {
+         // Fields from DataObject
 			TEST_ID(TEST_DATA_TYPE_DESIRED_VALUE + 1),
+         // Fields from this class
 			TEST_FIELD1(TEST_DATA_TYPE_DESIRED_VALUE + 2),
 			TEST_FIELD2(TEST_DATA_TYPE_DESIRED_VALUE + 3),
 			TEST_FIELD3(TEST_DATA_TYPE_DESIRED_VALUE + 4),
