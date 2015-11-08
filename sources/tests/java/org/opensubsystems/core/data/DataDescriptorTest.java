@@ -22,7 +22,6 @@ package org.opensubsystems.core.data;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.commons.collections.CollectionUtils;
 import org.opensubsystems.core.data.TestDataObject.TestDataObjectDataDescriptor;
 import org.opensubsystems.core.util.test.OSSTestCase;
 
@@ -718,6 +717,18 @@ public class DataDescriptorTest extends OSSTestCase
     * @throws Exception - and error has occurred  
     */
    public void testGetParentDescriptorClass(
+   ) throws Exception
+   {
+      // TODO: Add this test
+   }
+
+   
+   /**
+    * Test containsField method.
+    * 
+    * @throws Exception - and error has occurred  
+    */
+   public void testContainsField(
    ) throws Exception
    {
       // TODO: Add this test
