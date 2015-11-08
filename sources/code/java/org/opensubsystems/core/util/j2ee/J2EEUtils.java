@@ -193,6 +193,20 @@ public final class J2EEUtils extends OSSObject
       return s_detectedServer;
    }
    
+   /**
+    * Check if the currently detected J2EE server is the specified type
+    * 
+    * @param server - server to check
+    * @return boolean - true if the currently detected J2EE server matches the
+    *                   server specified as argument
+    */
+   public static boolean isJ2EEServer(
+      J2EEServers server
+   )
+   {
+      return server.equals(getJ2EEServerType());
+   }
+   
    // Helper methods ///////////////////////////////////////////////////////////
    
    /**
