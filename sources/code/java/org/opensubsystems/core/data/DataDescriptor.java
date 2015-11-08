@@ -155,4 +155,15 @@ public interface DataDescriptor<E extends Enum<E>>
 	   E		  field, 
 		Integer iMaxLength
    );
+
+   /**
+    * Test if data descriptor contains this field in the list of all fields.
+    * 
+    * @param field - field to search for 
+    * @return boolean - true if the field is part of the descriptor, false 
+    *                   otherwise
+    */
+   boolean containsField(
+      E field
+   );
 }

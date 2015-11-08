@@ -353,7 +353,21 @@ public class DataDescriptorImpl<E extends Enum<E>> extends OSSObject
 	   m_mpDataFieldLengths.put(field, iMaxLength);
 	}
 
-	/**
+   
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean containsField(
+      E field
+   )
+   {
+      // This functionality takes advantage of the sort we have done in the 
+      // constructor
+      return m_setDataFields.contains(field);
+   }
+
+   /**
     * {@inheritDoc}
 	 * 
 	 * @param sb {@inheritDoc}
