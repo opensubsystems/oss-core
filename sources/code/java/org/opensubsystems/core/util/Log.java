@@ -27,6 +27,7 @@ import java.net.URL;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
+import org.opensubsystems.core.util.j2ee.J2EEUtils;
 
 /**
  * Class responsible for instantiating of the system logger. This way anybody
@@ -125,7 +126,12 @@ public class Log extends OSSObject
          }
          if (isConfigFile != null)
          {
-            LogManager.getLogManager().readConfiguration(isConfigFile);
+            if (!J2EEUtils.isJ2EEServer(J2EEUtils.J2EEServers.J2EE_SERVER_APACHE_TOMCAT))
+            {
+               // TODO: Fix bug: For now disable this since when running application 
+               // under Tomcat it breaks the logging            
+               LogManager.getLogManager().readConfiguration(isConfigFile);
+            }
             System.out.println("Logging subsystem initialized.");
          }
       }
