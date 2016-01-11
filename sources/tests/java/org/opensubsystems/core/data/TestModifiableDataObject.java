@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2015 - 2016 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -21,6 +21,7 @@ package org.opensubsystems.core.data;
 
 import java.sql.Timestamp;
 import java.util.EnumSet;
+import static org.opensubsystems.core.data.TestBasicDataObject.TestBasicDataObjectDataDescriptor.TEST_BASIC_DATA_TYPE_DESIRED_VALUE;
 
 import org.opensubsystems.core.data.impl.DataDescriptorImpl;
 import org.opensubsystems.core.data.impl.ModifiableDataObjectImpl;
@@ -36,7 +37,7 @@ public class TestModifiableDataObject extends ModifiableDataObjectImpl
 	// Inner classes ////////////////////////////////////////////////////////////
 	
 	public static class TestModifiableDataObjectDataDescriptor 
-	   extends DataDescriptorImpl<TestModifiableDataObjectDataDescriptor.TestDataFields>
+	   extends DataDescriptorImpl<TestModifiableDataObjectDataDescriptor.TestModifiableDataFields>
 	{
       // Constants ////////////////////////////////////////////////////////////////
       
@@ -49,14 +50,14 @@ public class TestModifiableDataObject extends ModifiableDataObjectImpl
 		 * Protected since it can be reconfigured by the framework and the real value
 		 * can be different.
 		 */
-		protected static final int TEST_DATA_TYPE_DESIRED_VALUE = 2345;
+		protected static final int TEST_MODIFIABLE_DATA_TYPE_DESIRED_VALUE = 3456;
 
 		/**
 		 * Displayable name for specified data type code object.
 		 * Protected since it can be customized and therefore code should use method
 		 * exposing it rather than the constants.
 		 */
-		protected static final String TEST_DATA_TYPE_NAME = "Test Modifiable Data Object";
+		protected static final String TEST_MODIFIABLE_DATA_TYPE_NAME = "Test Modifiable Data Object";
 
 		/**
 		 * Logical name identifying the default view for the specified data
@@ -67,7 +68,7 @@ public class TestModifiableDataObject extends ModifiableDataObjectImpl
 		 * Protected since it can be customized and therefore code should use method
 		 * exposing it rather than the constants.
 		 */
-		protected static final String TEST_TYPE_VIEW = "testmodifiabledataobject";
+		protected static final String TEST_MODIFIABLE_TYPE_VIEW = "testmodifiabledataobject";
 
 		/**
 		 * Definition of all fields that represent meaningful data for users.
@@ -77,31 +78,32 @@ public class TestModifiableDataObject extends ModifiableDataObjectImpl
 		 * Protected since derived classes can add more attributes and therefore code
 		 * should use method exposing it rather than the constants.
 		 */
-		public enum TestDataFields {
-			TEST_ID(TEST_DATA_TYPE_DESIRED_VALUE + 1),
-			TEST_FIELD1(TEST_DATA_TYPE_DESIRED_VALUE + 2),
-			TEST_FIELD2(TEST_DATA_TYPE_DESIRED_VALUE + 3),
-			TEST_FIELD3(TEST_DATA_TYPE_DESIRED_VALUE + 4),
-			TEST_CREATION_DATE(TEST_DATA_TYPE_DESIRED_VALUE + 5),
-			TEST_MODIFICATION_DATE(TEST_DATA_TYPE_DESIRED_VALUE + 6),
+		public enum TestModifiableDataFields {
+         // Fields from DataObject
+			TEST_ID(TEST_MODIFIABLE_DATA_TYPE_DESIRED_VALUE + 1),
+         // Fields from BasicDataObject
+			TEST_DOMAIN_ID(TEST_MODIFIABLE_DATA_TYPE_DESIRED_VALUE + 2),
+			TEST_FROM_PERSISTANCE_STORE(TEST_MODIFIABLE_DATA_TYPE_DESIRED_VALUE + 3),
+			TEST_CREATION_TIMESTAMP(TEST_MODIFIABLE_DATA_TYPE_DESIRED_VALUE + 4),
+         // Fields from ModifiableDataObject
+			TEST_MODIFICATION_DATE(TEST_MODIFIABLE_DATA_TYPE_DESIRED_VALUE + 5),
+         // Fields from this class
+			TEST_FIELD1(TEST_MODIFIABLE_DATA_TYPE_DESIRED_VALUE + 6),
+			TEST_FIELD2(TEST_MODIFIABLE_DATA_TYPE_DESIRED_VALUE + 7),
+			TEST_FIELD3(TEST_MODIFIABLE_DATA_TYPE_DESIRED_VALUE + 8),
 			;
 
 			private final int iValue;
-			TestDataFields(int id) { this.iValue = id; }
+			TestModifiableDataFields(int id) { this.iValue = id; }
 			public int getValue() { return iValue; }
 		}
 
       // Constructors //////////////////////////////////////////////////////////
       
-		public TestModifiableDataObjectDataDescriptor(
-		   int	  iDesiredDataType,
-			String  strDisplayableViewName,
-			String  strViewName,
-			EnumSet setDataFields
-	   ) throws OSSException
+		public TestModifiableDataObjectDataDescriptor() throws OSSException
 		{
-			super(TEST_DATA_TYPE_DESIRED_VALUE, TEST_DATA_TYPE_NAME, TEST_TYPE_VIEW, 
-					EnumSet.allOf(TestDataFields.class));
+			super(TEST_MODIFIABLE_DATA_TYPE_DESIRED_VALUE, TEST_MODIFIABLE_DATA_TYPE_NAME, 
+               TEST_MODIFIABLE_TYPE_VIEW, EnumSet.allOf(TestModifiableDataFields.class));
 		}
 	}
 
@@ -136,7 +138,7 @@ public class TestModifiableDataObject extends ModifiableDataObjectImpl
    public TestModifiableDataObject(
    ) throws OSSException
    {
-      this(DataObject.NEW_ID, DataObject.NEW_ID, "", "", "", null, null);
+      this(DataObject.NEW_ID, DataObject.NEW_ID, null, null, "", "", "");
    }
    
    /**
@@ -149,7 +151,7 @@ public class TestModifiableDataObject extends ModifiableDataObjectImpl
       long lDomainId
    ) throws OSSException
    {
-      this(DataObject.NEW_ID, lDomainId, "", "", "", null, null);
+      this(DataObject.NEW_ID, lDomainId, null, null, "", "", "");
    }
    
    /**
@@ -157,21 +159,21 @@ public class TestModifiableDataObject extends ModifiableDataObjectImpl
     *
     * @param lId - Unique ID identifying this test data
     * @param lDomainId - Id of the domain this test data belongs to 
+    * @param creationTimestamp - Timestamp when the test data was created
+    * @param modificationTimestamp - Timestamp when the test data was last time modified
     * @param strField1 - first field of the test data
     * @param strField2 - second field of the test data
     * @param strField3 - third field of the test data
-    * @param creationTimestamp - Timestamp when the test data was created
-    * @param modificationTimestamp - Timestamp when the test data was last time modified
 	 * @throws OSSException - an error has occurred
     */ 
    public TestModifiableDataObject(
       long      lId,
       long      lDomainId,
+      Timestamp creationTimestamp,
+      Timestamp modificationTimestamp,
       String    strField1,
       String    strField2,
-      String    strField3,
-      Timestamp creationTimestamp,
-      Timestamp modificationTimestamp
+      String    strField3
    ) throws OSSException
    {
       super(lId, TestModifiableDataObjectDataDescriptor.class, lDomainId, creationTimestamp, 
