@@ -24,7 +24,7 @@ import java.util.Date;
 import org.opensubsystems.core.error.OSSException;
 
 /**
- * Tests for DataObject and DataObjectImpl classes.
+ * Tests for BasicDataObjectTest and BasicDataObjectTestImpl classes.
  * 
  * @author bastafidli
  */
