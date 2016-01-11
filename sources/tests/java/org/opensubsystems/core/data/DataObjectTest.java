@@ -306,10 +306,19 @@ public class DataObjectTest extends OSSTestCase
 		
       data1.setId(11);
 		assertEquals("Data id doesn't match", 11, data1.getId());
+		try
+		{
+			data1.setId(111);
+			fail("It should not be possible to change data object id once it was set.");
+		}
+		catch (Throwable thr)
+		{
+			// Do nothing since this is expected java.lag.AssertionError
+		}
 		
 		try
 		{
-			data2.setId(11);
+			data2.setId(22);
 			fail("It should not be possible to change data object id once it was set.");
 		}
 		catch (Throwable thr)

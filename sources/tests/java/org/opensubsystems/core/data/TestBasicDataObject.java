@@ -158,7 +158,8 @@ public class TestBasicDataObject extends BasicDataObjectImpl
       String    strField3
    ) throws OSSException
    {
-      super(lId, TestBasicDataObjectDataDescriptor.class, lDomainId, null);
+      super(lId, TestBasicDataObjectDataDescriptor.class, lDomainId, 
+            creationTimestamp);
       
       m_strField1   = strField1;
       m_strField2  = strField2;
