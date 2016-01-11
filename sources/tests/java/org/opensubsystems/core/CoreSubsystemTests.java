@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2015 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2016 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -25,6 +25,7 @@ import junit.framework.TestSuite;
 import org.opensubsystems.core.data.BasicDataObjectTest;
 import org.opensubsystems.core.data.DataDescriptorTest;
 import org.opensubsystems.core.data.DataObjectTest;
+import org.opensubsystems.core.data.ModifiableDataObjectTest;
 
 import org.opensubsystems.core.persist.DataFactoryManagerTest;
 import org.opensubsystems.core.persist.jdbc.DatabaseFactoryClassFactoryTest;
@@ -105,6 +106,7 @@ public final class CoreSubsystemTests extends Tests
    {
       suite.addTestSuite(DataObjectTest.class);
       suite.addTestSuite(BasicDataObjectTest.class);
+      suite.addTestSuite(ModifiableDataObjectTest.class);
       suite.addTestSuite(DataDescriptorTest.class);
 
       suite.addTestSuite(ClassFactoryTest.class);
