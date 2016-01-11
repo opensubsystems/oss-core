@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2015 - 2016 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -33,7 +33,7 @@ public class BasicDataObjectTest extends DataObjectTest
    // Constructors /////////////////////////////////////////////////////////////
 
    /**
-    * Constructor for DataObjectTest.
+    * Constructor for BasicDataObjectTest.
 	 * 
     * @param strName - name of the test
     * @throws OSSException - an error has occurred
@@ -46,6 +46,24 @@ public class BasicDataObjectTest extends DataObjectTest
            TestBasicDataObject.TestBasicDataObjectDataDescriptor.TEST_BASIC_DATA_TYPE_DESIRED_VALUE);
    }
 
+
+   /**
+    * Constructor for BasicDataObjectTest.
+	 * 
+    * @param strName - name of the test
+    * @param clsDataDescriptor - data descriptor for class created in createTestDataObject
+    * @param iDesiredDataType - desired data type for class created in createTestDataObject
+    * @throws OSSException - an error has occurred
+    */
+   public BasicDataObjectTest(
+      String strName,
+      Class  clsDataDescriptor,
+      int    iDesiredDataType
+   ) throws OSSException
+   {
+      super(strName, clsDataDescriptor, iDesiredDataType);
+   }
+   
    // Helper methods ///////////////////////////////////////////////////////////
    
    /**
@@ -57,10 +75,10 @@ public class BasicDataObjectTest extends DataObjectTest
     * @param strField1 - first field of the test data
     * @param strField2 - second field of the test data
     * @param strField3 - third field of the test data
-    * @return TestBasicDataObject - data to use for testing
+    * @return BasicDataObject - data to use for testing
 	 * @throws OSSException - an error has occurred
     */ 
-   protected TestBasicDataObject createTestDataObject(
+   protected BasicDataObject createTestDataObject(
       long      lId,
       long      lDomainId,
       Timestamp creationTimestamp,
@@ -106,10 +124,10 @@ public class BasicDataObjectTest extends DataObjectTest
    ) throws Exception
    {
       Timestamp now = new Timestamp((new Date()).getTime());
-		TestBasicDataObject data1 = createTestDataObject(1, 11, now, "1value1", 
-                                                       "1value2", "1value3");
-		TestBasicDataObject data2 = createTestDataObject(2, 22, now, "2value1", 
-                                                       "2value2", "2value3");
+		BasicDataObject data1 = createTestDataObject(1, 11, now, "1value1", 
+                                                   "1value2", "1value3");
+		BasicDataObject data2 = createTestDataObject(2, 22, now, "2value1", 
+                                                   "2value2", "2value3");
 		
 		assertFalse("Persistance store flag doesn't match", data1.isFromPersistenceStore());
 		assertFalse("Persistance store flag doesn't match", data2.isFromPersistenceStore());
@@ -125,10 +143,10 @@ public class BasicDataObjectTest extends DataObjectTest
    ) throws Exception
    {
       Timestamp now = new Timestamp((new Date()).getTime());
-		TestBasicDataObject data1 = createTestDataObject(1, 11, now, "1value1", 
-                                                       "1value2", "1value3");
-		TestBasicDataObject data2 = createTestDataObject(2, 22, now, "2value1", 
-                                                       "2value2", "2value3");
+		BasicDataObject data1 = createTestDataObject(1, 11, now, "1value1", 
+                                                   "1value2", "1value3");
+		BasicDataObject data2 = createTestDataObject(2, 22, now, "2value1", 
+                                                   "2value2", "2value3");
 		
 		assertFalse("Persistance store flag doesn't match", data1.isFromPersistenceStore());
 		assertFalse("Persistance store flag doesn't match", data2.isFromPersistenceStore());
@@ -148,10 +166,10 @@ public class BasicDataObjectTest extends DataObjectTest
    ) throws Exception
    {
       Timestamp now = new Timestamp((new Date()).getTime());
-		TestBasicDataObject data1 = createTestDataObject(1, 11, now, "1value1", 
-                                                       "1value2", "1value3");
-		TestBasicDataObject data2 = createTestDataObject(2, 22, now, "2value1", 
-                                                       "2value2", "2value3");
+		BasicDataObject data1 = createTestDataObject(1, 11, now, "1value1", 
+                                                   "1value2", "1value3");
+		BasicDataObject data2 = createTestDataObject(2, 22, now, "2value1", 
+                                                   "2value2", "2value3");
 		
 		assertEquals("Domain id doesn't match", 11, data1.getDomainId());
 		assertEquals("Domain id doesn't match", 22, data2.getDomainId());
@@ -167,10 +185,10 @@ public class BasicDataObjectTest extends DataObjectTest
    {
       Timestamp now = new Timestamp((new Date()).getTime());
       Timestamp later = new Timestamp((new Date()).getTime() + 1000);
-		TestBasicDataObject data1 = createTestDataObject(1, 11, now, "1value1", 
-                                                       "1value2", "1value3");
-		TestBasicDataObject data2 = createTestDataObject(2, 22, later, "2value1", 
-                                                       "2value2", "2value3");
+		BasicDataObject data1 = createTestDataObject(1, 11, now, "1value1", 
+                                                   "1value2", "1value3");
+		BasicDataObject data2 = createTestDataObject(2, 22, later, "2value1", 
+                                                   "2value2", "2value3");
 		
       assertFalse("Two test timestamps cannot be the same", now.equals(later));
 		assertEquals("Creation timestamp doesn't match", now, data1.getCreationTimestamp());
@@ -187,10 +205,10 @@ public class BasicDataObjectTest extends DataObjectTest
    {
       Timestamp now = new Timestamp((new Date()).getTime());
       Timestamp later = new Timestamp((new Date()).getTime() + 1000);
-		TestBasicDataObject data1 = createTestDataObject(1, 11, null, "1value1", 
-                                                       "1value2", "1value3");
-		TestBasicDataObject data2 = createTestDataObject(2, 22, now, "2value1", 
-                                                       "2value2", "2value3");
+		BasicDataObject data1 = createTestDataObject(1, 11, null, "1value1", 
+                                                   "1value2", "1value3");
+		BasicDataObject data2 = createTestDataObject(2, 22, now, "2value1", 
+                                                   "2value2", "2value3");
 		
       assertFalse("Two test timestamps cannot be the same", now.equals(later));
 		assertNull("Creation timestamp doesn't match", data1.getCreationTimestamp());
@@ -201,7 +219,7 @@ public class BasicDataObjectTest extends DataObjectTest
       try
 		{
          data1.setCreationTimestamp(now);
-			fail("It should not be possible to change creation timestampe once it was set.");
+			fail("It should not be possible to change creation timestamp once it was set.");
 		}
 		catch (Throwable thr)
 		{
@@ -211,7 +229,7 @@ public class BasicDataObjectTest extends DataObjectTest
       try
 		{
          data2.setCreationTimestamp(later);
-			fail("It should not be possible to change creation timestampe once it was set.");
+			fail("It should not be possible to change creation timestamp once it was set.");
 		}
 		catch (Throwable thr)
 		{
