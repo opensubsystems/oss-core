@@ -256,23 +256,31 @@ public class DataDescriptorManager extends OSSObject
     * @return DataDescriptor - data descriptor to use for given class
     * @throws OSSException - an error has occurred
     */
+   // Supressing since this has been fixed using volatile pattern for Java 1.5+
+   @SuppressWarnings("DoubleCheckedLocking")
    public DataDescriptor getDataDescriptorInstance(
       Class<? extends DataDescriptor> clsDescriptor
    ) throws OSSException
    {
-      DataDescriptor descriptor;
-      
-      descriptor = m_mpDescriptorCache.get(clsDescriptor.getName());
-      if (descriptor == null)
+      DataDescriptor result = m_mpDescriptorCache.get(clsDescriptor.getName());;
+      if (result == null) 
       {
-         synchronized (m_mpDescriptorCache)
+         synchronized(IMPL_LOCK) 
          {
-            descriptor = m_descriptorClassFactory.createInstance(clsDescriptor);
-            initialize(descriptor);
+            result = m_mpDescriptorCache.get(clsDescriptor.getName());;
+            if (result == null) 
+            {
+               DataDescriptor descriptor;
+               
+               descriptor = m_descriptorClassFactory.createInstance(clsDescriptor);
+               initialize(descriptor);
+
+               result = descriptor;
+            }
          }
       }
       
-      return descriptor; 
+      return result; 
    }
 
    /**
@@ -457,7 +465,7 @@ public class DataDescriptorManager extends OSSObject
                      "Application already contains data descriptor for data type " 
                      + descriptor.getDataType() + ": " + lstDescriptors.toString()
                      + ". The data descriptor " + descriptor.getClass().getName()
-                     + " cannot be added.");
+                     + ": " + descriptor + " cannot be added.");
          }
          else
          {
