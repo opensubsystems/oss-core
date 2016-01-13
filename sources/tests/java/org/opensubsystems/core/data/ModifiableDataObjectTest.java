@@ -66,7 +66,6 @@ public class ModifiableDataObjectTest extends BasicDataObjectTest
    
    // Helper methods ///////////////////////////////////////////////////////////
    
-   
    /**
     * Create test data from a given parameters.
     *
@@ -118,29 +117,7 @@ public class ModifiableDataObjectTest extends BasicDataObjectTest
    ) throws OSSException
    {
       return createTestDataObject(lId, lDomainId, creationTimestamp, null, 
-                                      strField1, strField2, strField3);
-   }
-
-   /**
-    * Create test data from a given parameters.
-    *
-    * @param lId - Unique ID identifying this test data
-    * @param strField1 - first field of the test data
-    * @param strField2 - second field of the test data
-    * @param strField3 - third field of the test data
-    * @return DataObject - data to use for testing
-	 * @throws OSSException - an error has occurred
-    */ 
-   @Override
-   protected DataObject createTestDataObject(
-      long   lId,
-      String strField1,
-      String strField2,
-      String strField3
-   ) throws OSSException
-   {
-      return createTestDataObject(lId, DataObject.NEW_ID, null, strField1, 
-                                  strField2, strField3);
+                                  strField1, strField2, strField3);
    }
 
    // Tests ////////////////////////////////////////////////////////////////////
