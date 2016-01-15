@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2016 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -221,15 +221,13 @@ public abstract class ModifiableDatabaseSchemaImpl extends    DatabaseSchemaImpl
             // This will detects conflict when two users tries to modify the 
             // same data and one of them saves the changes and then other tries 
             // to overwrite them without knowing that the data were modified
-            if ((exc.getMessage().indexOf("[100]") > -1)
+            if ((exc.getMessage().contains("[100]"))
                && (data instanceof ModifiableDataObject))
             {
-               Integer iDataTypeCode = new Integer(iDataType);
-               
                checkUpdateError(
                   dbConnection, 
                   strDisplayableViewName, 
-                  (String)getModifiableTableNames().get(iDataTypeCode),
+                  (String)getModifiableTableNames().get(iDataType),
                   ((ModifiableDataObject)data).getId(), 
                   ((ModifiableDataObject)data).getModificationTimestamp());
             }
