@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2014 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2016 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -44,6 +44,8 @@ public class DatabaseSchemaClassFactory extends ModifierClassFactory<DatabaseSch
    
    /**
     * Default constructor
+    * 
+    * @throws OSSException - an error has occurred
     */
    public DatabaseSchemaClassFactory(
    ) throws OSSException
