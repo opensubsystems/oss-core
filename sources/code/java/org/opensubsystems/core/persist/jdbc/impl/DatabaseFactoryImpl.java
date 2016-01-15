@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2016 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -40,14 +40,14 @@ public abstract class DatabaseFactoryImpl extends OSSObject
    /**
     * Database on which this database factory should operate.
     */
-   private Database m_database;
+   private final Database m_database;
    
    /**
     * Class identifying data descriptor for the object. This is private so that 
     * we can maintain the cached object value without fear that these two won't 
     * be in sync.
     */
-   private Class<DataDescriptor> m_clsDataDescriptor;
+   private final Class<DataDescriptor> m_clsDataDescriptor;
    
    // Cached values ////////////////////////////////////////////////////////////
    
@@ -55,7 +55,7 @@ public abstract class DatabaseFactoryImpl extends OSSObject
     * Data descriptor describing the current data object. This is a cached copy
     * and in order to ensure it is in sync with the source, it is private.
     */
-   private DataDescriptor m_dataDescriptor;
+   private final DataDescriptor m_dataDescriptor;
    
    // Constructors /////////////////////////////////////////////////////////////
    
