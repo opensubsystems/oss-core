@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2006 - 2016 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -35,18 +35,18 @@ import org.opensubsystems.core.persist.jdbc.DatabaseSchema;
  * Example of method in factory which reads single data object: 
  *
  *  public DataObject get(
- *     final int iId,
- *     final int iDomainId
+ *     final long lId,
+ *     final long lDomainId
  *  ) throws OSSException
  *  {
  *     DataObject data = null;
  *
  *     // If the ID is supplied try to read the data from the database, 
  *     // if it is not, it is new data which doesn't have ID yet
- *     if (iId == DataObject.NEW_ID)
+ *     if (lId == DataObject.NEW_ID)
  *     {
  *        // These values are used as default values for new data object
- *        data = new MyData(iDomainId);
+ *        data = new MyData(lDomainId);
  *     }
  *     else
  *     {
@@ -70,12 +70,12 @@ public class DatabaseReadSingleDataObjectOperation extends DatabaseReadOperation
    /**
     * ID of data object.
     */
-   private int m_iId;
+   private final long m_lId;
 
    /**
     * ID of domain the data object belongs to.
     */
-   private int m_iDomainId;
+   private final long m_lDomainId;
    
    // Constructors /////////////////////////////////////////////////////////////
    
@@ -86,21 +86,21 @@ public class DatabaseReadSingleDataObjectOperation extends DatabaseReadOperation
     * @param factory - factory which is executing this operation
     * @param strQuery - sql query that has to be processed
     * @param schema - database schema used with this operation
-    * @param iId - ID of data object to read
-    * @param iDomainId - ID of domain the data object belongs to
+    * @param lId - ID of data object to read
+    * @param lDomainId - ID of domain the data object belongs to
     */
    public DatabaseReadSingleDataObjectOperation(
       DatabaseFactory factory,
       String          strQuery,
       DatabaseSchema  schema,
-      int             iId,
-      int             iDomainId
+      long            lId,
+      long            lDomainId
    )
    {
       super(factory, strQuery, schema);
       
-      m_iId = iId;
-      m_iDomainId = iDomainId;
+      m_lId = lId;
+      m_lDomainId = lDomainId;
    }
    
    // Overwritten method ///////////////////////////////////////////////////////
@@ -118,18 +118,18 @@ public class DatabaseReadSingleDataObjectOperation extends DatabaseReadOperation
       StringBuilder buffer = new StringBuilder();
       // construct error message
       buffer.append("Multiple records loaded from database for ID ");
-      buffer.append(m_iId);
+      buffer.append(m_lId);
       if (m_dbschema.isInDomain())
       {
          buffer.append(" and domain ID ");
-         buffer.append(m_iDomainId);
+         buffer.append(m_lDomainId);
       }
 
-      pstmQuery.setInt(1, m_iId);
+      pstmQuery.setLong(1, m_lId);
       if (m_dbschema.isInDomain())
       {
          // set up domain ID parameter if data object is in domain
-         pstmQuery.setInt(2, m_iDomainId);
+         pstmQuery.setLong(2, m_lDomainId);
       }
 
       return loadAtMostOneData(dbfactory, pstmQuery, buffer.toString());

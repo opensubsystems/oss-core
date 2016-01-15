@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2003 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2003 - 2016 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -42,7 +42,7 @@ import org.opensubsystems.core.persist.jdbc.DatabaseSchema;
  * Example of method in factory which reads data using query produced by its schema 
  *
  * public int[] getActualIds(
- *    final int  iDomainId,
+ *    final long  lDomainId,
  *    String     strIds, 
  *    SimpleRule listSecurityData
  * ) throws OSSException
@@ -60,7 +60,7 @@ import org.opensubsystems.core.persist.jdbc.DatabaseSchema;
  *       ) throws OSSException,
  *                SQLException
  *       {
- *          pstmQuery.setInt(1, iDomainId);
+ *          pstmQuery.setLong(1, lDomainId);
  *          return DatabaseUtils.loadMultipleIntsAsArray(pstmQuery);
  *       }         
  *    };

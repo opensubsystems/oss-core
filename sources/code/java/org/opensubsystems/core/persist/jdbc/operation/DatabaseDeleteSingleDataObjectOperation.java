@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006 - 2013 OpenSubsystems.com/net/org and its owners. All rights reserved.
+ * Copyright (C) 2006 - 2016 OpenSubsystems.com/net/org and its owners. All rights reserved.
  * 
  * This file is part of OpenSubsystems.
  *
@@ -37,18 +37,18 @@ import org.opensubsystems.core.persist.jdbc.ModifiableDatabaseSchema;
  * Example of method in factory which deletes single data object:
  *  
  *  public void delete(
- *     final int iId,
- *     final int iDomainId
+ *     final long lId,
+ *     final long lDomainId
  *  ) throws OSSException
  *  {
  *     if (GlobalConstants.ERROR_CHECKING)
  *     {
- *        assert iId != DataObject.NEW_ID 
+ *        assert lId != DataObject.NEW_ID 
  *               : "Cannot delete data, which wasn't created yet.";
  *     }
  *
  *     DatabaseUpdateOperation dbop = new DatabaseDeleteSingleDataObjectOperation(
- *        this, m_schema.getDeleteMyDataById(), m_schema, iId, iDomainId);
+ *        this, m_schema.getDeleteMyDataById(), m_schema, lId, lDomainId);
  *     dbop.executeUpdate();
  *  }
  *
@@ -61,22 +61,22 @@ public class DatabaseDeleteSingleDataObjectOperation extends DatabaseUpdateOpera
    /**
     * Schema to use to execute database dependent operations.
     */
-   private ModifiableDatabaseSchema m_schema;
+   private final ModifiableDatabaseSchema m_schema;
 
    /**
     * Data type of the related object to be deleted cascade.
     */
-   private int m_iDataType;
+   private final int m_iDataType;
 
    /**
     * ID of data object.
     */
-   private int m_iId;
+   private final long m_lId;
 
    /**
     * ID of domain the data object belongs to.
     */
-   private int m_iDomainId;
+   private final long m_lDomainId;
    
    // Constructors /////////////////////////////////////////////////////////////
 
@@ -86,23 +86,23 @@ public class DatabaseDeleteSingleDataObjectOperation extends DatabaseUpdateOpera
     * @param factory - factory which is executing this operation
     * @param strQuery - sql query that has to be processed
     * @param schema - schema to use to execute database dependent operations
-    * @param iId - ID of data object to delete
-    * @param iDomainId - ID of domain the data object belongs to
+    * @param lId - ID of data object to delete
+    * @param lDomainId - ID of domain the data object belongs to
     */
    public DatabaseDeleteSingleDataObjectOperation(
       DatabaseFactory          factory,
       String                   strQuery,
       ModifiableDatabaseSchema schema,
-      int                      iId,
-      int                      iDomainId
+      long                     lId,
+      long                     lDomainId
    )
    {
       super(factory, strQuery, schema, DatabaseUpdateOperation.DBOP_DELETE, null);
       
       m_schema = schema;
       m_iDataType = factory.getDataDescriptor().getDataType();
-      m_iId = iId;
-      m_iDomainId = iDomainId;
+      m_lId = lId;
+      m_lDomainId = lDomainId;
    }
 
    /**
@@ -115,15 +115,15 @@ public class DatabaseDeleteSingleDataObjectOperation extends DatabaseUpdateOpera
       PreparedStatement   pstmQuery
    ) throws OSSException, SQLException
    {
-      m_schema.deleteRelatedData(cntConnection, m_iDataType, m_iId);
+      m_schema.deleteRelatedData(cntConnection, m_iDataType, m_lId);
 
       int iDeleted;
       
-      pstmQuery.setInt(1, m_iId);
+      pstmQuery.setLong(1, m_lId);
       if (m_schema.isInDomain())
       {
          // set up domain ID parameter if data object is in domain
-         pstmQuery.setInt(2, m_iDomainId);
+         pstmQuery.setLong(2, m_lDomainId);
       }
       iDeleted = pstmQuery.executeUpdate();
       
